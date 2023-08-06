@@ -276,14 +276,14 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
             scope: "anonymous",
           }),
         };
-      
+      console.log("opciones compartidas",shareOptions)
         request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
             console.error(err);
             return;
           }
-      
           const sharedResponse = JSON.parse(shareBody);
+          console.log(sharedResponse)
           if (sharedResponse.link && sharedResponse.link.webUrl) {
             const sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
