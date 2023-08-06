@@ -6,40 +6,51 @@ const localStorage = new LocalStorage("./local-storage");
 let sequelize;
 let info;
 const handb = async (req, res) => {
+if (localStorage.getItem(`INFODB`)) {
+  res.send(true)
+}else{
   if (req.query) {
     console.log("entro db");
 
-    const { dbname, user, pass, host } = req.query;
+    const { name,password,dbname, user, pass, host } = req.query;
     localStorage.setItem(
       `INFODB`,
-      JSON.stringify({ dbname, user, pass, host })
+      JSON.stringify({name,password,dbname, user, pass, host })
     );
 
     reincioNode();
     res.send("se crearon las variables de configuracion");
   }
+}
 };
 
-if (localStorage.getItem(`INFODB`)) {
-  info = JSON.parse(localStorage.getItem(`INFODB`));
-  sequelize = new Sequelize(info.dbname, info.user, info.pass, {
-    host: info.host,
-    dialect:
-      "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
-    // port:"1433"
-  });
-  // Test the database connection
-  sequelize
-    .authenticate()
-    .then(() => {
-      console.log("Connection has been established successfully.");
-    })
-    .catch((err) => {
-      console.error("Unable to connect to the database:", err);
-    });
-} else {
-  console.log("no hay variables de configuracion para la db");
-}
+// if (localStorage.getItem(`INFODB`)) {
+//   info = JSON.parse(localStorage.getItem(`INFODB`));
+//   sequelize = new Sequelize(info.dbname, info.user, info.pass, {
+//     host: info.host,
+//     dialect:
+//       "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+//     // port:"1433"
+//   });
+//   // Test the database connection
+//   sequelize
+//     .authenticate()
+//     .then(() => {
+//       console.log("Connection has been established successfully.");
+//     })
+//     .catch((err) => {
+//       console.error("Unable to connect to the database:", err);
+//     });
+// } else {
+//   console.log("no hay variables de configuracion para la db");
+// }
+
+sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", {
+  host: "Fritomania.mssql.somee.com",
+  dialect:
+    "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+  // port:"1433"
+});
 
 const reincioNode = () => {
   const comando =

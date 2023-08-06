@@ -3,7 +3,7 @@ const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
 
-const LoadProyect = async (Doc_id) => {
+const LoadProyect = async (Doc_id,email) => {
   //? se piden los datos del usuario en el localStorage
   // const user = JSON.parse(localStorage.getItem("user"));
   //? se selecciona los idNodo para saber que proyectos tiene el usuario
@@ -126,7 +126,7 @@ const LoadProyect = async (Doc_id) => {
       } while (tipoParte[0][0].TipoParte !== "Cabecera");
     }
 
-    localStorage.setItem(`Proyecto`, JSON.stringify(obj_proyecto));
+    localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
     res.json({ error: error });

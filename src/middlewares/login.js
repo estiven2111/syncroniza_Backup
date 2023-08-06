@@ -41,7 +41,7 @@ const login = async (req, res) => {
       const token = jwt.sign({ userEmail: usuario.Email }, secretKey, {
         expiresIn: "12h",
       });
-      LoadProyect(usuario.Doc_id);
+      LoadProyect(usuario.Doc_id,usuario.Email);
       res.json({ token, userEmail: usuario.Email, userName: usuario.Nombre });
     } catch (error) {
       console.error("Error al autenticar al usuario:", error);
