@@ -147,7 +147,7 @@ const dashboard = async (req, res) => {
 //? funcion para mover el archivo 
 
 const moveupload = (tipo,imgs,uploadPath,user,token) =>{
-console.log("entro al metodo")
+
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
@@ -207,15 +207,16 @@ console.log("entro al metodo")
           }
           const uploadResponse = JSON.parse(body);
           const itemId = uploadResponse.id;
-          
+          console.log("entro al metodo1")
           const driveInfoResponse = await request.get({
             url: "https://graph.microsoft.com/v1.0/me/drives",
             headers: {
               Authorization: "Bearer " + token,
             },
           });
-          
+          console.log("entro al metodo2")
           const drives = JSON.parse(driveInfoResponse).value;
+          console.log(drives)
           const driveId = drives[0].id; 
       
           // Compartir el archivo públicamente
