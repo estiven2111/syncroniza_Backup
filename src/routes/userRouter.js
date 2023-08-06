@@ -166,7 +166,7 @@ passport.use(
     },
     (accessToken, refreshToken, params, profile, done) => {
       // console.log("token", accessToken);
-      console.log("params", params,"profile", profile,"done", done)
+     
       // aca puede realizar acciones para obtener los datos de los usuarios
       //para enviar ala base datos o lo que desee y se pueda hacer
 
