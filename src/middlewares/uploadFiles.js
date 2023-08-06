@@ -52,7 +52,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          const users = moveupload = (tipo,imgs,uploadPath,user) 
+           users =await moveupload(tipo,imgs,uploadPath,user) 
         } else {
           res.json({ msg: "suba una imagen" });
         }
@@ -76,7 +76,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            const users = moveupload = (tipo,imgs,uploadPath,user) 
+            users = await moveupload(tipo,imgs,uploadPath,user) 
             // imgs.mv(`${uploadPath}`, (err) => {
             //   if (err) return res.status(500).send(err);
             //   const file = path.join(
