@@ -217,10 +217,10 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
               Authorization: "Bearer " + token,
             },
           });
-      
+          console.log("aca va bien0")
           const drives = JSON.parse(driveInfoResponse).value;
           const driveId = drives[0].id; // Puedes ajustar esto según tus necesidades
-      
+          console.log("aca va bien1")
           // Compartir el archivo públicamente
           const shareResponse = await request.post(
             {
@@ -235,7 +235,7 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
               }),
             }
           );
-      
+       console.log("aca va bien2")
           const shareResponseBody = JSON.parse(shareResponse);
           const accessUrlShared = shareResponseBody.link.webUrl;
           console.log("URL de acceso compartida:", accessUrlShared);
