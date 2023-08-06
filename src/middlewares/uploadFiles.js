@@ -40,6 +40,7 @@ const uploadFiles = async (req, res) => {
 const dashboard = async (req, res) => {
   const { token, user, tipo } = req.body;
   console.log("tipooo",tipo)
+  let users
   switch (tipo) {
     case "ocr":
       try {
@@ -86,14 +87,14 @@ const dashboard = async (req, res) => {
                   }
                   const accessUrl = JSON.parse(body)["webUrl"];
                   console.log("URL de acceso:", accessUrl);
-                  const user = {
+                  users = {
                     acces_url: accessUrl,
                     auth: req.isAuthenticated(),
                   };
     
                   eliminar(file);
     
-                  res.json(user);
+                 
                 }
               );
             });
@@ -158,12 +159,12 @@ const dashboard = async (req, res) => {
                       }
                       const accessUrl = JSON.parse(body)["webUrl"];
                       console.log("URL de acceso:", accessUrl);
-                      // const user = {
-                      //   acces_url: accessUrl,
-                      //   auth: req.isAuthenticated(),
-                      // };
+                      users = {
+                        acces_url: accessUrl,
+                        auth: req.isAuthenticated(),
+                      };
         
-                      // eliminar(file);
+                       eliminar(file);
         
                     
                     }
@@ -188,7 +189,7 @@ const dashboard = async (req, res) => {
 
 
         }
-        res.send("okokokoko")
+        res.send(users)
       }
       break;
 
