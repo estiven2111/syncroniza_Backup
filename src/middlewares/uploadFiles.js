@@ -284,12 +284,17 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
           }
       
           const sharedResponse = JSON.parse(shareBody);
-          const sharedUrl = sharedResponse.link.webUrl;
-          console.log("URL de acceso compartida:", sharedUrl);
-          return sharedUrl;
+          if (sharedResponse.link && sharedResponse.link.webUrl) {
+            const sharedUrl = sharedResponse.link.webUrl;
+            console.log("URL de acceso compartida:", sharedUrl);
+            return sharedUrl;
+          } else {
+            console.log("No se pudo obtener la URL de acceso compartida.");
+          }
+
         });
       });
-   
+    return "nada"
     });
     //TODO este
   });
