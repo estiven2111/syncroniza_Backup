@@ -52,52 +52,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          console.log(imagen);
-          imgs.mv(`${uploadPath}`, (err) => {
-            if (err) return res.status(500).send(err);
-            const file = path.join(__dirname, "../..", "uploads", imgs.name);
-
-            // const file = path.join(__dirname, "../..", "uploads", "tesla.jpg");
-
-            const onedrive_folder = `OCR/${user}`;
-            // const onedrive_folder = `OCR`;
-            const onedrive_filename = path.basename(file);
-            // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
-
-            fs.readFile(file, function (err, data) {
-              if (err) {
-                console.error(err);
-                return;
-              }
-              // console.log(req.user.accessToken)
-              request.put(
-                {
-                  url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
-                  headers: {
-                    Authorization: "Bearer " + req.user.accessToken,
-                    // Authorization: "Bearer " + TOKEN,
-                    "Content-Type": "application/json",
-                  },
-                  body: data,
-                },
-                async function (err, response, body) {
-                  if (err) {
-                    console.error(err);
-                    return;
-                  }
-                  const accessUrl = JSON.parse(body)["webUrl"];
-                  console.log("URL de acceso:", accessUrl);
-                  users = {
-                    acces_url: accessUrl,
-                    auth: req.isAuthenticated(),
-                  };
-
-                  eliminar(file);
-                }
-              );
-            });
-            //TODO este
-          });
+          const users = moveupload = (tipo,imgs,uploadPath) 
         } else {
           res.json({ msg: "suba una imagen" });
         }
@@ -120,58 +75,58 @@ const dashboard = async (req, res) => {
             let imageBuffer;
             let uploadPath;
             imgs = archivo;
-            console.log(imgs);
             uploadPath = `uploads/${archivo.name}`;
-            imgs.mv(`${uploadPath}`, (err) => {
-              if (err) return res.status(500).send(err);
-              const file = path.join(
-                __dirname,
-                "../..",
-                "uploads",
-                archivo.name
-              );
+            const users = moveupload = (tipo,imgs,uploadPath) 
+            // imgs.mv(`${uploadPath}`, (err) => {
+            //   if (err) return res.status(500).send(err);
+            //   const file = path.join(
+            //     __dirname,
+            //     "../..",
+            //     "uploads",
+            //     archivo.name
+            //   );
 
-              // const file = path.join(__dirname, "../..", "uploads", "tesla.jpg");
+            //   // const file = path.join(__dirname, "../..", "uploads", "tesla.jpg");
 
-              const onedrive_folder = `Entregables/${user}`;
-              // const onedrive_folder = `OCR`;
-              const onedrive_filename = path.basename(file);
-              // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
+            //   const onedrive_folder = `Entregables/${user}`;
+            //   // const onedrive_folder = `OCR`;
+            //   const onedrive_filename = path.basename(file);
+            //   // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
 
-              fs.readFile(file, function (err, data) {
-                if (err) {
-                  console.error(err);
-                  return;
-                }
-                // console.log(req.user.accessToken)
-                request.put(
-                  {
-                    url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
-                    headers: {
-                      Authorization: "Bearer " + req.user.accessToken,
-                      // Authorization: "Bearer " + TOKEN,
-                      "Content-Type": "application/json",
-                    },
-                    body: data,
-                  },
-                  async function (err, response, body) {
-                    if (err) {
-                      console.error("aca", err);
-                      return;
-                    }
-                    const accessUrl = JSON.parse(body)["webUrl"];
-                    console.log("URL de acceso:", accessUrl);
-                    users = {
-                      acces_url: accessUrl,
-                      auth: req.isAuthenticated(),
-                    };
+            //   fs.readFile(file, function (err, data) {
+            //     if (err) {
+            //       console.error(err);
+            //       return;
+            //     }
+            //     // console.log(req.user.accessToken)
+            //     request.put(
+            //       {
+            //         url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+            //         headers: {
+            //           Authorization: "Bearer " + req.user.accessToken,
+            //           // Authorization: "Bearer " + TOKEN,
+            //           "Content-Type": "application/json",
+            //         },
+            //         body: data,
+            //       },
+            //       async function (err, response, body) {
+            //         if (err) {
+            //           console.error("aca", err);
+            //           return;
+            //         }
+            //         const accessUrl = JSON.parse(body)["webUrl"];
+            //         console.log("URL de acceso:", accessUrl);
+            //         users = {
+            //           acces_url: accessUrl,
+            //           auth: req.isAuthenticated(),
+            //         };
 
-                    eliminar(file);
-                  }
-                );
-              });
-              //TODO este
-            });
+            //         eliminar(file);
+            //       }
+            //     );
+            //   });
+            //   //TODO este
+            // });
           } catch (error) {
             console.error("aca2", err);
             res.json({ error });
@@ -186,6 +141,63 @@ const dashboard = async (req, res) => {
   res.send(users);
 };
 
+
+
+//? funcion para mover el archivo 
+
+const moveupload = (tipo,imgs,uploadPath) =>{
+
+  imgs.mv(`${uploadPath}`, (err) => {
+    if (err) return res.status(500).send(err);
+    const file = path.join(__dirname, "../..", "uploads", imgs.name);
+
+    // const file = path.join(__dirname, "../..", "uploads", "tesla.jpg");
+
+    const onedrive_folder = `${tipo.toUpperCase()}/${user}`;
+    // const onedrive_folder = `OCR`;
+    const onedrive_filename = path.basename(file);
+    // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
+
+    fs.readFile(file, function (err, data) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      // console.log(req.user.accessToken)
+      request.put(
+        {
+          url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+          headers: {
+            Authorization: "Bearer " + req.user.accessToken,
+            // Authorization: "Bearer " + TOKEN,
+            "Content-Type": "application/json",
+          },
+          body: data,
+        },
+        async function (err, response, body) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          const accessUrl = JSON.parse(body)["webUrl"];
+          console.log("URL de acceso:", accessUrl);
+          users = {
+            acces_url: accessUrl,
+            auth: req.isAuthenticated(),
+          };
+
+          eliminar(file);
+          return users;
+        }
+      );
+    });
+    //TODO este
+  });
+}
+
+
+//! Eliminar archivo en uploads
+
 const eliminar = (file) => {
   if (fs_extra.existsSync(file)) {
     fs_extra.unlink(file);
@@ -193,6 +205,8 @@ const eliminar = (file) => {
     console.log("El archivo no existe:", file);
   }
 };
+
+
 
 // Middleware para proteger rutas
 function ensureAuthenticated(req, res, next) {
