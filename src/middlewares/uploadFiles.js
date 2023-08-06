@@ -165,12 +165,37 @@ console.log("entro al metodo")
         return;
       }
       // console.log(req.user.accessToken)
+      // request.put(
+      //   {
+      //     url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+      //     headers: {
+      //       Authorization: "Bearer " + token,
+      //       // Authorization: "Bearer " + TOKEN,
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: data,
+      //   },
+      //   async function (err, response, body) {
+      //     if (err) {
+      //       console.error(err);
+      //       return;
+      //     }
+      //     const accessUrl = JSON.parse(body)["webUrl"];
+      //     console.log("URL de acceso:", accessUrl);
+      //     users = {
+      //       acces_url: accessUrl,
+      //     };
+
+      //     eliminar(file);
+      //     return users;
+      //   }
+      // );
+
       request.put(
         {
           url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
           headers: {
             Authorization: "Bearer " + token,
-            // Authorization: "Bearer " + TOKEN,
             "Content-Type": "application/json",
           },
           body: data,
@@ -180,13 +205,41 @@ console.log("entro al metodo")
             console.error(err);
             return;
           }
-          const accessUrl = JSON.parse(body)["webUrl"];
+          const uploadResponse = JSON.parse(body);
+          const itemId = uploadResponse.id;
+          
+          const driveInfoResponse = await request.get({
+            url: "https://graph.microsoft.com/v1.0/me/drives",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          });
+          
+          const drives = JSON.parse(driveInfoResponse).value;
+          const driveId = drives[0].id; 
+      
+          // Compartir el archivo públicamente
+          const shareResponse = await request.post(
+            {
+              url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
+              headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                type: "view", // Puedes cambiar el tipo según tus necesidades
+                scope: "anonymous",
+              }),
+            }
+          );
+      
+          const accessUrl = JSON.parse(shareResponse).link.webUrl;
           console.log("URL de acceso:", accessUrl);
+      
           users = {
-            acces_url: accessUrl,
-            auth: req.isAuthenticated(),
+            access_url: accessUrl,
           };
-
+      
           eliminar(file);
           return users;
         }
