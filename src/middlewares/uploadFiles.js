@@ -38,8 +38,9 @@ const uploadFiles = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  const { token, user, tipo } = req.body;
+  const { user, tipo } = req.body;
   console.log("tipooo", tipo);
+  let token = req.user.accessToken
   let users;
   switch (tipo) {
     case "OCR":
@@ -52,7 +53,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-           users =await moveupload(tipo,imgs,uploadPath,user) 
+           users =await moveupload(tipo,imgs,uploadPath,user,token) 
         } else {
           res.json({ msg: "suba una imagen" });
         }
@@ -76,7 +77,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            users = await moveupload(tipo,imgs,uploadPath,user) 
+            users = await moveupload(tipo,imgs,uploadPath,user,token) 
             // imgs.mv(`${uploadPath}`, (err) => {
             //   if (err) return res.status(500).send(err);
             //   const file = path.join(
@@ -145,7 +146,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo 
 
-const moveupload = (tipo,imgs,uploadPath,user) =>{
+const moveupload = (tipo,imgs,uploadPath,user,token) =>{
 console.log("entro al metodo")
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -168,7 +169,7 @@ console.log("entro al metodo")
         {
           url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
           headers: {
-            Authorization: "Bearer " + req.user.accessToken,
+            Authorization: "Bearer " + token,
             // Authorization: "Bearer " + TOKEN,
             "Content-Type": "application/json",
           },
