@@ -42,7 +42,7 @@ const dashboard = async (req, res) => {
   console.log("tipooo", tipo);
   let users;
   switch (tipo) {
-    case "ocr":
+    case "OCR":
       try {
         if (req.files) {
           const { imagen } = req.files;
@@ -52,7 +52,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          const users = moveupload = (tipo,imgs,uploadPath) 
+          const users = moveupload = (tipo,imgs,uploadPath,user) 
         } else {
           res.json({ msg: "suba una imagen" });
         }
@@ -76,7 +76,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            const users = moveupload = (tipo,imgs,uploadPath) 
+            const users = moveupload = (tipo,imgs,uploadPath,user) 
             // imgs.mv(`${uploadPath}`, (err) => {
             //   if (err) return res.status(500).send(err);
             //   const file = path.join(
@@ -145,15 +145,15 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo 
 
-const moveupload = (tipo,imgs,uploadPath) =>{
-
+const moveupload = (tipo,imgs,uploadPath,user) =>{
+console.log("entro al metodo")
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
 
     // const file = path.join(__dirname, "../..", "uploads", "tesla.jpg");
 
-    const onedrive_folder = `${tipo.toUpperCase()}/${user}`;
+    const onedrive_folder = `${tipo}/${user}`;
     // const onedrive_folder = `OCR`;
     const onedrive_filename = path.basename(file);
     // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
