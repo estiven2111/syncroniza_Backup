@@ -147,7 +147,7 @@ const dashboard = async (req, res) => {
 //? funcion para mover el archivo 
 
 const moveupload = (tipo,imgs,uploadPath,user,token) =>{
-
+console.log("el token es ",token);
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
@@ -244,7 +244,6 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
       //   }
       // );
    
-
       const uploadOptions = {
         url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
         headers: {
@@ -260,13 +259,14 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
           console.error(err);
           return;
         }
-      
+        console.log("aca vamos ")
         const responseBody = JSON.parse(body);
+        const driveId = responseBody.parentReference.driveId; // Obtener el driveId
         const itemId = responseBody.id;
-      
+        console.log("aca vamos 1")
         // Compartir el archivo de OneDrive públicamente
         const shareOptions = {
-          url: `https://graph.microsoft.com/v1.0/me/drive/items/${itemId}/createLink`,
+          url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -276,25 +276,23 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
             scope: "anonymous",
           }),
         };
-      console.log("opciones compartidas",shareOptions)
+      console.log("aca vamos 2")
         request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
             console.error(err);
             return;
           }
+      
           const sharedResponse = JSON.parse(shareBody);
-          console.log(sharedResponse)
+          console.log("aca vamos 3")
           if (sharedResponse.link && sharedResponse.link.webUrl) {
             const sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
-            return sharedUrl;
           } else {
             console.log("No se pudo obtener la URL de acceso compartida.");
           }
-
         });
       });
-    return "nada"
     });
     //TODO este
   });
