@@ -164,7 +164,6 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
         console.error(err);
         return;
       }
-      // console.log(req.user.accessToken)
       // request.put(
       //   {
       //     url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
@@ -191,59 +190,106 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
       //   }
       // );
 
-      request.put(
-        {
-          url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+      // request.put(
+      //   {
+      //     url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+      //     headers: {
+      //       Authorization: "Bearer " + token,
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: data,
+      //   },
+      //   async function (err, response, body) {
+      //     if (err) {
+      //       console.error(err);
+      //       return;
+      //     }
+          
+      //     const responseBody = JSON.parse(body);
+      //     const accessUrl = responseBody["webUrl"];
+      //     console.log("URL de acceso:", accessUrl);
+      
+      //     // Obtener el driveId
+      //     const driveInfoResponse = await request.get({
+      //       url: "https://graph.microsoft.com/v1.0/me/drives",
+      //       headers: {
+      //         Authorization: "Bearer " + token,
+      //       },
+      //     });
+      //     console.log("aca va bien0",driveInfoResponse)
+      //     const drives = JSON.parse(driveInfoResponse).value;
+      //     const driveId = drives[0].id; // Puedes ajustar esto según tus necesidades
+      //     console.log("aca va bien1")
+      //     // Compartir el archivo públicamente
+      //     const shareResponse = await request.post(
+      //       {
+      //         url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${responseBody.id}/createLink`,
+      //         headers: {
+      //           Authorization: "Bearer " + token,
+      //           "Content-Type": "application/json",
+      //         },
+      //         body: JSON.stringify({
+      //           type: "view", // Puedes cambiar el tipo según tus necesidades
+      //           scope: "anonymous",
+      //         }),
+      //       }
+      //     );
+      //  console.log("aca va bien2")
+      //     const shareResponseBody = JSON.parse(shareResponse);
+      //     const accessUrlShared = shareResponseBody.link.webUrl;
+      //     console.log("URL de acceso compartida:", accessUrlShared);
+      
+      //     eliminar(file);
+      //     return users;
+      //   }
+      // );
+   
+
+      const uploadOptions = {
+        url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        body: data,
+      };
+      
+      // Subir el archivo a OneDrive
+      request.put(uploadOptions, async function (err, response, body) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      
+        const responseBody = JSON.parse(body);
+        const itemId = responseBody.id;
+      
+        // Compartir el archivo de OneDrive públicamente
+        const shareOptions = {
+          url: `https://graph.microsoft.com/v1.0/me/drive/items/${itemId}/createLink`,
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
           },
-          body: data,
-        },
-        async function (err, response, body) {
+          body: JSON.stringify({
+            type: "view",
+            scope: "anonymous",
+          }),
+        };
+      
+        request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
             console.error(err);
             return;
           }
-          
-          const responseBody = JSON.parse(body);
-          const accessUrl = responseBody["webUrl"];
-          console.log("URL de acceso:", accessUrl);
       
-          // Obtener el driveId
-          const driveInfoResponse = await request.get({
-            url: "https://graph.microsoft.com/v1.0/me/drives",
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          });
-          console.log("aca va bien0",driveInfoResponse)
-          const drives = JSON.parse(driveInfoResponse).value;
-          const driveId = drives[0].id; // Puedes ajustar esto según tus necesidades
-          console.log("aca va bien1")
-          // Compartir el archivo públicamente
-          const shareResponse = await request.post(
-            {
-              url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${responseBody.id}/createLink`,
-              headers: {
-                Authorization: "Bearer " + token,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                type: "view", // Puedes cambiar el tipo según tus necesidades
-                scope: "anonymous",
-              }),
-            }
-          );
-       console.log("aca va bien2")
-          const shareResponseBody = JSON.parse(shareResponse);
-          const accessUrlShared = shareResponseBody.link.webUrl;
-          console.log("URL de acceso compartida:", accessUrlShared);
-      
-          eliminar(file);
-          return users;
-        }
-      );
+          const sharedResponse = JSON.parse(shareBody);
+          const sharedUrl = sharedResponse.link.webUrl;
+          console.log("URL de acceso compartida:", sharedUrl);
+          return sharedUrl;
+        });
+      });
+   
     });
     //TODO este
   });
