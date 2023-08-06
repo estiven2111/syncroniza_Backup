@@ -217,7 +217,7 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
               Authorization: "Bearer " + token,
             },
           });
-          console.log("aca va bien0")
+          console.log("aca va bien0",driveInfoResponse)
           const drives = JSON.parse(driveInfoResponse).value;
           const driveId = drives[0].id; // Puedes ajustar esto según tus necesidades
           console.log("aca va bien1")
