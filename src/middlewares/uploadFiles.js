@@ -205,6 +205,7 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
             console.error(err);
             return;
           }
+          console.log("Response body:", body);
           const uploadResponse = JSON.parse(body);
           const itemId = uploadResponse.id;
           console.log("entro al metodo1")
