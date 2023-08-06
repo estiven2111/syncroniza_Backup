@@ -205,25 +205,26 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
             console.error(err);
             return;
           }
-          console.log("Response body:", body);
-          const uploadResponse = JSON.parse(body);
-          const itemId = uploadResponse.id;
-          console.log("entro al metodo1")
+          
+          const responseBody = JSON.parse(body);
+          const accessUrl = responseBody["webUrl"];
+          console.log("URL de acceso:", accessUrl);
+      
+          // Obtener el driveId
           const driveInfoResponse = await request.get({
             url: "https://graph.microsoft.com/v1.0/me/drives",
             headers: {
               Authorization: "Bearer " + token,
             },
           });
-          console.log("entro al metodo2")
+      
           const drives = JSON.parse(driveInfoResponse).value;
-          console.log(drives)
-          const driveId = drives[0].id; 
+          const driveId = drives[0].id; // Puedes ajustar esto según tus necesidades
       
           // Compartir el archivo públicamente
           const shareResponse = await request.post(
             {
-              url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
+              url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${responseBody.id}/createLink`,
               headers: {
                 Authorization: "Bearer " + token,
                 "Content-Type": "application/json",
@@ -235,12 +236,9 @@ const moveupload = (tipo,imgs,uploadPath,user,token) =>{
             }
           );
       
-          const accessUrl = JSON.parse(shareResponse).link.webUrl;
-          console.log("URL de acceso:", accessUrl);
-      
-          users = {
-            access_url: accessUrl,
-          };
+          const shareResponseBody = JSON.parse(shareResponse);
+          const accessUrlShared = shareResponseBody.link.webUrl;
+          console.log("URL de acceso compartida:", accessUrlShared);
       
           eliminar(file);
           return users;
