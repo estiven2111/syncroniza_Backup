@@ -7,7 +7,7 @@ const localStorage = new LocalStorage("./local-storage");
 
 const login = async (req, res) => {
   const { user, password } = req.body;
-  
+  console.log("entro login")
   if (user === "" || password === "") {
     res.status(401).json({ message: "Completar los campos" });
     return;
