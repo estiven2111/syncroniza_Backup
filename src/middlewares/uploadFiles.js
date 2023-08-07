@@ -260,6 +260,8 @@ console.log("el token es ",token);
           return;
         }
         console.log("aca vamos ")
+        const accessUrl = JSON.parse(body)["webUrl"];
+            console.log("URL de acceso:", accessUrl);
         const responseBody = JSON.parse(body);
         const driveId = responseBody.parentReference.driveId; // Obtener el driveId
         const itemId = responseBody.id;
