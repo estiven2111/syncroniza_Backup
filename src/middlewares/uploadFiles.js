@@ -260,8 +260,6 @@ console.log("el token es ",token);
           return;
         }
         console.log("aca vamos ")
-        const accessUrl = JSON.parse(body)["webUrl"];
-            console.log("URL de acceso:", accessUrl);
         const responseBody = JSON.parse(body);
         const driveId = responseBody.parentReference.driveId; // Obtener el driveId
         const itemId = responseBody.id;
@@ -290,7 +288,6 @@ console.log("el token es ",token);
           if (sharedResponse.link && sharedResponse.link.webUrl) {
             const sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
-            eliminar(file);
           } else {
             console.log("No se pudo obtener la URL de acceso compartida.");
           }
