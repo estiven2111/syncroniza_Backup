@@ -12,7 +12,7 @@ const login = async (req, res) => {
     res.status(401).json({ message: "Completar los campos" });
     return;
   }
-  if (localStorage.getItem(`INFODB`)) {
+  // if (localStorage.getItem(`INFODB`)) {
    
     try {
       
@@ -47,9 +47,9 @@ const login = async (req, res) => {
       console.error("Error al autenticar al usuario:", error);
       res.status(500).json({ message: "Error de servidor" });
     }
-  } else {
-    res.send("no se conecto ala db");
-  }
+  // } else {
+  //   res.send("no se conecto ala db");
+  // }
 };
 
 module.exports = login;
