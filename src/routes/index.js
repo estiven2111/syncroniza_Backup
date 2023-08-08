@@ -8,7 +8,7 @@ router.use("/user", userRouter);
 router.use("/user/api/proyect", ProyectRouter);
 
 
-//! PETICIONES PARA CONFIGURACION 
+//! PETICIONES PARA CONFIGURACION
 
 // router.post("/DB", handb);
 // router.get("/valitation/DB", (req,res)=>{

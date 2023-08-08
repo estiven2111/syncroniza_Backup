@@ -135,7 +135,9 @@ const LoadProyect = async (Doc_id,email) => {
 
 //todo hacer consulta para proyectos enviando respuesta automatica
 const getProyectName = async (req, res) => {
+ 
   const { search,email } = req.query;
+  console.log("entro",email)
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     // localStorage.removeItem(`Proyecto`)
@@ -162,13 +164,13 @@ const getProyect = async (req, res) => {
   const { search,email } = req.query;
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+    
     //? me devuelve todo el objeto
     let proyect;
 
     proyect = proyects.proyectos.filter((obj) => {
       return obj.proyecto.includes(search.toUpperCase());
     });
-
     res.json(proyect);
   } catch (error) {
     res.json({ error: error });
