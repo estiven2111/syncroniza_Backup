@@ -159,7 +159,7 @@ const getProyectName = async (req, res) => {
 
 //todo hacer consulta para enviar el proyectos
 const getProyect = async (req, res) => {
-  const { search } = req.query;
+  const { search,email } = req.query;
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     //? me devuelve todo el objeto
@@ -241,6 +241,7 @@ const hourActivities = async (req, res) => {
 };
 
 const logout = (req, res) => {
+  const { email } = req.query;
   try {
     localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");
