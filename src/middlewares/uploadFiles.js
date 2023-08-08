@@ -148,6 +148,9 @@ const dashboard = async (req, res) => {
 
 const moveupload = (tipo,imgs,uploadPath,user,token) =>{
 console.log("el token es ",token);
+console.log("el imgs es ",imgs);
+console.log("el uploadPath es ",uploadPath);
+console.log("el user es ",user);
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
@@ -243,7 +246,7 @@ console.log("el token es ",token);
       //     return users;
       //   }
       // );
-   
+      console.log("aca vamossssss ")
       const uploadOptions = {
         url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
         headers: {
@@ -252,7 +255,7 @@ console.log("el token es ",token);
         },
         body: data,
       };
-      
+      console.log("aca vamosaaaaaaaaaaaa ",uploadOptions.body)
       // Subir el archivo a OneDrive
       request.put(uploadOptions, async function (err, response, body) {
         if (err) {
