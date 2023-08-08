@@ -135,9 +135,9 @@ const LoadProyect = async (Doc_id,email) => {
 
 //todo hacer consulta para proyectos enviando respuesta automatica
 const getProyectName = async (req, res) => {
-  const { search } = req.query;
+  const { search,email } = req.query;
   try {
-    const proyects = JSON.parse(localStorage.getItem(`Proyecto`));
+    const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     // localStorage.removeItem(`Proyecto`)
     let NomProyect;
 
@@ -161,7 +161,7 @@ const getProyectName = async (req, res) => {
 const getProyect = async (req, res) => {
   const { search } = req.query;
   try {
-    const proyects = JSON.parse(localStorage.getItem(`Proyecto`));
+    const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     //? me devuelve todo el objeto
     let proyect;
 
@@ -242,7 +242,7 @@ const hourActivities = async (req, res) => {
 
 const logout = (req, res) => {
   try {
-    localStorage.removeItem(`Proyecto`);
+    localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");
   } catch (error) {
     res.json({ error: error });
