@@ -128,7 +128,7 @@ const LoadProyect = async (Doc_id,email) => {
 
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     console.log(`${email}Proyecto`)
-    res.send(`${email}Proyecto`)
+    res.json(`${email}Proyecto`)
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
     res.json({ error: error });
