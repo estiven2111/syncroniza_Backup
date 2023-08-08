@@ -20,7 +20,6 @@ const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
 const crypto = require("crypto");
 // app.use(express.static("uploads"));
 app.use("/", router);
-app.use(fileupload());
 const sessionSecret = crypto.randomBytes(64).toString("hex");
 require("dotenv").config();
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
