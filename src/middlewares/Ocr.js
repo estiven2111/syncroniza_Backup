@@ -19,14 +19,12 @@ async function Ocr(req, res) {
   const { imagen } = req.files;
   const { latitud, longitud } = req.body;
   const { token } = req.body;
-  console.log(imagen);
   let imgs;
   let imagePath;
   let imageBuffer;
   let uploadPath;
   let obj;
   imgs = req.files.imagen;
-  console.log(token);
   uploadPath = `uploads/${imgs.name}`;
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -108,6 +106,7 @@ async function Ocr(req, res) {
                       texto += line.words.map((w) => w.text).join(" ") + " ";
                     }
                   } else {
+                    console.log(texto)
                     obj = {
                       nit: "",
                       numFact: "",
