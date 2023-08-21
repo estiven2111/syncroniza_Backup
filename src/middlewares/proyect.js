@@ -3,7 +3,7 @@ const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
 
-const LoadProyect = async (Doc_id,email) => {
+const LoadProyect = async (Doc_id, email) => {
   //? se piden los datos del usuario en el localStorage
   // const user = JSON.parse(localStorage.getItem("user"));
   //? se selecciona los idNodo para saber que proyectos tiene el usuario
@@ -29,6 +29,8 @@ const LoadProyect = async (Doc_id,email) => {
 
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
       let idPadre = proyect[0][0].idPadre;
+     let componentes = []
+     let actividades = []
       let tipoParte;
       let Parte = idPadre;
       let actividad = "";
@@ -37,6 +39,20 @@ const LoadProyect = async (Doc_id,email) => {
       let fecha = "";
       let frecuencia = 0;
       let entregable = false;
+
+      let Codi_parteP = "";
+      let idNodoP = "";
+      let idPadreP = ""
+      let Codi_parteC = "";
+      let idNodoC = "";
+      let idPadreC = ""
+      let Codi_parteA = "";
+      let idNodoA = "";
+      let idPadreA = ""
+      let skuP = "";
+      let skuC = "";
+      let skuA = "";
+
       Cod_parte = await sequelize.query(
         `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
         // {replacements:{Codigo:}}
@@ -50,6 +66,10 @@ const LoadProyect = async (Doc_id,email) => {
         frecuencia = Cod_parte[0][0].FrecuenciaVeces;
         entregable = Cod_parte[0][0].AplicaEntregables;
         nom_entregable = nomEntregable;
+        idNodoA = proyect[0][0].idNodo;
+        Codi_parteA = proyect[0][0].Cod_parte;
+        idPadreA = proyect[0][0].idPadre;
+        skuA = proyect[0][0].SKU
       }
       do {
         tipoParte = await sequelize.query(
@@ -61,10 +81,19 @@ const LoadProyect = async (Doc_id,email) => {
           componente = tipoParte[0][0].Nombre;
           //? saca la fecha exacta del string
           fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+          idNodoC = tipoParte[0][0].idNodo;
+          Codi_parteC = tipoParte[0][0].Cod_parte;
+          idPadreC = tipoParte[0][0].idPadre;
+          skuC = tipoParte[0][0].SKU
         }
         if (tipoParte[0][0].TipoParte === "Cabecera") {
           proyecto = tipoParte[0][0].Nombre;
+          idNodoP = tipoParte[0][0].idNodo;
+          Codi_parteP = tipoParte[0][0].Cod_parte;
+          idPadreP = tipoParte[0][0].idPadre;
+          skuP = tipoParte[0][0].SKU
           //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+          
         }
         //? Verificar si el proyecto ya existe en el objeto obj_proyecto
         let proyectoExistente = obj_proyecto.proyectos.find(
@@ -79,24 +108,37 @@ const LoadProyect = async (Doc_id,email) => {
 
           if (componenteExistente) {
             //? Agregar la actividad al componente existente
-
+            console.log("push Actividad",idNodoA,Codi_parteA,idPadreA,actividades)
             componenteExistente.actividades.push({
               actividad: actividad,
               frecuencia,
               entregable,
               nombre_entregable: nom_entregable,
+              idNodoA,
+              Codi_parteA,
+              idPadreA,
+              skuA,
             });
           } else {
             //? Agregar un nuevo componente con la actividad al proyecto existente
+            console.log("push componente")
             proyectoExistente.componentes.push({
               fecha,
               componente: componente,
+              idNodoC,
+              Codi_parteC,
+              idPadreC,
+              skuC,
               actividades: [
                 {
                   actividad: actividad,
                   frecuencia,
                   entregable,
                   nombre_entregable: nom_entregable,
+                  idNodoA,
+                  Codi_parteA,
+                  idPadreA,
+                  skuA,
                 },
               ],
             });
@@ -104,22 +146,36 @@ const LoadProyect = async (Doc_id,email) => {
         } else {
           //? Agregar un nuevo proyecto con el componente y actividad
           if (proyecto !== "") {
+            console.log("entra al if",componentes)
             obj_proyecto.proyectos?.push({
               proyecto: proyecto,
+              idNodoP,
+              Codi_parteP,
+              idPadreP,
+              skuP,
               componentes: [
                 {
                   fecha,
                   componente: componente,
+                  idNodoC,
+                  Codi_parteC,
+                  idPadreC,
+                  skuC,
                   actividades: [
                     {
                       actividad: actividad,
                       frecuencia,
                       entregable,
                       nombre_entregable: nom_entregable,
+                      idNodoA,
+                      Codi_parteA,
+                      idPadreA,
+                      skuA,
                     },
                   ],
                 },
               ],
+             
             });
           }
         }
@@ -129,15 +185,15 @@ const LoadProyect = async (Doc_id,email) => {
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
-    res.json({ error: error });
+    console.log("el error es",error);
+    // res.json({ error: error });
   }
 };
 
 //todo hacer consulta para proyectos enviando respuesta automatica
 const getProyectName = async (req, res) => {
- 
-  const { search,email } = req.query;
-  console.log("entro",email)
+  const { search, email } = req.query;
+  console.log("entro", email);
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     // localStorage.removeItem(`Proyecto`)
@@ -161,10 +217,10 @@ const getProyectName = async (req, res) => {
 
 //todo hacer consulta para enviar el proyectos
 const getProyect = async (req, res) => {
-  const { search,email } = req.query;
+  const { search, email } = req.query;
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
-    
+
     //? me devuelve todo el objeto
     let proyect;
 

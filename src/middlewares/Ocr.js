@@ -1,12 +1,14 @@
 const sharp = require("sharp");
 const async = require("async");
 const fs = require("fs");
+const fs_extra = require("fs-extra");
 const path = require("path");
 const sleep = require("util").promisify(setTimeout);
 const ComputerVisionClient =
   require("@azure/cognitiveservices-computervision").ComputerVisionClient;
 const ApiKeyCredentials = require("@azure/ms-rest-js").ApiKeyCredentials;
 const axios = require("axios");
+ //const brain = require("brain.js");
 const key = "292641e03431470eb7f5c30132318dd7";
 const endpoint = "https://erpocr.cognitiveservices.azure.com";
 
@@ -19,12 +21,14 @@ async function Ocr(req, res) {
   const { imagen } = req.files;
   const { latitud, longitud } = req.body;
   const { token } = req.body;
+  console.log(imagen);
   let imgs;
   let imagePath;
   let imageBuffer;
   let uploadPath;
   let obj;
   imgs = req.files.imagen;
+  console.log(token);
   uploadPath = `uploads/${imgs.name}`;
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -52,8 +56,8 @@ async function Ocr(req, res) {
       .then(() => {
         // Aquí puedes realizar otras operaciones con la imagen redimensionada
         // o enviar una respuesta al cliente, si es necesario.
-        let municipio 
-        let codepostal
+        let municipio;
+        let codepostal;
         imagePath = "uploads/imagenrender.png";
         imageBuffer = fs.readFileSync("uploads/imagenrender.png");
         let texto = "";
@@ -106,7 +110,6 @@ async function Ocr(req, res) {
                       texto += line.words.map((w) => w.text).join(" ") + " ";
                     }
                   } else {
-                    console.log(texto)
                     obj = {
                       nit: "",
                       numFact: "",
@@ -188,7 +191,21 @@ async function Ocr(req, res) {
                 const noMatch = texto.match(noRegex);
                 const no = noMatch ? noMatch[1].trim() : null;
                 console.log("nit o cc:", no);
-
+                const pathnomimg = path.join(
+                  __dirname,
+                  "../..",
+                  "uploads",
+                  imgs.name
+                );
+                const pathnomimgR = path.join(
+                  __dirname,
+                  "../..",
+                  "uploads",
+                  "imagenrender.png"
+                );
+                console.log(pathnomimg);
+                console.log(pathnomimgR);
+                //eliminar(file)
                 obj = {
                   nit: no,
                   numFact: codigo,
@@ -202,6 +219,9 @@ async function Ocr(req, res) {
                   municipio: municipio,
                   codepostal: codepostal,
                 };
+                console.log(texto)
+                eliminar(pathnomimg);
+                eliminar(pathnomimgR);
               }
               res.json(obj);
             }
@@ -214,6 +234,14 @@ async function Ocr(req, res) {
       });
   });
 
+  const eliminar = async (file) => {
+    if (fs_extra.existsSync(file)) {
+      await fs_extra.unlink(file);
+    } else {
+      console.log("El archivo no existe:", file);
+    }
+  };
+
   const ubicacion = async () => {
     try {
     } catch (error) {
@@ -221,6 +249,51 @@ async function Ocr(req, res) {
       return null;
     }
   };
+
+//   // Función para entrenar el modelo
+// async function trainModel() {
+//   // Aquí deberías utilizar un algoritmo de aprendizaje automático
+//   // para entrenar el modelo en base a trainingData.
+//   // Puedes usar bibliotecas como TensorFlow, PyTorch o scikit-learn
+//   // para crear y entrenar tu modelo.
+
+//   // Datos de entrenamiento (texto_extraído, número_de_factura)
+// const trainingData = [
+//   { input: "Texto de la imagen 1", output: "123456" },
+//   { input: "Texto de la imagen 2", output: "987654" }
+// ];
+
+// // Crear una instancia de red neuronal
+// const net = new brain.recurrent.LSTM();
+
+// // Formatear los datos para la red neuronal
+// const formattedData = trainingData.map(data => ({
+//   input: data.input,
+//   output: data.output
+// }));
+
+// // Entrenar el modelo
+// net.train(formattedData);
+
+
+
+// // Ejemplo de uso
+// const extractedText = "Texto extraído de una imagen";
+// const predictedInvoiceNumber = predictInvoiceNumber(extractedText);
+
+// console.log("Número de factura predicho:", predictedInvoiceNumber);
+
+//   // Retorna el modelo entrenado
+//   return trainedModel;
+// }
+// // Función para predecir el número de factura dado el texto
+// function predictInvoiceNumber(text) {
+//   const output = net.run(text);
+//   return output;
+// }
+
+
+
 }
 
 module.exports = Ocr;

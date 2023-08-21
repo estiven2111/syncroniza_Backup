@@ -165,8 +165,7 @@ passport.use(
       resource: "https://graph.microsoft.com/",
     },
     (accessToken, refreshToken, params, profile, done) => {
-      console.log("profile", profile);
-      console.log("params", params);
+      // console.log("token", accessToken);
      
       // aca puede realizar acciones para obtener los datos de los usuarios
       //para enviar ala base datos o lo que desee y se pueda hacer

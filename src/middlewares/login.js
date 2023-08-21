@@ -39,10 +39,11 @@ const login = async (req, res) => {
       // Generar y devolver un token JWT aquí
       const secretKey = "my_secret";
       const token = jwt.sign({ userEmail: usuario.Email }, secretKey, {
-        expiresIn: "12h",
+        expiresIn: "1m",
       });
+      console.log(usuario.Doc_id)
       LoadProyect(usuario.Doc_id,usuario.Email);
-      res.json({ token, userEmail: usuario.Email, userName: usuario.Nombre });
+      res.json({ token, userEmail: usuario.Email, userName: usuario.Nombre, doc_empleado:usuario.Doc_id });
     } catch (error) {
       console.error("Error al autenticar al usuario:", error);
       res.status(500).json({ message: "Error de servidor" });
