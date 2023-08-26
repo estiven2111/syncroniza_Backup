@@ -42,6 +42,7 @@ const dashboard = async (req, res) => {
     user,
     tipo,
     ActualizarProyecto,
+    SendDatosOcr
   } = req.body;
 
   //   const {
@@ -71,7 +72,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarProyecto);
+          users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr);
          
           res.send("Datos guardados")
         } else {
@@ -110,7 +111,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
   console.log("el token es ", token);
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
@@ -173,17 +174,32 @@ const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => 
              sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
             
-            const ActualizarProyecto = {}
-            ActualizarProyecto.SKU_Proyecto ="sku"
-            ActualizarProyecto.NitCliente =  "nit"
-            ActualizarProyecto.idNodoProyecto = 13
-            ActualizarProyecto.idProceso = 4
-            ActualizarProyecto.N_DocumentoEmpleado = "333333"
-            ActualizarProyecto.NumeroEntregable = 1
-            ActualizarProyecto.URLArchivo = sharedUrl;
-            ActualizarProyecto.Fecha = "20230805 10:00:00"
-            console.log("el obteto es esteeeee",ActualizarProyecto)
-            insertInto(ActualizarProyecto)
+           
+            // const ActualizarProyecto = {}
+            if (tipo === "OCR") {
+              ActualizarProyecto.URLArchivo = sharedUrl;
+              // ActualizarProyecto.SKU_Proyecto ="sku"
+              // ActualizarProyecto.NitCliente =  "nit"
+              // ActualizarProyecto.idNodoProyecto = 13
+              // ActualizarProyecto.idProceso = 4
+              // ActualizarProyecto.N_DocumentoEmpleado = "333333"
+              // ActualizarProyecto.NumeroEntregable = 1
+              // ActualizarProyecto.Fecha = "20230805 10:00:00"
+              // console.log("el obteto es esteeeee",ActualizarProyecto)
+              insertInto(ActualizarProyecto,tipo)
+            }
+            if (tipo === "entregable") {
+              SaveDatos.URLArchivo = sharedUrl;
+              // ActualizarProyecto.SKU_Proyecto ="sku"
+              // ActualizarProyecto.NitCliente =  "nit"
+              // ActualizarProyecto.idNodoProyecto = 13
+              // ActualizarProyecto.idProceso = 4
+              // ActualizarProyecto.N_DocumentoEmpleado = "333333"
+              // ActualizarProyecto.NumeroEntregable = 1
+              // ActualizarProyecto.Fecha = "20230805 10:00:00"
+              console.log("el obteto es esteeeee",SaveDatos)
+              insertInto(SaveDatos,tipo)
+            }
             // SKU_Proyecto,
             // NitCliente,
             // idNodoProyecto,
@@ -204,40 +220,89 @@ const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => 
   return sharedUrl;
 };
 
-const insertInto = async(data) =>{
+const insertInto = async(data,tipo) =>{
 
- try {
-  await sequelize.query(
-    `INSERT INTO TBL_SER_ProyectoActividadesEmpleadosEntregables
-    ([SKU_Proyecto]
-    ,[NitCliente]
-    ,[idNodoProyecto]
-    ,[idProceso]
-    ,[N_DocumentoEmpleado]
-    ,[NumeroEntregable]
-    ,[URLArchivo]
-    ,[Fecha])
-VALUES
-    ('${data.SKU_Proyecto}',
-    '${data.NitCliente}',
-    ${data.idNodoProyecto},
-    ${data.idProceso},
-    '${data.N_DocumentoEmpleado}',
-    '${data.NumeroEntregable}',
-     '${data.URLArchivo}',
-     '${data.Fecha}')
-`
-  );
+ switch (tipo) {
+  case "OCR":
+    
+  try {
+    await sequelize.query(
+      `INSERT INTO TBL_SER_ProyectoActividadesEmpleadosEntregables
+      ([SKU_Proyecto]
+      ,[NitCliente]
+      ,[idNodoProyecto]
+      ,[idProceso]
+      ,[N_DocumentoEmpleado]
+      ,[NumeroEntregable]
+      ,[URLArchivo]
+      ,[Fecha])
+  VALUES
+      ('${data.SKU_Proyecto}',
+      '${data.NitCliente}',
+      ${data.idNodoProyecto},
+      ${data.idProceso},
+      '${data.N_DocumentoEmpleado}',
+      '${data.NumeroEntregable}',
+       '${data.URLArchivo}',
+       '${data.Fecha}')
+  `
+    );
+  
+    await sequelize.query( 
+      `
+      UPDATE TBL_SER_EntregablesActividad
+  SET Subido = 1
+  WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
+      `
+    )
+   } catch (error) {
+    console.log(eror)
+   }
 
-  await sequelize.query( 
+
+    break;
+
+    case "entregable":
+
+    try {
+
+      await sequelize.query(
+        `INSERT INTO TBL_SER_ProyectoActividadesEmpleadosEntregables
+        ([SKU_Proyecto]
+        ,[NitCliente]
+        ,[idNodoProyecto]
+        ,[idProceso]
+        ,[N_DocumentoEmpleado]
+        ,[NumeroEntregable]
+        ,[URLArchivo]
+        ,[Fecha])
+    VALUES
+        ('${data.SKU_Proyecto}',
+        '${data.NitCliente}',
+        ${data.idNodoProyecto},
+        ${data.idProceso},
+        '${data.N_DocumentoEmpleado}',
+        '${data.NumeroEntregable}',
+         '${data.URLArchivo}',
+         '${data.Fecha}')
     `
-    UPDATE TBL_SER_EntregablesActividad
-SET Subido = 1
-WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
-    `
-  )
- } catch (error) {
-  console.log(eror)
+      );
+    
+      await sequelize.query( 
+        `
+        UPDATE TBL_SER_EntregablesActividad
+    SET Subido = 1
+    WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
+        `
+      )
+      
+    } catch (error) {
+      console.log(eror)
+    }
+      break;
+ 
+  default:
+    break;
  }
 }
 

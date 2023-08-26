@@ -61,7 +61,14 @@ const LoadProyect = async (Doc_id, email) => {
       const entrega = await sequelize.query(
         `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
       );
-      const nomEntregable = entrega[0]?.map((nom) => nom.Nombre);
+      const nomEntregable = entrega[0]?.map((nom) => {
+        return {
+          id_proceso:nom.id_Proceso,
+          Numero:nom.Numero,
+          Nom_Entregable:nom.Nombre,
+          subido:nom.Subido,
+        }
+      });
       
       if (proyect[0][0].TipoParte === "Actividad") {
         actividad = proyect[0][0].Nombre;

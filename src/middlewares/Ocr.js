@@ -112,6 +112,7 @@ async function Ocr(req, res) {
                       console.log(texto)
                     }
                   } else {
+                    //!  CENTRO DE COSTOS EN DONDE LLEGA
                     obj = {
                       nit: "",
                       numFact: "",
