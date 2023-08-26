@@ -133,6 +133,7 @@ const dashboard = async (req, res) => {
 
 const moveupload = (tipo, imgs, uploadPath, user, token) => {
   console.log("el token es ", token);
+  let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
@@ -190,7 +191,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token) => {
           const sharedResponse = JSON.parse(shareBody);
           console.log("aca vamos 3");
           if (sharedResponse.link && sharedResponse.link.webUrl) {
-            const sharedUrl = sharedResponse.link.webUrl;
+             sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
             eliminar(file);
             return sharedUrl;
@@ -202,6 +203,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token) => {
     });
     //TODO este
   });
+  return sharedUrl;
 };
 
 const insertInto = async(data) =>{
