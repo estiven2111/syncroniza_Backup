@@ -86,7 +86,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token);
+          users = await moveupload(tipo, imgs, uploadPath, user, token,objTable);
           console.log("urlssssssssssss",users)
           objTable.URLArchivo = users
           console.log("objetooooooooooo",objTable.URLArchivo)
@@ -110,11 +110,8 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            users = await moveupload(tipo, imgs, uploadPath, user, token);
-            console.log("urlssssssssssss",users)
-            objTable.URLArchivo = users
-          console.log("objetooooooooooo",objTable.URLArchivo)
-          // insertInto(objTable)
+            users = await moveupload(tipo, imgs, uploadPath, user, token,objTable);
+          
           } catch (error) {
             console.error("aca2", err);
             res.json({ error });
@@ -131,7 +128,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,objTable) => {
   console.log("el token es ", token);
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
@@ -193,6 +190,8 @@ const moveupload = (tipo, imgs, uploadPath, user, token) => {
           if (sharedResponse.link && sharedResponse.link.webUrl) {
              sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
+            objTable.URLArchivo = sharedUrl;
+            console.log("el obteto es esteeeee",objTable)
             eliminar(file);
             return sharedUrl;
           } else {
