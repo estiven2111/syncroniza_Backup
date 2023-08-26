@@ -110,7 +110,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => {
   console.log("el token es ", token);
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
@@ -173,7 +173,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto) => {
              sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
             
-            
+            const ActualizarProyecto = {}
             ActualizarProyecto.SKU_Proyecto ="sku"
             ActualizarProyecto.NitCliente =  "nit"
             ActualizarProyecto.idNodoProyecto = 13
