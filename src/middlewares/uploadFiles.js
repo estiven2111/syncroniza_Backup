@@ -223,7 +223,7 @@ VALUES
     ${data.idNodoProyecto},
     ${data.idProceso},
     '${data.N_DocumentoEmpleado}',
-    ${data.Nom_Entregable},
+    '${data.Nom_Entregable}',
      '${data.URLArchivo}',
      '${data.Fecha}')
 `
