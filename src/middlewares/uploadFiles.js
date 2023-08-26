@@ -73,7 +73,7 @@ const dashboard = async (req, res) => {
           uploadPath = `uploads/${imgs.name}`;
           users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarProyecto);
          
-          res.send("datos guardados")
+          res.send("Datos guardados")
         } else {
           res.json({ msg: "suba una imagen" });
         }
@@ -93,7 +93,7 @@ const dashboard = async (req, res) => {
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
             users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarProyecto);
-            res.send("datos guardados")
+            res.send("Datos guardados")
           } catch (error) {
             console.error("aca2", err);
             res.json({ error });
@@ -177,9 +177,9 @@ const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => 
             ActualizarProyecto.SKU_Proyecto ="sku"
             ActualizarProyecto.NitCliente =  "nit"
             ActualizarProyecto.idNodoProyecto = 13
-            ActualizarProyecto.idProceso = 32
+            ActualizarProyecto.idProceso = 4
             ActualizarProyecto.N_DocumentoEmpleado = "333333"
-            ActualizarProyecto.Nom_Entregable = 1
+            ActualizarProyecto.NumeroEntregable = 1
             ActualizarProyecto.URLArchivo = sharedUrl;
             ActualizarProyecto.Fecha = "20230805 10:00:00"
             console.log("el obteto es esteeeee",ActualizarProyecto)
@@ -214,7 +214,7 @@ const insertInto = async(data) =>{
     ,[idNodoProyecto]
     ,[idProceso]
     ,[N_DocumentoEmpleado]
-    ,[Nom_Entregable]
+    ,[NumeroEntregable]
     ,[URLArchivo]
     ,[Fecha])
 VALUES
@@ -223,11 +223,19 @@ VALUES
     ${data.idNodoProyecto},
     ${data.idProceso},
     '${data.N_DocumentoEmpleado}',
-    '${data.Nom_Entregable}',
+    '${data.NumeroEntregable}',
      '${data.URLArchivo}',
      '${data.Fecha}')
 `
   );
+
+  await sequelize.query( 
+    `
+    UPDATE TBL_SER_EntregablesActividad
+SET Subido = 1
+WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
+    `
+  )
  } catch (error) {
   console.log(eror)
  }
