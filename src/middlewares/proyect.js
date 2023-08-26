@@ -3,13 +3,14 @@ const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
 
+
 const LoadProyect = async (Doc_id, email) => {
   //? se piden los datos del usuario en el localStorage
   // const user = JSON.parse(localStorage.getItem("user"));
   //? se selecciona los idNodo para saber que proyectos tiene el usuario
   try {
     const idnodo = await sequelize.query(
-      `SELECT idNodoProyecto FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id} `
+      `SELECT idNodoProyecto FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id} and Terminada = 0 `
     );
 
     let proyect;
@@ -39,7 +40,7 @@ const LoadProyect = async (Doc_id, email) => {
       let fecha = "";
       let frecuencia = 0;
       let entregable = false;
-
+        let nitCliente = "";
       let Codi_parteP = "";
       let idNodoP = "";
       let idPadreP = ""
@@ -61,6 +62,7 @@ const LoadProyect = async (Doc_id, email) => {
         `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
       );
       const nomEntregable = entrega[0]?.map((nom) => nom.Nombre);
+      
       if (proyect[0][0].TipoParte === "Actividad") {
         actividad = proyect[0][0].Nombre;
         frecuencia = Cod_parte[0][0].FrecuenciaVeces;
@@ -85,6 +87,7 @@ const LoadProyect = async (Doc_id, email) => {
           Codi_parteC = tipoParte[0][0].Cod_parte;
           idPadreC = tipoParte[0][0].idPadre;
           skuC = tipoParte[0][0].SKU
+          nitCliente = tipoParte[0][0].NitCliente
         }
         if (tipoParte[0][0].TipoParte === "Cabecera") {
           proyecto = tipoParte[0][0].Nombre;
@@ -153,6 +156,7 @@ const LoadProyect = async (Doc_id, email) => {
               Codi_parteP,
               idPadreP,
               skuP,
+              nitCliente,
               componentes: [
                 {
                   fecha,
@@ -225,55 +229,59 @@ const getProyect = async (req, res) => {
     let proyect;
 
     proyect = proyects.proyectos.filter((obj) => {
-      return obj.proyecto.includes(search.toUpperCase());
+      return  obj.proyecto.includes(search.toUpperCase());
     });
+
     res.json(proyect);
   } catch (error) {
     res.json({ error: error });
   }
 };
 
+
+//todo endpoint para agregar horas de los proyectos
 const registerActivities = async (req, res) => {
+
   const {
-    inicio,
-    fin,
-    HParcial,
-    fecha,
-    proyect,
-    component,
-    activity,
-    finished,
-    email,
-    user,
+    SKU_Proyecto,
+    NitCliente,
+    DocumentoEmpleado,
+    idNodoProyecto,
+    idNodoActividad,
+    Cod_Parte,
+    FechaRegistro,
+    FechaInicio,
+    FechaFinal,
+    DuracionHoras,
   } = req.body;
   try {
     await sequelize.query(
-      `INSERT INTO [dbo].[TBL_SER_RegistroActividades]
-      ([Nombre_usuario]
-      ,[email_usuario]
-      ,[Nombre_Proyecto]
-      ,[Nombre_Componente]
-      ,[Nombre_actividad]
-      ,[Fecha]
-      ,[Hora_Inicio]
-      ,[Hora_Fin]
-      ,[Hora_Total]
-      ,[finished])
+      `INSERT INTO [dbo].[TBL_SER_ReporteHorasActividadEmpleado]
+      ([SKU_Proyecto]
+      ,[NitCliente]
+      ,[DocumentoEmpleado]
+      ,[idNodoProyecto]
+      ,[idNodoActividad]
+      ,[Cod_Parte]
+      ,[FechaRegistro]
+      ,[FechaInicio]
+      ,[FechaFinal]
+      ,[DuracionHoras])
   VALUES
-      ('${email}',
-      '${user}',
-      '${proyect}',
-      '${component}',
-      '${activity}',
-      '${fecha}',
-       ${inicio},
-       ${fin},
-       ${HParcial},
-       '${finished}')
+      ('${SKU_Proyecto}',
+      '${NitCliente}',
+      '${DocumentoEmpleado}',
+      ${idNodoProyecto},
+      ${idNodoActividad},
+      ${Cod_Parte},
+       '${FechaRegistro}',
+       '${FechaInicio}',
+       '${FechaFinal}',
+       ${DuracionHoras})
   `
     );
     const hours = await sequelize.query(
-      `SELECT SUM(Hora_Total) as horas FROM TBL_SER_RegistroActividades where Nombre_actividad = '${activity}'AND Nombre_Proyecto = '${proyect}'`
+      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
     );
 
     TotalH = parseFloat(hours[0][0].horas).toFixed(2);
@@ -283,13 +291,14 @@ const registerActivities = async (req, res) => {
   }
 };
 
+
+//todo devuelve la sumatoria de las actividades
 const hourActivities = async (req, res) => {
   try {
-    const { activity, proyect } = req.query;
-    console.log(activity, proyect);
-
+    const { idNodoProyecto, idNodoActividad } = req.query;
+console.log(idNodoProyecto, idNodoActividad)
     const hours = await sequelize.query(
-      `SELECT SUM(Hora_Total) as horas FROM TBL_SER_RegistroActividades where Nombre_actividad = '${activity}'AND Nombre_Proyecto = '${proyect}'`
+      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
     );
     const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
     res.json(TotalH);
@@ -298,6 +307,29 @@ const hourActivities = async (req, res) => {
   }
 };
 
+const updateProyecto = async(req,res) =>{
+const {finished,idNodoProyecto,SKU_Proyecto,doc_id,email} = req.body
+ try {
+  await sequelize.query(
+    `
+    UPDATE TBL_SER_ProyectoActividadesEmpleados
+   SET Terminada = ${finished}
+   WHERE idNodoProyecto = ${idNodoProyecto} and SKU_Proyecto = ${SKU_Proyecto};
+    `
+  )
+localStorage.removeItem(`${email}Proyecto`);
+ await LoadProyect(doc_id, email)
+  
+ res.send("actualizacion exitosa")
+ } catch (error) {
+   console.log(error)
+   res.send("error en la actualizacion")
+ }
+}
+
+
+
+//todo desloguea el usuario 
 const logout = (req, res) => {
   const { email } = req.query;
   try {
@@ -317,5 +349,6 @@ module.exports = {
   LoadProyect,
   registerActivities,
   hourActivities,
+  updateProyecto,
   logout,
 };

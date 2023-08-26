@@ -101,6 +101,7 @@ async function Ocr(req, res) {
                 console.log("Recognized text:");
 
                 for (const page in readResults) {
+                  console.log("page:" + page)
                   if (readResults.length > 1) {
                     console.log(`==== Page: ${page}`);
                   }
@@ -108,6 +109,7 @@ async function Ocr(req, res) {
                   if (result.lines.length) {
                     for (const line of result.lines) {
                       texto += line.words.map((w) => w.text).join(" ") + " ";
+                      console.log(texto)
                     }
                   } else {
                     obj = {
@@ -123,7 +125,8 @@ async function Ocr(req, res) {
                       municipio: municipio,
                       codepostal: codepostal,
                     };
-                    res.send;
+                    console.log(obj)
+                    res.send(obj);
                   }
                 }
                 // await fs.unlink(uploadPath);
