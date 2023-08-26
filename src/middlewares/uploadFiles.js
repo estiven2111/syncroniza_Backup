@@ -69,8 +69,7 @@ const dashboard = async (req, res) => {
     idProceso,
     N_DocumentoEmpleado,
     NumeroEntregable,
-    Fecha,
-    URLArchivo
+    Fecha
   };
   
   console.log("tipooo", tipo);
