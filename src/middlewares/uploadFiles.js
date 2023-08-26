@@ -179,7 +179,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => 
             ActualizarProyecto.idNodoProyecto = 13
             ActualizarProyecto.idProceso = 25
             ActualizarProyecto.N_DocumentoEmpleado = "333333"
-            ActualizarProyecto.NumeroEntregable = 2
+            ActualizarProyecto.Nom_Entregable = "nombre entregable"
             ActualizarProyecto.URLArchivo = sharedUrl;
             ActualizarProyecto.Fecha = "20230805 10:00:00"
             console.log("el obteto es esteeeee",ActualizarProyecto)
@@ -214,7 +214,7 @@ const insertInto = async(data) =>{
     ,[idNodoProyecto]
     ,[idProceso]
     ,[N_DocumentoEmpleado]
-    ,[NumeroEntregable]
+    ,[Nom_Entregable]
     ,[URLArchivo]
     ,[Fecha])
 VALUES
@@ -223,7 +223,7 @@ VALUES
     ${data.idNodoProyecto},
     ${data.idProceso},
     '${data.N_DocumentoEmpleado}',
-    ${data.NumeroEntregable},
+    ${data.Nom_Entregable},
      '${data.URLArchivo}',
      '${data.Fecha}')
 `
