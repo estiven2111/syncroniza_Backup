@@ -41,13 +41,7 @@ const dashboard = async (req, res) => {
   const {
     user,
     tipo,
-    SKU_Proyecto,
-    NitCliente,
-    idNodoProyecto,
-    idProceso,
-    N_DocumentoEmpleado,
-    NumeroEntregable,
-    Fecha,
+    ActualizarProyecto,
   } = req.body;
 
   //   const {
@@ -62,15 +56,6 @@ const dashboard = async (req, res) => {
   //   } = req.params
   // //ActualizarProyecto
   //TODO creo un objeto con los valores que me llegan por el body
-  const objTable = {
-    SKU_Proyecto,
-    NitCliente,
-    idNodoProyecto,
-    idProceso,
-    N_DocumentoEmpleado,
-    NumeroEntregable,
-    Fecha
-  };
   
   console.log("tipooo", tipo);
   let token = req.user.accessToken;
@@ -86,11 +71,8 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token,objTable);
-          console.log("urlssssssssssss",users)
-          objTable.URLArchivo = users
-          console.log("objetooooooooooo",objTable.URLArchivo)
-          // insertInto(objTable)
+          users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarProyecto);
+         
           res.send("datos guardados")
         } else {
           res.json({ msg: "suba una imagen" });
@@ -110,8 +92,8 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            users = await moveupload(tipo, imgs, uploadPath, user, token,objTable);
-          
+            users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarProyecto);
+            res.send("datos guardados")
           } catch (error) {
             console.error("aca2", err);
             res.json({ error });
@@ -128,7 +110,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token,objTable) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto) => {
   console.log("el token es ", token);
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
@@ -190,8 +172,25 @@ const moveupload = (tipo, imgs, uploadPath, user, token,objTable) => {
           if (sharedResponse.link && sharedResponse.link.webUrl) {
              sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
-            objTable.URLArchivo = sharedUrl;
-            console.log("el obteto es esteeeee",objTable)
+            
+            
+            ActualizarProyecto.SKU_Proyecto ="sku"
+            ActualizarProyecto.NitCliente =  "nit"
+            ActualizarProyecto.idNodoProyecto = 13
+            ActualizarProyecto.idProceso = 25
+            ActualizarProyecto.N_DocumentoEmpleado = "333333"
+            ActualizarProyecto.NumeroEntregable = 2
+            ActualizarProyecto.URLArchivo = sharedUrl;
+            ActualizarProyecto.Fecha = "20230805 10:00:00"
+            console.log("el obteto es esteeeee",ActualizarProyecto)
+            insertInto(ActualizarProyecto)
+            // SKU_Proyecto,
+            // NitCliente,
+            // idNodoProyecto,
+            // idProceso,
+            // N_DocumentoEmpleado,
+            // NumeroEntregable,
+            // Fecha,
             eliminar(file);
             return sharedUrl;
           } else {
