@@ -177,9 +177,9 @@ const moveupload = (tipo, imgs, uploadPath, user, token,ActualizarProyecto1) => 
             ActualizarProyecto.SKU_Proyecto ="sku"
             ActualizarProyecto.NitCliente =  "nit"
             ActualizarProyecto.idNodoProyecto = 13
-            ActualizarProyecto.idProceso = 25
+            ActualizarProyecto.idProceso = 32
             ActualizarProyecto.N_DocumentoEmpleado = "333333"
-            ActualizarProyecto.Nom_Entregable = "nombre entregable"
+            ActualizarProyecto.Nom_Entregable = 1
             ActualizarProyecto.URLArchivo = sharedUrl;
             ActualizarProyecto.Fecha = "20230805 10:00:00"
             console.log("el obteto es esteeeee",ActualizarProyecto)
