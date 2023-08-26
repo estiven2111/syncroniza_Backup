@@ -90,7 +90,7 @@ const dashboard = async (req, res) => {
           console.log("urlssssssssssss",users)
           objTable.URLArchivo = users
           console.log("objetooooooooooo",objTable.URLArchivo)
-          insertInto(objTable)
+          // insertInto(objTable)
           res.send("datos guardados")
         } else {
           res.json({ msg: "suba una imagen" });
@@ -114,7 +114,7 @@ const dashboard = async (req, res) => {
             console.log("urlssssssssssss",users)
             objTable.URLArchivo = users
           console.log("objetooooooooooo",objTable.URLArchivo)
-          insertInto(objTable)
+          // insertInto(objTable)
           } catch (error) {
             console.error("aca2", err);
             res.json({ error });
