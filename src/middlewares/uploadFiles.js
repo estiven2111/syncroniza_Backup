@@ -49,6 +49,13 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable)
   }
+  if (req.files) {
+    for (const key in req.files) {
+      const archivo = req.files[key];
+    console.log(archivo.name.split("-")[0])
+    console.log(archivo.name.split("-")[1])
+    }
+  }
   // let obj = {};
   // if (ActualizarEntregable) {
   //   const {
@@ -113,13 +120,14 @@ const dashboard = async (req, res) => {
       if (req.files) {
         for (const key in req.files) {
           const archivo = req.files[key];
+          obj_ActualizarEntregable.NumeroEntregable = archivo.name.split("-")[0]
           try {
             let imgs;
             let imagePath;
             let imageBuffer;
             let uploadPath;
             imgs = archivo;
-            uploadPath = `uploads/${archivo.name}`;
+            uploadPath = `uploads/${archivo.name.split("-")[1]}`;
             users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
             res.send("Datos guardados")
           } catch (error) {
@@ -325,7 +333,7 @@ const insertInto = async(data,tipo) =>{
         '${data.nitCliente}',
         ${data.idNodoProyecto},
         ${data.idProceso},
-        '${data.N_DocumentoEmpleado}',
+        '${data.DocumentoEmpleado}',
         '${data.NumeroEntregable}',
          '${data.URLArchivo}',
          '${data.Fecha}')
