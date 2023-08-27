@@ -127,7 +127,7 @@ const dashboard = async (req, res) => {
             let imageBuffer;
             let uploadPath;
             imgs = archivo;
-            uploadPath = `uploads/${archivo.name.split("-")[1]}`;
+            uploadPath = `uploads/${archivo.name}`;
             users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
             res.send("Datos guardados")
           } catch (error) {
