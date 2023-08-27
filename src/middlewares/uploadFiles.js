@@ -178,7 +178,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
            
             // const ActualizarProyecto = {}
             if (tipo === "OCR") {
-              ActualizarProyecto.URLArchivo = sharedUrl;
+              SaveDatos.URLArchivo = sharedUrl;
               // ActualizarProyecto.SKU_Proyecto ="sku"
               // ActualizarProyecto.NitCliente =  "nit"
               // ActualizarProyecto.idNodoProyecto = 13
@@ -187,10 +187,14 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
               // ActualizarProyecto.NumeroEntregable = 1
               // ActualizarProyecto.Fecha = "20230805 10:00:00"
               // console.log("el obteto es esteeeee",ActualizarProyecto)
-              insertInto(ActualizarProyecto,tipo)
+              insertInto(SaveDatos,tipo)
             }
             if (tipo === "entregable") {
-              SaveDatos.URLArchivo = sharedUrl;
+              console.log("sin agregagar url ",SaveDatos)
+              SaveDatos= {
+                ...SaveDatos,
+                URLArchivo:sharedUrl
+              };
               // ActualizarProyecto.SKU_Proyecto ="sku"
               // ActualizarProyecto.NitCliente =  "nit"
               // ActualizarProyecto.idNodoProyecto = 13
@@ -222,7 +226,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
 };
 
 const insertInto = async(data,tipo) =>{
-  console.log(data)
+  console.log(data.SKU_Proyecto)
  switch (tipo) {
   case "OCR":
     
@@ -295,7 +299,7 @@ const insertInto = async(data,tipo) =>{
         ,[Fecha])
     VALUES
         ('${data.SKU_Proyecto}',
-        '${data.NitCliente}',
+        '${data.nitCliente}',
         ${data.idNodoProyecto},
         ${data.idProceso},
         '${data.N_DocumentoEmpleado}',
