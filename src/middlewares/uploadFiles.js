@@ -39,7 +39,7 @@ const uploadFiles = async (req, res) => {
 
 const dashboard = async (req, res) => {
   
-  const {
+  let {
     user,
     tipo,
     ActualizarEntregable,
