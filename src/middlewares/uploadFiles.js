@@ -45,6 +45,28 @@ const dashboard = async (req, res) => {
     ActualizarEntregable,
     SendDatosOcr
   } = req.body;
+  let obj = {};
+  if (ActualizarEntregable) {
+    const {
+      SKU_Proyecto,
+      NitCliente,
+      idNodoProyecto,
+      idProceso,
+      N_DocumentoEmpleado,
+      NumeroEntregable,
+      Fecha,
+    } = ActualizarEntregable;
+
+    obj = {
+      SKU_Proyecto,
+      NitCliente,
+      idNodoProyecto,
+      idProceso,
+      N_DocumentoEmpleado,
+      NumeroEntregable,
+      Fecha,
+    };
+  }
 
   //   const {
   //     SKU_Proyecto,
@@ -94,7 +116,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarEntregable);
+            users = await moveupload(tipo, imgs, uploadPath, user, token,obj);
             res.send("Datos guardados")
           } catch (error) {
             console.error("aca2", err);
