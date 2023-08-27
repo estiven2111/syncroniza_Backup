@@ -226,7 +226,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
 };
 
 const insertInto = async(data,tipo) =>{
-  console.log(data.SKU_Proyecto)
+  console.log(data)
  switch (tipo) {
   case "OCR":
     
