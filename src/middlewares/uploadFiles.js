@@ -191,10 +191,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
             }
             if (tipo === "entregable") {
               console.log("sin agregagar url ",SaveDatos)
-              SaveDatos= {
-                ...SaveDatos,
-                URLArchivo:sharedUrl
-              };
+              SaveDatos.URLArchivo =sharedUrl;
               // ActualizarProyecto.SKU_Proyecto ="sku"
               // ActualizarProyecto.NitCliente =  "nit"
               // ActualizarProyecto.idNodoProyecto = 13
