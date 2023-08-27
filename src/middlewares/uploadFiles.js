@@ -38,10 +38,11 @@ const uploadFiles = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
+  
   const {
     user,
     tipo,
-    ActualizarProyecto,
+    ActualizarEntregable,
     SendDatosOcr
   } = req.body;
 
@@ -93,7 +94,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarProyecto);
+            users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarEntregable);
             res.send("Datos guardados")
           } catch (error) {
             console.error("aca2", err);
@@ -221,40 +222,56 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
 };
 
 const insertInto = async(data,tipo) =>{
-
+  console.log(data)
  switch (tipo) {
   case "OCR":
     
   try {
     await sequelize.query(
-      `INSERT INTO TBL_SER_ProyectoActividadesEmpleadosEntregables
+      `INSERT INTO TBL_SER_ProyectoAnticiposComprobante
       ([SKU_Proyecto]
       ,[NitCliente]
       ,[idNodoProyecto]
       ,[idProceso]
       ,[N_DocumentoEmpleado]
-      ,[NumeroEntregable]
+      ,[Nombre_Empleado]
+      ,[NumeroComprobante]
       ,[URLArchivo]
-      ,[Fecha])
+      ,[Fecha]
+      ,[FechaComprobante]
+      ,[ValorComprobante]
+      ,[NitComprobante]
+      ,[NombreComprobante]
+      ,[CiudadComprobante]
+      ,[DireccionComprobante]
+      ,[CCostos]
+      ,[idAnticipo]
+      ,[ipc]
+      ,[Sub_Total]
+      )
   VALUES
       ('${data.SKU_Proyecto}',
       '${data.NitCliente}',
       ${data.idNodoProyecto},
       ${data.idProceso},
       '${data.N_DocumentoEmpleado}',
-      '${data.NumeroEntregable}',
+      '${data.Nombre_Empleado}',
+       '${data.NumeroComprobante}',
        '${data.URLArchivo}',
-       '${data.Fecha}')
+       '${data.Fecha}',
+       '${data.FechaComprobante}',
+       ${data.ValorComprobante},
+       '${data.NitComprobante}',
+        '${data.NombreComprobante}',
+        '${data.CiudadComprobante}',
+        '${data.DireccionComprobante}',
+        '${data.CCostos}',
+         ${data.idAnticipo},
+         ${data.ipc},
+       ${data.Sub_Total}
+       )
   `
     );
-  
-    await sequelize.query( 
-      `
-      UPDATE TBL_SER_EntregablesActividad
-  SET Subido = 1
-  WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
-      `
-    )
    } catch (error) {
     console.log(eror)
    }
