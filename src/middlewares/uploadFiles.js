@@ -131,7 +131,7 @@ const dashboard = async (req, res) => {
             users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
             res.send("Datos guardados")
           } catch (error) {
-            console.error("aca2", err);
+            console.error("aca2", error);
             res.json({ error });
           }
         }
