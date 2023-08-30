@@ -315,7 +315,7 @@ console.log(idNodoProyecto, idNodoActividad)
 };
 
 const updateProyecto = async(req,res) =>{
-const {finished,idNodoProyecto,SKU_Proyecto,doc_id,email} = req.body
+const {finished,idNodoProyecto,SKU_Proyecto} = req.body
  try {
   await sequelize.query(
     `
@@ -324,14 +324,21 @@ const {finished,idNodoProyecto,SKU_Proyecto,doc_id,email} = req.body
    WHERE idNodoProyecto = ${idNodoProyecto} and SKU_Proyecto = ${SKU_Proyecto};
     `
   )
-localStorage.removeItem(`${email}Proyecto`);
- await LoadProyect(doc_id, email)
+// localStorage.removeItem(`${email}Proyecto`);
+//  await LoadProyect(doc_id, email)
   
  res.send("actualizacion exitosa")
  } catch (error) {
    console.log(error)
    res.send("error en la actualizacion")
  }
+}
+
+const UpdatProyect = async(req,res) =>{
+  const {doc_id,email} = req.body
+  localStorage.removeItem(`${email}Proyecto`);
+ await LoadProyect(doc_id, email)
+ res.send("Proyeco actualizado")
 }
 
 
@@ -357,5 +364,6 @@ module.exports = {
   registerActivities,
   hourActivities,
   updateProyecto,
+  UpdatProyect,
   logout,
 };
