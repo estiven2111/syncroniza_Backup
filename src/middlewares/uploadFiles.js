@@ -129,7 +129,7 @@ const dashboard = async (req, res) => {
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
             users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
-            res.send("Datos guardados")
+           
           } catch (error) {
             console.error("aca2", error);
             res.json({ error });
@@ -141,7 +141,7 @@ const dashboard = async (req, res) => {
     default:
       break;
   }
-  res.send(users);
+  res.send("Datos guardados")
 };
 
 //? funcion para mover el archivo
