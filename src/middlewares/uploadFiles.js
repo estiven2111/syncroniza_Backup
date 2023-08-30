@@ -120,8 +120,6 @@ const dashboard = async (req, res) => {
       if (req.files) {
         for (const key in req.files) {
           const archivo = req.files[key];
-          obj_ActualizarEntregable.NumeroEntregable = archivo.name.split("-")[0]
-          console.log("imagen entregable numeroooooooooo",obj_ActualizarEntregable.NumeroEntregable)
           try {
             let imgs;
             let imagePath;
@@ -129,7 +127,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
+            await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,archivo.name);
            
           } catch (error) {
             console.error("aca2", error);
@@ -147,7 +145,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
   
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
@@ -225,8 +223,8 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
               insertInto(SaveDatos,tipo)
             }
             if (tipo === "entregable") {
-              console.log("el numero de entregable es ", SaveDatos.NumeroEntregable);
-              console.log("sin agregagar url ",SaveDatos)
+              
+              obj_ActualizarEntregable.NumeroEntregable = archivo.split("-")[0]
               SaveDatos.URLArchivo =sharedUrl;
               // ActualizarProyecto.SKU_Proyecto ="sku"
               // ActualizarProyecto.NitCliente =  "nit"
