@@ -121,6 +121,7 @@ const dashboard = async (req, res) => {
         for (const key in req.files) {
           const archivo = req.files[key];
           obj_ActualizarEntregable.NumeroEntregable = archivo.name.split("-")[0]
+          console.log("imagen entregable numeroooooooooo",obj_ActualizarEntregable.NumeroEntregable)
           try {
             let imgs;
             let imagePath;
@@ -147,7 +148,7 @@ const dashboard = async (req, res) => {
 //? funcion para mover el archivo
 
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
-  console.log("el token es ", token);
+  console.log("el numero de entregable es ", SaveDatos.NumeroEntregable);
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
