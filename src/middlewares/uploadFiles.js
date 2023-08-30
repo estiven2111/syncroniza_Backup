@@ -224,7 +224,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
             }
             if (tipo === "entregable") {
               
-              obj_ActualizarEntregable.NumeroEntregable = archivo.split("-")[0]
+              SaveDatos.NumeroEntregable = archivo.split("-")[0]
               SaveDatos.URLArchivo =sharedUrl;
               // ActualizarProyecto.SKU_Proyecto ="sku"
               // ActualizarProyecto.NitCliente =  "nit"
