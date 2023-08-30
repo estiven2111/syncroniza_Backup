@@ -49,13 +49,13 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable)
   }
-  if (req.files) {
-    for (const key in req.files) {
-      const archivo = req.files[key];
-    console.log(archivo.name.split("-")[0])
-    console.log(archivo.name.split("-")[1])
-    }
-  }
+  // if (req.files) {
+  //   for (const key in req.files) {
+  //     const archivo = req.files[key];
+  //   console.log(archivo.name.split("-")[0])
+  //   console.log(archivo.name.split("-")[1])
+  //   }
+  // }
   // let obj = {};
   // if (ActualizarEntregable) {
   //   const {
