@@ -129,7 +129,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
+            await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable);
            
           } catch (error) {
             console.error("aca2", error);
@@ -148,7 +148,7 @@ const dashboard = async (req, res) => {
 //? funcion para mover el archivo
 
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
-  console.log("el numero de entregable es ", SaveDatos.NumeroEntregable);
+  
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -225,6 +225,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
               insertInto(SaveDatos,tipo)
             }
             if (tipo === "entregable") {
+              console.log("el numero de entregable es ", SaveDatos.NumeroEntregable);
               console.log("sin agregagar url ",SaveDatos)
               SaveDatos.URLArchivo =sharedUrl;
               // ActualizarProyecto.SKU_Proyecto ="sku"
@@ -245,7 +246,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
             // NumeroEntregable,
             // Fecha,
             eliminar(file);
-            return sharedUrl;
+           
           } else {
             console.log("No se pudo obtener la URL de acceso compartida.");
           }
@@ -254,7 +255,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos) => {
     });
     //TODO este
   });
-  return sharedUrl;
+
 };
 
 const insertInto = async(data,tipo) =>{
