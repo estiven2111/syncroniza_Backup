@@ -98,7 +98,7 @@ const dashboard = async (req, res) => {
   // res.send("ok")
   // return
   let users;
-  switch (tipo,req.files) {
+  switch (tipo) {
     case "OCR":
       try {
         if (req.files) {
