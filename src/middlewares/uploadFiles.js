@@ -92,10 +92,10 @@ const dashboard = async (req, res) => {
   // //ActualizarProyecto
   //TODO creo un objeto con los valores que me llegan por el body
   
-  console.log("tipooo", tipo,req.files.imagen);
+  console.log("tipooo", tipo);
   let token = req.user.accessToken;
   let users;
-  switch (tipo) {
+  switch (tipo,req.files) {
     case "OCR":
       try {
         if (req.files) {
