@@ -340,13 +340,13 @@ const insertInto = async(data,tipo) =>{
     `
       );
     
-      await sequelize.query( 
-        `
-        UPDATE TBL_SER_EntregablesActividad
-    SET Subido = 1
-    WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
-        `
-      )
+    //   await sequelize.query( 
+    //     `
+    //     UPDATE TBL_SER_EntregablesActividad
+    // SET Subido = 1
+    // WHERE id_Proceso = ${data.idProceso} and Numero = ${data.NumeroEntregable};
+    //     `
+    //   )
       
     } catch (error) {
       console.log(error)
