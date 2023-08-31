@@ -95,7 +95,7 @@ const dashboard = async (req, res) => {
   console.log("tipooo", tipo);
   let token = req.user.accessToken;
   let users;
-  switch (tipo) {
+  switch (tipo,req.files) {
     case "OCR":
       try {
         if (req.files) {
