@@ -117,6 +117,8 @@ const dashboard = async (req, res) => {
       }
       break;
     case "entregable":
+      console.log("entro al case")
+      console.log(req.files)
       if (req.files) {
         for (const key in req.files) {
           const archivo = req.files[key];
