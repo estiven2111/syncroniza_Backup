@@ -163,6 +163,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
         console.error(err);
         return;
       }
+      console.log("aca vamos ");
       const uploadOptions = {
         url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
         headers: {
@@ -171,14 +172,14 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
         },
         body: data,
       };
-
+      console.log("aca vamos 2");
       // Subir el archivo a OneDrive
       request.put(uploadOptions, async function (err, response, body) {
         if (err) {
           console.error(err);
           return;
         }
-        console.log("aca vamos ");
+       
         const accessUrl = JSON.parse(body)["webUrl"];
         console.log("URL de acceso:", accessUrl);
         const responseBody = JSON.parse(body);
@@ -197,7 +198,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
             scope: "anonymous",
           }),
         };
-        console.log("aca vamos 2");
+       
         request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
             console.error(err);
