@@ -106,7 +106,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = req.files.imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr);
+          users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr,archivo.name);
          
           res.send("Datos guardados")
         } else {
@@ -213,8 +213,8 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
             
            
             // const ActualizarProyecto = {}
-            if (tipo === "OCR") {
-              SaveDatos.URLArchivo = sharedUrl;
+            // if (tipo === "OCR") {
+            //   SaveDatos.URLArchivo = sharedUrl;
               // ActualizarProyecto.SKU_Proyecto ="sku"
               // ActualizarProyecto.NitCliente =  "nit"
               // ActualizarProyecto.idNodoProyecto = 13
@@ -223,8 +223,8 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
               // ActualizarProyecto.NumeroEntregable = 1
               // ActualizarProyecto.Fecha = "20230805 10:00:00"
               // console.log("el obteto es esteeeee",ActualizarProyecto)
-              insertInto(SaveDatos,tipo)
-            }
+            //   insertInto(SaveDatos,tipo)
+            // }
             if (tipo === "entregable") {
               
               SaveDatos.NumeroEntregable = archivo.split("-")[0]
