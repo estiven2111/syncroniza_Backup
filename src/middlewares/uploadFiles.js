@@ -151,7 +151,7 @@ const dashboard = async (req, res) => {
     default:
       break;
   }
- 
+ res.send("archivos enviados correctamente")
 };
 
 //? funcion para mover el archivo
