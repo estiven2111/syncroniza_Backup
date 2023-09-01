@@ -112,7 +112,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr,archivo.name);
+          users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarEntregable,archivo.name);
          
          
           }
