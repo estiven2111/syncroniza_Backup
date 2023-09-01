@@ -102,7 +102,9 @@ const dashboard = async (req, res) => {
     case "OCR":
       try {
         if (req.files) {
-          const { imagen } = req.files;
+          for (const key in req.files) {
+            const { imagen } = req.files[key];
+            console.log(imagen)
           let imgs;
           let imagePath;
           let imageBuffer;
@@ -112,6 +114,8 @@ const dashboard = async (req, res) => {
           users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr,archivo.name);
          
           res.send("Datos guardados")
+          }
+        
         } else {
           res.json({ msg: "suba una imagen" });
         }
@@ -175,7 +179,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
         },
         body: data,
       };
-      console.log("aca vamos 2");
+      console.log("aca vamos 2",uploadOptions);
       // Subir el archivo a OneDrive
       request.put(uploadOptions, async function (err, response, body) {
         if (err) {
