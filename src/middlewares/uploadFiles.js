@@ -43,7 +43,6 @@ const dashboard = async (req, res) => {
     user,
     tipo,
     ActualizarEntregable,
-    SendDatosOcr
   } = req.body;
   let obj_ActualizarEntregable = {}
   if (ActualizarEntregable) {
@@ -111,7 +110,7 @@ const dashboard = async (req, res) => {
           let imagePath;
           let imageBuffer;
           let uploadPath;
-          imgs = req.files.imagen;
+          imgs = imagen;
           uploadPath = `uploads/${imgs.name}`;
           users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr,archivo.name);
          
