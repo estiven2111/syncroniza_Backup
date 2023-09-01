@@ -104,7 +104,9 @@ const dashboard = async (req, res) => {
         if (req.files) {
           for (const key in req.files) {
             const { imagen } = req.files[key];
-            console.log(imagen)
+            console.log("key",key)
+            console.log( "req.files[key]",req.files[key])
+            console.log( "req.files",req.files)
           let imgs;
           let imagePath;
           let imageBuffer;
