@@ -119,6 +119,7 @@ const dashboard = async (req, res) => {
         
         } else {
           res.json({ msg: "suba una imagen" });
+          return
         }
       } catch (error) {
         res.json({ error });
@@ -150,13 +151,13 @@ const dashboard = async (req, res) => {
     default:
       break;
   }
-  res.send("Datos guardados")
+ 
 };
 
 //? funcion para mover el archivo
 
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
-  
+  console.log(uploadPath,"   imagen ruta")
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
