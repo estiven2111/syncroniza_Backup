@@ -114,7 +114,7 @@ const dashboard = async (req, res) => {
           uploadPath = `uploads/${imgs.name}`;
           users = await moveupload(tipo, imgs, uploadPath, user, token,SendDatosOcr,archivo.name);
          
-          res.send("Datos guardados")
+         
           }
         
         } else {
