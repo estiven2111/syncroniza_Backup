@@ -375,6 +375,7 @@ const AnticipoGastos = async (req, res) => {
     Valor: datos.Valor,
     DetalleConcepto:datos.DetalleConcepto,
     IdCentroCostos: datos.IdCentroCostos,
+    sku:datos.SKU
 
   })
   })
