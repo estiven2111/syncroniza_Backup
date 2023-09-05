@@ -215,6 +215,7 @@ async function Ocr(req, res) {
                   numFact: codigo,
                   doc: no,
                   total: cantidad,
+                  totalSinIva:"",
                   nombre: pagadoA,
                   fecha: fecha,
                   iva,
@@ -222,6 +223,7 @@ async function Ocr(req, res) {
                   concepto: valor,
                   municipio: municipio,
                   codepostal: codepostal,
+                  ipc:""
                 };
                 console.log(texto)
                 eliminar(pathnomimg);

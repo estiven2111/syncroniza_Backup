@@ -7,6 +7,7 @@ const {
   registerActivities,
   hourActivities,
   UpdatProyect,
+  AnticipoGastos,
   logout,
   Ocr,
 } = require("../middlewares/index");
@@ -22,6 +23,7 @@ ProyectRouter.get("/hours", hourActivities);//? actualiza las horas en el useEfe
 ProyectRouter.put("/update",updateProyecto)
 ProyectRouter.post("/ocr",Ocr)
 ProyectRouter.put("/updateProyect",UpdatProyect)
+ProyectRouter.post("/anticipo",AnticipoGastos)
 
 //,fileupload({ useTempFiles: true, tempFileDir: "./uploads" })
 module.exports = ProyectRouter;
