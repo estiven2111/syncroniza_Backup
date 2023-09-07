@@ -48,6 +48,7 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable)
   }
+  console.log(obj_ActualizarEntregable)
   // if (req.files) {
   //   for (const key in req.files) {
   //     const archivo = req.files[key];
@@ -377,7 +378,7 @@ const insertInto = async(data,tipo) =>{
     }
   );
    } catch (error) {
-    console.log(eror)
+    console.log(error)
    }
 
 
