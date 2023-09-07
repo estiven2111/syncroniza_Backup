@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 const fileupload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const router = require("./routes/index");
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(fileupload());
 app.use(sequelize);
+app.use(morgan("dev"));
 const path = require("path");
 const fs = require("fs");
 const request = require("request");
