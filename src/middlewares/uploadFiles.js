@@ -112,7 +112,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token,ActualizarEntregable,imgs.name);
+          users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,imgs.name);
          
          
           }
@@ -235,26 +235,11 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
             //   insertInto(SaveDatos,tipo)
             // }
             if (tipo === "entregable") {
-              
               SaveDatos.NumeroEntregable = archivo.split("-")[0]
-              SaveDatos.URLArchivo =sharedUrl;
-              // ActualizarProyecto.SKU_Proyecto ="sku"
-              // ActualizarProyecto.NitCliente =  "nit"
-              // ActualizarProyecto.idNodoProyecto = 13
-              // ActualizarProyecto.idProceso = 4
-              // ActualizarProyecto.N_DocumentoEmpleado = "333333"
-              // ActualizarProyecto.NumeroEntregable = 1
-              // ActualizarProyecto.Fecha = "20230805 10:00:00"
-              console.log("el obteto es esteeeee",SaveDatos)
-              insertInto(SaveDatos,tipo)
             }
-            // SKU_Proyecto,
-            // NitCliente,
-            // idNodoProyecto,
-            // idProceso,
-            // N_DocumentoEmpleado,
-            // NumeroEntregable,
-            // Fecha,
+            SaveDatos.URLArchivo =sharedUrl;
+            console.log(SaveDatos)
+            insertInto(SaveDatos,tipo)
             eliminar(file);
            
           } else {
