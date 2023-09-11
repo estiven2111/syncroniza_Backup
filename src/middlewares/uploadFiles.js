@@ -238,7 +238,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
             if (tipo === "entregable") {
               SaveDatos.NumeroEntregable = archivo.split("-")[0]
             }
-            SaveDatos.URLArchivo =sharedUrl;
+            SaveDatos.URLArchivo = sharedUrl
             console.log(SaveDatos)
             insertInto(SaveDatos,tipo)
             eliminar(file);

@@ -213,12 +213,14 @@ const getProyectName = async (req, res) => {
     // localStorage.removeItem(`Proyecto`)
     let NomProyect;
 
-    NomProyect = proyects.proyectos
+    if (proyects) {
+      NomProyect = proyects.proyectos
       .filter((obj) => obj.proyecto.includes(search.toUpperCase()))
       .map((obj) => obj.proyecto);
 
     if (NomProyect.length <= 0) {
       return res.json("No hay royectos con este nombre ");
+    }
     }
     // const proyect = proyects.proyectos.filter((obj) => {
     //   return obj.proyecto.includes(search);
