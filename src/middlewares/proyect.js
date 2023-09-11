@@ -264,6 +264,7 @@ const registerActivities = async (req, res) => {
     FechaFinal,
     DuracionHoras,
   } = req.body;
+  console.log(req.body)
   try {
     await sequelize.query(
       `INSERT INTO [dbo].[TBL_SER_ReporteHorasActividadEmpleado]
