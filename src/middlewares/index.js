@@ -7,7 +7,8 @@ const {
   hourActivities,
   UpdatProyect,
   AnticipoGastos,
-  logout
+  logout,
+  Entregables
 } = require("./proyect");
 const Ocr = require("./Ocr")
 
@@ -20,5 +21,6 @@ module.exports = {
   UpdatProyect,
   AnticipoGastos,
   logout,
-  Ocr
+  Ocr,
+  Entregables
 };
