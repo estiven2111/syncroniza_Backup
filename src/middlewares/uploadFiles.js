@@ -42,6 +42,7 @@ const dashboard = async (req, res) => {
   let {
     user,
     tipo,
+    token,
     ActualizarEntregable,
   } = req.body;
   let obj_ActualizarEntregable = {}
@@ -93,7 +94,7 @@ const dashboard = async (req, res) => {
   //TODO creo un objeto con los valores que me llegan por el body
   
   console.log("tipooo", tipo);
-  let token = req.user.accessToken;
+  // let token = req.user.accessToken;
   console.log("token en peticion dasboard", token)
   // res.send("ok")
   // return

@@ -209,7 +209,7 @@ userRouter.get(
   }),
   (req, res) => {
     const auth = req.isAuthenticated()
-    const datos = {pass:"pass",token:auth}
+    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
   
     //res.redirect("/user/api/dashboard");
     res.json(datos)
