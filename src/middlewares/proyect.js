@@ -388,7 +388,7 @@ const AnticipoGastos = async (req, res) => {
 
 
 const Entregables = async(req,res) =>{
-const {SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable} =  req.query
+const {SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable,idProceso} =  req.query
 
 console.log(SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable,idProceso)
 // res.send("ok")
