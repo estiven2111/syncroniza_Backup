@@ -418,6 +418,8 @@ try {
 //todo desloguea el usuario
 const logout = (req, res) => {
   const { email } = req.query;
+  req.logout();
+  res.clearCookie(`access_token${email}`);
   try {
     localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");

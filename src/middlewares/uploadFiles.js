@@ -43,6 +43,7 @@ const dashboard = async (req, res) => {
     user,
     tipo,
     token,
+    email,
     ActualizarEntregable,
   } = req.body;
   let obj_ActualizarEntregable = {}
@@ -114,7 +115,7 @@ const dashboard = async (req, res) => {
           let uploadPath;
           imgs = imagen;
           uploadPath = `uploads/${imgs.name}`;
-          users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,imgs.name);
+          users = await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,imgs.name,email);
          
          
           }
@@ -140,7 +141,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,archivo.name);
+            await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,archivo.name,email);
            
           } catch (error) {
             console.error("aca2", error);
@@ -158,8 +159,12 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email) => {
   console.log(uploadPath,"   imagen ruta")
+  const accessToken = req.user.accessToken;
+  res.cookie(`access_token${email}`, accessToken, { httpOnly: true });
+  const nomcookie = `access_token${email}`
+  const token2 = req.cookies.nomcookie;
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -178,7 +183,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
       const uploadOptions = {
         url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + token2,
           "Content-Type": "application/json",
         },
         body: data,
@@ -201,7 +206,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
         const shareOptions = {
           url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
           headers: {
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + token2,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
