@@ -210,6 +210,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
           }),
         };
        
+       try {
         request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
             console.error(err);
@@ -248,6 +249,9 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
             console.log("No se pudo obtener la URL de acceso compartida.");
           }
         });
+       } catch (error) {
+        console.log("el error es ",error)
+       }
       });
     });
 
