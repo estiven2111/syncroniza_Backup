@@ -213,6 +213,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
        try {
         request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
+            console.log("entro al error: " + err.message)
             console.error(err);
             return;
           }
