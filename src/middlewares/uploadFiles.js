@@ -173,11 +173,11 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email)
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
 
-    const onedrive_folder = `${tipo}/${user}`;
+    const onedrive_folder = `${tipo}/${"user"}`;
     const onedrive_filename = path.basename(file);
     // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
 
-    fs.readFile(file, function (err, data) {
+    fs.readFile(file, async function(err, data) {
       if (err) {
         console.error(err);
         return;
@@ -191,9 +191,10 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email)
         },
         body: data,
       };
-      console.log("aca vamos 2",uploadOptions);
       // Subir el archivo a OneDrive
-      request.put(uploadOptions, async function (err, response, body) {
+      try {
+      console.log("aca vamos 2",uploadOptions);
+      await request.put(uploadOptions, async function (err, response, body) {
         if (err) {
           console.error(err);
           return;
@@ -219,7 +220,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email)
         };
        
        try {
-        request.post(shareOptions, function (err, response, shareBody) {
+       await request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
             console.log("entro al error: " + err.message)
             console.error(err);
@@ -262,6 +263,9 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email)
         console.log("el error es ",error)
        }
       });
+    } catch (error) {
+      console.log("el error es primer ",error)
+    }
     });
 
   
