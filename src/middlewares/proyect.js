@@ -418,16 +418,16 @@ try {
 //todo desloguea el usuario
 const logout = (req, res) => {
   const { email } = req.query;
-  req.logout();
+  // req.logout();
 
-  res.clearCookie(`access_token`);
+  // res.clearCookie(`access_token`);
   
   try {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Error al eliminar la sesión:', err);
-      }
-    });
+    // req.session.destroy((err) => {
+    //   if (err) {
+    //     console.error('Error al eliminar la sesión:', err);
+    //   }
+    // });
     localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");
   } catch (error) {
