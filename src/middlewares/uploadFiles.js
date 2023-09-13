@@ -173,7 +173,7 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email)
     if (err) return res.status(500).send(err);
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
 const nomuser = user.split(" ").join("_")
-    const onedrive_folder = `${tipo}/${nomuser}/"user"`;
+    const onedrive_folder = `${tipo}/${nomuser}/user`;
     const onedrive_filename = path.basename(file);
     // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
 
