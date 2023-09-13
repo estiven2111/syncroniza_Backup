@@ -42,7 +42,6 @@ const dashboard = async (req, res) => {
   let {
     user,
     tipo,
-    token,
     email,
     ActualizarEntregable,
   } = req.body;
@@ -141,6 +140,7 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
+            const token = req.user.accessToken;
             await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,archivo.name,email);
            
           } catch (error) {
@@ -161,8 +161,8 @@ const dashboard = async (req, res) => {
 
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email) => {
   console.log(uploadPath,"   imagen ruta")
-  const accessToken = req.user.accessToken;
-  res.cookie(`access_token${email}`, accessToken, { httpOnly: true });
+  
+  res.cookie(`access_token${email}`, token, { httpOnly: true });
   const nomcookie = `access_token${email}`
   const token2 = req.cookies.nomcookie;
   let sharedUrl
