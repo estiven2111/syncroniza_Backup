@@ -419,8 +419,15 @@ try {
 const logout = (req, res) => {
   const { email } = req.query;
   req.logout();
-  res.clearCookie(`access_token${email}`);
+
+  res.clearCookie(`access_token`);
+  
   try {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error al eliminar la sesión:', err);
+      }
+    });
     localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");
   } catch (error) {

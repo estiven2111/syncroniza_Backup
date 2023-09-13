@@ -141,9 +141,10 @@ const dashboard = async (req, res) => {
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
             const token = req.user.accessToken;
-            res.cookie(`access_token${email}`, token, { httpOnly: true });
-  const nomcookie = `access_token${email}`
-  const token2 = req.cookies.nomcookie;
+            req.session.accessToken = token;
+            res.cookie(`access_token`, token, { httpOnly: true });
+  // const nomcookie = `access_token${email}`
+  const token2 = req.cookies.access_token;
             await moveupload(tipo, imgs, uploadPath, user, token2,obj_ActualizarEntregable,archivo.name);
            
           } catch (error) {
