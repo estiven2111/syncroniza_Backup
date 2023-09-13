@@ -95,7 +95,7 @@ const dashboard = async (req, res) => {
   
   console.log("tipooo", tipo);
   // let token = req.user.accessToken;
-  console.log("token en peticion dasboard", token)
+  // console.log("token en peticion dasboard", token)
   // res.send("ok")
   // return
   let users;
