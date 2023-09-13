@@ -43,6 +43,7 @@ const dashboard = async (req, res) => {
     user,
     tipo,
     email,
+    token,
     ActualizarEntregable,
   } = req.body;
   let obj_ActualizarEntregable = {}
@@ -140,12 +141,12 @@ const dashboard = async (req, res) => {
             let uploadPath;
             imgs = archivo;
             uploadPath = `uploads/${archivo.name}`;
-            const token = req.user.accessToken;
-            req.session.accessToken = token;
-            res.cookie(`access_token`, token, { httpOnly: true });
+            // const token = req.user.accessToken;
+            // req.session.accessToken = token;
+            // res.cookie(`access_token`, token, { httpOnly: true });
   // const nomcookie = `access_token${email}`
-  const token2 = req.cookies.access_token;
-            await moveupload(tipo, imgs, uploadPath, user, token2,obj_ActualizarEntregable,archivo.name);
+  // const token2 = req.cookies.access_token;
+            await moveupload(tipo, imgs, uploadPath, user, token,obj_ActualizarEntregable,archivo.name);
            
           } catch (error) {
             console.error("aca2", error);
