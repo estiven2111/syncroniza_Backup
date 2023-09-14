@@ -233,21 +233,6 @@ const nomuser = user.split(" ").join("_")
           if (sharedResponse.link && sharedResponse.link.webUrl) {
              sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
-            
-           
-            // const ActualizarProyecto = {}
-            // if (tipo === "OCR") {
-            //   SaveDatos.URLArchivo = sharedUrl;
-              // ActualizarProyecto.SKU_Proyecto ="sku"
-              // ActualizarProyecto.NitCliente =  "nit"
-              // ActualizarProyecto.idNodoProyecto = 13
-              // ActualizarProyecto.idProceso = 4
-              // ActualizarProyecto.N_DocumentoEmpleado = "333333"
-              // ActualizarProyecto.NumeroEntregable = 1
-              // ActualizarProyecto.Fecha = "20230805 10:00:00"
-              // console.log("el obteto es esteeeee",ActualizarProyecto)
-            //   insertInto(SaveDatos,tipo)
-            // }
             if (tipo === "entregable") {
               SaveDatos.NumeroEntregable = archivo.split("-")[0]
             }
