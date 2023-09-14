@@ -42,7 +42,6 @@ const dashboard = async (req, res) => {
   let {
     user,
     tipo,
-    email,
     token,
     ActualizarEntregable,
   } = req.body;
@@ -164,7 +163,7 @@ const dashboard = async (req, res) => {
 
 //? funcion para mover el archivo
 
-const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo,email) => {
+const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
   console.log(uploadPath,"   imagen ruta")
   
   
@@ -305,7 +304,7 @@ const insertInto = async(data,tipo) =>{
         '${data.CiudadComprobante}',
         '${data.DireccionComprobante}',
         '${data.CCostos}',
-         ${data.idAnticipo},
+         '${data.idAnticipo}',
          ${data.ipc},
        ${data.Sub_Total}
        )
