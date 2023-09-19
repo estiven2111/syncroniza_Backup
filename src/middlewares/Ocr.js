@@ -20,7 +20,6 @@ const computerVisionClient = new ComputerVisionClient(
 async function Ocr(req, res) {
   const { imagen } = req.files;
   const { latitud, longitud } = req.body;
-  const { token } = req.body;
   console.log(imagen);
   let imgs;
   let imagePath;
@@ -42,7 +41,7 @@ async function Ocr(req, res) {
         .toFile(`uploads/imagenrender.png`, (err) => {
           if (err) {
             reject(err);
-            return res.json({"error": err});
+            return res.status(500).send({"error": err});
             
           } else {
             console.log("Imagen redimensionada correctamente.");
@@ -137,7 +136,7 @@ async function Ocr(req, res) {
           async (err) => {
             if (err) {
               console.error(err);
-              return res.json({"error": err});
+              return res.status(500).send({"error": err});
               
             } else {
               let iva;
@@ -237,7 +236,7 @@ async function Ocr(req, res) {
       })
       .catch((error) => {
         // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
-        return res.json({"error": error});
+        return res.status(500).send({"error": error});
          
       });
   });
