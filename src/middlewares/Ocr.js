@@ -28,7 +28,6 @@ async function Ocr(req, res) {
   let uploadPath;
   let obj;
   imgs = req.files.imagen;
-  console.log(token);
   uploadPath = `uploads/${imgs.name}`;
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -238,7 +237,7 @@ async function Ocr(req, res) {
       })
       .catch((error) => {
         // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
-        res.json({"error": err});
+        res.json({"error": error});
               return
       });
   });
