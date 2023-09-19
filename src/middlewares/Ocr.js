@@ -42,8 +42,9 @@ async function Ocr(req, res) {
         .resize(anchoDeseado, altoDeseado, { fit: "inside" })
         .toFile(`uploads/imagenrender.png`, (err) => {
           if (err) {
-            console.error("Error al redimensionar la imagen:", err);
+            res.json({"error": err});
             reject(err);
+            return
           } else {
             console.log("Imagen redimensionada correctamente.");
             resolve();
@@ -237,7 +238,8 @@ async function Ocr(req, res) {
       })
       .catch((error) => {
         // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
-        res.status(500).send("Error al redimensionar la imagen.");
+        res.json({"error": err});
+              return
       });
   });
 
