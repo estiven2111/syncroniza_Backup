@@ -20,6 +20,7 @@ const computerVisionClient = new ComputerVisionClient(
 async function Ocr(req, res) {
   const { imagen } = req.files;
   const { latitud, longitud } = req.body;
+  const { token } = req.body;
   console.log(imagen);
   let imgs;
   let imagePath;
@@ -27,6 +28,7 @@ async function Ocr(req, res) {
   let uploadPath;
   let obj;
   imgs = req.files.imagen;
+  console.log(token);
   uploadPath = `uploads/${imgs.name}`;
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
@@ -40,9 +42,8 @@ async function Ocr(req, res) {
         .resize(anchoDeseado, altoDeseado, { fit: "inside" })
         .toFile(`uploads/imagenrender.png`, (err) => {
           if (err) {
+            console.error("Error al redimensionar la imagen:", err);
             reject(err);
-            return res.status(500).send({"error": err});
-            
           } else {
             console.log("Imagen redimensionada correctamente.");
             resolve();
@@ -136,8 +137,7 @@ async function Ocr(req, res) {
           async (err) => {
             if (err) {
               console.error(err);
-              return res.status(500).send({"error": err});
-              
+              res.status(500).json({ error: "Error al procesar la imagen" });
             } else {
               let iva;
               let rete;
@@ -236,8 +236,7 @@ async function Ocr(req, res) {
       })
       .catch((error) => {
         // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
-        return res.status(500).send({"error": error});
-         
+        res.status(500).send("Error al redimensionar la imagen.");
       });
   });
 
@@ -253,7 +252,7 @@ async function Ocr(req, res) {
     try {
     } catch (error) {
       console.error("Error al obtener el código postal:", error.message);
-      return;
+      return null;
     }
   };
 
