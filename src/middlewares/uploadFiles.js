@@ -120,7 +120,7 @@ const dashboard = async (req, res) => {
           }
         
         } else {
-          res.json({ msg: "suba una imagen" });
+          res.json({ msg: "suba almenos un archivo" });
           return
         }
       } catch (error) {
@@ -152,6 +152,10 @@ const dashboard = async (req, res) => {
             res.json({ error });
           }
         }
+      }else{
+        console.log("no hay archivos")
+        res.json({ msg: "suba almenos un archivo" });
+        return
       }
       break;
 
