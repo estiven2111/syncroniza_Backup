@@ -137,7 +137,8 @@ async function Ocr(req, res) {
           async (err) => {
             if (err) {
               console.error(err);
-              res.json({ error: "Error al procesar la imagen" });
+              res.json({"error": err});
+              return
             } else {
               let iva;
               let rete;
