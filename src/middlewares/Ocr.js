@@ -41,9 +41,9 @@ async function Ocr(req, res) {
         .resize(anchoDeseado, altoDeseado, { fit: "inside" })
         .toFile(`uploads/imagenrender.png`, (err) => {
           if (err) {
-            res.json({"error": err});
             reject(err);
-            return
+            return res.json({"error": err});
+            
           } else {
             console.log("Imagen redimensionada correctamente.");
             resolve();
@@ -137,8 +137,8 @@ async function Ocr(req, res) {
           async (err) => {
             if (err) {
               console.error(err);
-              res.json({"error": err});
-              return
+              return res.json({"error": err});
+              
             } else {
               let iva;
               let rete;
@@ -237,8 +237,8 @@ async function Ocr(req, res) {
       })
       .catch((error) => {
         // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
-        res.json({"error": error});
-              return
+        return res.json({"error": error});
+         
       });
   });
 
@@ -254,7 +254,7 @@ async function Ocr(req, res) {
     try {
     } catch (error) {
       console.error("Error al obtener el código postal:", error.message);
-      return null;
+      return;
     }
   };
 
