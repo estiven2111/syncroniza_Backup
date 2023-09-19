@@ -199,7 +199,7 @@ const LoadProyect = async (Doc_id, email) => {
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
-    console.log("el error es", error);
+    console.log({"error": error});
     // res.json({ error: error });
   }
 };
@@ -227,7 +227,7 @@ const getProyectName = async (req, res) => {
     // });
     res.json(NomProyect);
   } catch (error) {
-    res.json({ error: error });
+    res.json({"error": error});
   }
 };
 
@@ -246,7 +246,7 @@ const getProyect = async (req, res) => {
 
     res.json(proyect);
   } catch (error) {
-    res.json({ error: error });
+    res.json({"error": error});
   }
 };
 
@@ -298,7 +298,7 @@ const registerActivities = async (req, res) => {
     TotalH = parseFloat(hours[0][0].horas).toFixed(2);
     res.json({ horaTotal: TotalH });
   } catch (error) {
-    res.json({ error: error });
+    res.json({"error": error});
   }
 };
 
@@ -313,7 +313,7 @@ const hourActivities = async (req, res) => {
     const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
     res.json(TotalH);
   } catch (error) {
-    res.json({ error: error });
+    res.json({"error": error});
   }
 };
 
@@ -347,19 +347,24 @@ const updateProyecto = async (req, res) => {
     res.send("actualizacion exitosa");
   } catch (error) {
     console.log(error);
-    res.send("error en la actualizacion");
+    res.send({"error": error});
   }
 };
 
 const UpdatProyect = async (req, res) => {
+ try {
   const { doc_id, email } = req.body;
   localStorage.removeItem(`${email}Proyecto`);
   await LoadProyect(doc_id, email);
-  res.send("Proyeco actualizado");
+  res.send("actualizacion exitosa");
+ } catch (error) {
+  res.json({"error": error})
+ }
 };
 
 const AnticipoGastos = async (req, res) => {
-    const {doc,sku} = req.body
+try {
+  const {doc,sku} = req.body
 
   const datos = await sequelize.query(
     `
@@ -384,6 +389,9 @@ const AnticipoGastos = async (req, res) => {
   })
 
   res.send(objDatos)
+} catch (error) {
+  res.json({"error": error})
+}
 };
 
 
@@ -409,7 +417,7 @@ try {
   }
   res.json(entrega)
 } catch (error) {
-  res.json(error)
+  res.json({"error": error})
 }
 
 
@@ -431,7 +439,7 @@ const logout = (req, res) => {
     localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");
   } catch (error) {
-    res.json({ error: error });
+    res.json({"error": error})
   }
 };
 
