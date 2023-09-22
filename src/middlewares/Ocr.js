@@ -33,7 +33,11 @@ async function Ocr(req, res) {
   uploadPath = `uploads/${imgs.name}`;
   console.log(uploadPath,"ruta");
   imgs.mv(`${uploadPath}`, (err) => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.log("el error: " + err.message);
+      return
+      //  res.status(500).send(err)
+    };
 
     const anchoDeseado = 800;
     const altoDeseado = 600;
