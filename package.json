@@ -35,7 +35,7 @@
     "jsonwebtoken": "^9.0.0",
     "mime": "^3.0.0",
     "morgan": "^1.10.0",
-    "ms-rest-azure": "^3.0.2",
+    "ms-rest-azure": "^2.5.7",
     "msgraph-sdk-javascript": "^0.3.1",
     "node-fetch": "^3.3.1",
     "node-localstorage": "^2.2.1",
@@ -46,12 +46,12 @@
     "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
     "request": "^2.88.2",
-    "request-promise": "^4.2.6",
+    "request-promise": "^0.0.1",
     "sequelize": "^6.31.1",
     "sharp": "^0.32.1",
     "tedious": "^16.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.0.1"
   }
 }
