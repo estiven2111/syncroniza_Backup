@@ -173,7 +173,10 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
   
   let sharedUrl
   imgs.mv(`${uploadPath}`, (err) => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.log("error en mv", err)
+      return err
+    };
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
 const nomuser = user.split(" ").join("_")
   const nomfolder  = nomuser.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
