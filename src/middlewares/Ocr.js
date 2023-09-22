@@ -30,8 +30,8 @@ async function Ocr(req, res) {
   let uploadPath;
   let objeto;
   imgs = req.files.imagen;
-  console.log(token);
   uploadPath = `uploads/${imgs.name}`;
+  console.log(uploadPath,"ruta");
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);
 
