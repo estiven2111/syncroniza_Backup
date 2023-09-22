@@ -209,14 +209,14 @@ userRouter.get(
   }),
   (req, res) => {
     const auth = req.isAuthenticated()
-    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
+    const datos = {pass:"pass",token:auth}
   
     //res.redirect("/user/api/dashboard");
     res.json(datos)
   }
 );
-userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
-// userRouter.post("/api/dashboard", dashboard);
+// userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
+userRouter.post("/api/dashboard", dashboard);
 // ensureAuthenticated
 // userRouter.post("/api/register",registerUser)
 

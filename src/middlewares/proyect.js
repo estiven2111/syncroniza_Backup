@@ -3,6 +3,7 @@ const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
 
+
 const LoadProyect = async (Doc_id, email) => {
   //? se piden los datos del usuario en el localStorage
   // const user = JSON.parse(localStorage.getItem("user"));
@@ -29,8 +30,8 @@ const LoadProyect = async (Doc_id, email) => {
 
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
       let idPadre = proyect[0][0].idPadre;
-      let componentes = [];
-      let actividades = [];
+     let componentes = []
+     let actividades = []
       let tipoParte;
       let Parte = idPadre;
       let actividad = "";
@@ -39,16 +40,16 @@ const LoadProyect = async (Doc_id, email) => {
       let fecha = "";
       let frecuencia = 0;
       let entregable = false;
-      let nitCliente = "";
+        let nitCliente = "";
       let Codi_parteP = "";
       let idNodoP = "";
-      let idPadreP = "";
+      let idPadreP = ""
       let Codi_parteC = "";
       let idNodoC = "";
-      let idPadreC = "";
+      let idPadreC = ""
       let Codi_parteA = "";
       let idNodoA = "";
-      let idPadreA = "";
+      let idPadreA = ""
       let skuP = "";
       let skuC = "";
       let skuA = "";
@@ -62,13 +63,13 @@ const LoadProyect = async (Doc_id, email) => {
       );
       const nomEntregable = entrega[0]?.map((nom) => {
         return {
-          id_proceso: nom.id_Proceso,
-          Numero: nom.Numero,
-          Nom_Entregable: nom.Nombre,
-          subido: nom.Subido,
-        };
+          id_proceso:nom.id_Proceso,
+          Numero:nom.Numero,
+          Nom_Entregable:nom.Nombre,
+          subido:nom.Subido,
+        }
       });
-
+      
       if (proyect[0][0].TipoParte === "Actividad") {
         actividad = proyect[0][0].Nombre;
         frecuencia = Cod_parte[0][0].FrecuenciaVeces;
@@ -77,7 +78,7 @@ const LoadProyect = async (Doc_id, email) => {
         idNodoA = proyect[0][0].idNodo;
         Codi_parteA = proyect[0][0].Cod_parte;
         idPadreA = proyect[0][0].idPadre;
-        skuA = proyect[0][0].SKU;
+        skuA = proyect[0][0].SKU
       }
       do {
         tipoParte = await sequelize.query(
@@ -92,16 +93,17 @@ const LoadProyect = async (Doc_id, email) => {
           idNodoC = tipoParte[0][0].idNodo;
           Codi_parteC = tipoParte[0][0].Cod_parte;
           idPadreC = tipoParte[0][0].idPadre;
-          skuC = tipoParte[0][0].SKU;
-          nitCliente = tipoParte[0][0].NitCliente;
+          skuC = tipoParte[0][0].SKU
+          nitCliente = tipoParte[0][0].NitCliente
         }
         if (tipoParte[0][0].TipoParte === "Cabecera") {
           proyecto = tipoParte[0][0].Nombre;
           idNodoP = tipoParte[0][0].idNodo;
           Codi_parteP = tipoParte[0][0].Cod_parte;
           idPadreP = tipoParte[0][0].idPadre;
-          skuP = tipoParte[0][0].SKU;
+          skuP = tipoParte[0][0].SKU
           //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+          
         }
         //? Verificar si el proyecto ya existe en el objeto obj_proyecto
         let proyectoExistente = obj_proyecto.proyectos.find(
@@ -116,13 +118,7 @@ const LoadProyect = async (Doc_id, email) => {
 
           if (componenteExistente) {
             //? Agregar la actividad al componente existente
-            console.log(
-              "push Actividad",
-              idNodoA,
-              Codi_parteA,
-              idPadreA,
-              actividades
-            );
+            console.log("push Actividad",idNodoA,Codi_parteA,idPadreA,actividades)
             componenteExistente.actividades.push({
               actividad: actividad,
               frecuencia,
@@ -135,7 +131,7 @@ const LoadProyect = async (Doc_id, email) => {
             });
           } else {
             //? Agregar un nuevo componente con la actividad al proyecto existente
-            console.log("push componente");
+            console.log("push componente")
             proyectoExistente.componentes.push({
               fecha,
               componente: componente,
@@ -160,7 +156,7 @@ const LoadProyect = async (Doc_id, email) => {
         } else {
           //? Agregar un nuevo proyecto con el componente y actividad
           if (proyecto !== "") {
-            console.log("entra al if", componentes);
+            console.log("entra al if",componentes)
             obj_proyecto.proyectos?.push({
               proyecto: proyecto,
               idNodoP,
@@ -190,6 +186,7 @@ const LoadProyect = async (Doc_id, email) => {
                   ],
                 },
               ],
+             
             });
           }
         }
@@ -199,7 +196,7 @@ const LoadProyect = async (Doc_id, email) => {
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
-    console.log({"error": error});
+    console.log("el error es",error);
     // res.json({ error: error });
   }
 };
@@ -213,21 +210,19 @@ const getProyectName = async (req, res) => {
     // localStorage.removeItem(`Proyecto`)
     let NomProyect;
 
-    if (proyects) {
-      NomProyect = proyects.proyectos
+    NomProyect = proyects.proyectos
       .filter((obj) => obj.proyecto.includes(search.toUpperCase()))
       .map((obj) => obj.proyecto);
 
     if (NomProyect.length <= 0) {
       return res.json("No hay royectos con este nombre ");
     }
-    }
     // const proyect = proyects.proyectos.filter((obj) => {
     //   return obj.proyecto.includes(search);
     // });
     res.json(NomProyect);
   } catch (error) {
-    res.json({"error": error});
+    res.json({ error: error });
   }
 };
 
@@ -241,17 +236,19 @@ const getProyect = async (req, res) => {
     let proyect;
 
     proyect = proyects.proyectos.filter((obj) => {
-      return obj.proyecto.includes(search.toUpperCase());
+      return  obj.proyecto.includes(search.toUpperCase());
     });
 
     res.json(proyect);
   } catch (error) {
-    res.json({"error": error});
+    res.json({ error: error });
   }
 };
 
+
 //todo endpoint para agregar horas de los proyectos
 const registerActivities = async (req, res) => {
+
   const {
     SKU_Proyecto,
     NitCliente,
@@ -264,7 +261,6 @@ const registerActivities = async (req, res) => {
     FechaFinal,
     DuracionHoras,
   } = req.body;
-  console.log(req.body)
   try {
     await sequelize.query(
       `INSERT INTO [dbo].[TBL_SER_ReporteHorasActividadEmpleado]
@@ -298,148 +294,56 @@ const registerActivities = async (req, res) => {
     TotalH = parseFloat(hours[0][0].horas).toFixed(2);
     res.json({ horaTotal: TotalH });
   } catch (error) {
-    res.json({"error": error});
+    res.json({ error: error });
   }
 };
+
 
 //todo devuelve la sumatoria de las actividades
 const hourActivities = async (req, res) => {
   try {
     const { idNodoProyecto, idNodoActividad } = req.query;
-    console.log(idNodoProyecto, idNodoActividad);
+console.log(idNodoProyecto, idNodoActividad)
     const hours = await sequelize.query(
       `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
     );
     const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
     res.json(TotalH);
   } catch (error) {
-    res.json({"error": error});
+    res.json({ error: error });
   }
 };
 
-const updateProyecto = async (req, res) => {
-  const { finished, idNodoProyecto, SKU_Proyecto } = req.body;
-  try {
-    await sequelize.query(
-      `
+const updateProyecto = async(req,res) =>{
+const {finished,idNodoProyecto,SKU_Proyecto,doc_id,email} = req.body
+ try {
+  await sequelize.query(
+    `
     UPDATE TBL_SER_ProyectoActividadesEmpleados
    SET Terminada = ${finished}
    WHERE idNodoProyecto = ${idNodoProyecto} and SKU_Proyecto = ${SKU_Proyecto};
     `
-    );
-
-    // await sequelize.query(
-    //   `
-    //   UPDATE TBL_SER_ProyectoActividadesEmpleados
-    //   SET Terminada = :finished
-    //   WHERE idNodoProyecto = :idNodoProyecto AND SKU_Proyecto = :SKU_Proyecto;
-    //   `,
-    //   {
-    //     replacements: {
-    //       finished: finished,
-    //       idNodoProyecto: idNodoProyecto,
-    //       SKU_Proyecto: SKU_Proyecto,
-    //     },
-    //   }
-    // );
-    
-
-    res.send("actualizacion exitosa");
-  } catch (error) {
-    console.log(error);
-    res.send({"error": error});
-  }
-};
-
-const UpdatProyect = async (req, res) => {
- try {
-  const { doc_id, email } = req.body;
-  localStorage.removeItem(`${email}Proyecto`);
-  await LoadProyect(doc_id, email);
-  res.send("actualizacion exitosa");
- } catch (error) {
-  res.json({"error": error})
- }
-};
-
-const AnticipoGastos = async (req, res) => {
-try {
-  const {doc,sku} = req.body
-
-  const datos = await sequelize.query(
-    `
-    SELECT * FROM TBL_CON_TES_ListaComprobantesCajaMenor WHERE N_Documento = :doc AND SKU = :sku`,
-    {
-      replacements: { doc: doc, sku: sku },
-      type: sequelize.QueryTypes.SELECT
-    }
-  );
-
-  let objDatos = []
-  datos.map((datos) =>{
-    objDatos.push({
-    NumeroComprobante: datos.NumeroComprobante,
-    IdResponsable: datos.IdResponsable,
-    Valor: datos.Valor,
-    DetalleConcepto:datos.DetalleConcepto,
-    IdCentroCostos: datos.IdCentroCostos,
-    sku:datos.SKU
-
-  })
-  })
-
-  res.send(objDatos)
-} catch (error) {
-  res.json({"error": error})
-}
-};
-
-
-const Entregables = async(req,res) =>{
-const {SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable,idProceso} =  req.query
-
-console.log(SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable,idProceso)
-// res.send("ok")
-// return
-let entrega = false
-try {
-  const Entregables = await sequelize.query(
-    `
-    SELECT * FROM TBL_SER_ProyectoActividadesEmpleadosEntregables WHERE SKU_Proyecto = :sku AND NitCliente = :nit AND idNodoProyecto = :id AND NumeroEntregable = :numE AND idProceso = :proceso`,
-    {
-      replacements: { sku: SKU_Proyecto, nit: NitCliente, id: idNodoProyecto, numE:NumeroEntregable,proceso:idProceso },
-      type: sequelize.QueryTypes.SELECT
-    }
-  );
+  )
+localStorage.removeItem(`${email}Proyecto`);
+ await LoadProyect(doc_id, email)
   
-  if (Entregables.length >= 1) {
-    entrega = true
-  }
-  res.json(entrega)
-} catch (error) {
-  res.json({"error": error})
+ res.send("actualizacion exitosa")
+ } catch (error) {
+   console.log(error)
+   res.send("error en la actualizacion")
+ }
 }
 
 
-}
 
-//todo desloguea el usuario
+//todo desloguea el usuario 
 const logout = (req, res) => {
   const { email } = req.query;
-  // req.logout();
-
-  // res.clearCookie(`access_token`);
-  
   try {
-    // req.session.destroy((err) => {
-    //   if (err) {
-    //     console.error('Error al eliminar la sesión:', err);
-    //   }
-    // });
     localStorage.removeItem(`${email}Proyecto`);
     res.json("Logout seccesfull");
   } catch (error) {
-    res.json({"error": error})
+    res.json({ error: error });
   }
 };
 
@@ -453,8 +357,5 @@ module.exports = {
   registerActivities,
   hourActivities,
   updateProyecto,
-  UpdatProyect,
-  AnticipoGastos,
   logout,
-  Entregables
 };

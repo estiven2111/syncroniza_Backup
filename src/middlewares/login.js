@@ -39,9 +39,8 @@ const login = async (req, res) => {
       // Generar y devolver un token JWT aquí
       const secretKey = "my_secret";
       const token = jwt.sign({ userEmail: usuario.Email }, secretKey, {
-        expiresIn: "8h",
+        expiresIn: "1h",
       });
-      localStorage.removeItem(`${usuario.Email}Proyecto`);
       console.log(usuario.Doc_id)
       LoadProyect(usuario.Doc_id,usuario.Email);
       res.json({ token, userEmail: usuario.Email, userName: usuario.Nombre, doc_empleado:usuario.Doc_id });
