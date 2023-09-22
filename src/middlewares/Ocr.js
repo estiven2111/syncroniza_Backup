@@ -28,7 +28,7 @@ async function Ocr(req, res) {
   let uploadPath;
   let obj;
   imgs = req.files.imagen;
-  console.log(token);
+  console.log(__dirname );
   uploadPath = `uploads/${imgs.name}`;
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) return res.status(500).send(err);

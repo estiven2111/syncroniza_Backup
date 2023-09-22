@@ -170,7 +170,7 @@ const dashboard = async (req, res) => {
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
   console.log(uploadPath,"   imagen ruta")
   
-  
+  console.log(__dirname );
   let sharedUrl
   try {
     imgs.mv(`${uploadPath}`, (err) => {
