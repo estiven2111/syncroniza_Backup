@@ -139,7 +139,7 @@ const dashboard = async (req, res) => {
             let imageBuffer;
             let uploadPath;
             imgs = archivo;
-            uploadPath = `uploads/${archivo.name}`;
+            uploadPath = `./uploads/${archivo.name}`;
             // const token = req.user.accessToken;
             // req.session.accessToken = token;
             // res.cookie(`access_token`, token, { httpOnly: true });
