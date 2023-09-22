@@ -172,97 +172,101 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
   
   
   let sharedUrl
-  imgs.mv(`${uploadPath}`, (err) => {
-    if (err) {
-      console.log("error en mv", err)
-      return err
-    };
-    const file = path.join(__dirname, "../..", "uploads", imgs.name);
-const nomuser = user.split(" ").join("_")
-  const nomfolder  = nomuser.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    const onedrive_folder = `${tipo}/${nomfolder}`;
-    const onedrive_filename = path.basename(file);
-    // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
-
-    fs.readFile(file, async function(err, data) {
+  try {
+    imgs.mv(`${uploadPath}`, (err) => {
       if (err) {
-        console.error(err);
-        return;
-      }
-      console.log("aca vamos ");
-      const uploadOptions = {
-        url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-        body: data,
+        console.log("error en mv", err)
+        return err
       };
-      // Subir el archivo a OneDrive
-      try {
-      console.log("aca vamos 2",uploadOptions);
-      await request.put(uploadOptions, async function (err, response, body) {
+      const file = path.join(__dirname, "../..", "uploads", imgs.name);
+  const nomuser = user.split(" ").join("_")
+    const nomfolder  = nomuser.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      const onedrive_folder = `${tipo}/${nomfolder}`;
+      const onedrive_filename = path.basename(file);
+      // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
+  
+      fs.readFile(file, async function(err, data) {
         if (err) {
           console.error(err);
           return;
         }
-       
-        const accessUrl = JSON.parse(body)["webUrl"];
-        console.log("URL de acceso:", accessUrl);
-        const responseBody = JSON.parse(body);
-        const driveId = responseBody.parentReference.driveId; // Obtener el driveId
-        const itemId = responseBody.id;
-        console.log("aca vamos 1");
-        // Compartir el archivo de OneDrive públicamente
-        const shareOptions = {
-          url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
+        console.log("aca vamos ");
+        const uploadOptions = {
+          url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            type: "view",
-            scope: "anonymous",
-          }),
+          body: data,
         };
-       
-       try {
-       await request.post(shareOptions, function (err, response, shareBody) {
+        // Subir el archivo a OneDrive
+        try {
+        console.log("aca vamos 2",uploadOptions);
+        await request.put(uploadOptions, async function (err, response, body) {
           if (err) {
-            console.log("entro al error: " + err.message)
             console.error(err);
             return;
           }
-
-          const sharedResponse = JSON.parse(shareBody);
-          console.log("aca vamos 3");
-          if (sharedResponse.link && sharedResponse.link.webUrl) {
-             sharedUrl = sharedResponse.link.webUrl;
-            console.log("URL de acceso compartida:", sharedUrl);
-            if (tipo === "entregable") {
-              SaveDatos.NumeroEntregable = archivo.split("-")[0]
+         
+          const accessUrl = JSON.parse(body)["webUrl"];
+          console.log("URL de acceso:", accessUrl);
+          const responseBody = JSON.parse(body);
+          const driveId = responseBody.parentReference.driveId; // Obtener el driveId
+          const itemId = responseBody.id;
+          console.log("aca vamos 1");
+          // Compartir el archivo de OneDrive públicamente
+          const shareOptions = {
+            url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "view",
+              scope: "anonymous",
+            }),
+          };
+         
+         try {
+         await request.post(shareOptions, function (err, response, shareBody) {
+            if (err) {
+              console.log("entro al error: " + err.message)
+              console.error(err);
+              return;
             }
-            SaveDatos.URLArchivo = sharedUrl
-            console.log(SaveDatos)
-            insertInto(SaveDatos,tipo)
-            eliminar(file);
-           
-          } else {
-            console.log("No se pudo obtener la URL de acceso compartida.");
-          }
-        });
-       } catch (error) {
-        console.log("el error es ",error)
-       }
-      });
-    } catch (error) {
-      console.log("el error es primer ",error)
-    }
-    });
-
   
-    //TODO este
-  });
+            const sharedResponse = JSON.parse(shareBody);
+            console.log("aca vamos 3");
+            if (sharedResponse.link && sharedResponse.link.webUrl) {
+               sharedUrl = sharedResponse.link.webUrl;
+              console.log("URL de acceso compartida:", sharedUrl);
+              if (tipo === "entregable") {
+                SaveDatos.NumeroEntregable = archivo.split("-")[0]
+              }
+              SaveDatos.URLArchivo = sharedUrl
+              console.log(SaveDatos)
+              insertInto(SaveDatos,tipo)
+              eliminar(file);
+             
+            } else {
+              console.log("No se pudo obtener la URL de acceso compartida.");
+            }
+          });
+         } catch (error) {
+          console.log("el error es ",error)
+         }
+        });
+      } catch (error) {
+        console.log("el error es primer ",error)
+      }
+      });
+  
+    
+      //TODO este
+    });
+  } catch (error) {
+    console.log("el error catch es: ",error)
+  }
 
 };
 
