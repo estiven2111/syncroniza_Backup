@@ -168,7 +168,7 @@ const dashboard = async (req, res) => {
 //? funcion para mover el archivo
 
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
-  console.log(uploadPath,"   imagen ruta")
+  console.log(uploadPath,"imagen ruta")
   
   console.log(__dirname );
   let sharedUrl
