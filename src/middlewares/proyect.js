@@ -306,7 +306,6 @@ const registerActivities = async (req, res) => {
 const hourActivities = async (req, res) => {
   try {
     const { idNodoProyecto, idNodoActividad } = req.query;
-    console.log(idNodoProyecto, idNodoActividad);
     const hours = await sequelize.query(
       `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
     );
