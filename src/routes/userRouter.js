@@ -220,7 +220,7 @@ userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
 // ensureAuthenticated
 // userRouter.post("/api/register",registerUser)
 
-//todo usar para cojer el token por get desde la web
+//todo usar para cojer el token por get desde la webs
 // userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 // userRouter.get("/api/callback",passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/files" }),(req,res)=>{
 //   res.redirect("/dashboard");
