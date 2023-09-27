@@ -1,5 +1,7 @@
 const login = require("./login");
 // const registerUser = require("./registerUser");
+const ConsultaIndicadoresMiddleware = require("./consultasIndicadores/ConsultaIndicadoresMiddleware")
+const ConsultaIndicadores2Middleware = require("./consultasIndicadores/ConsultaIndicadores2Middleware")
 const {
   getProyectName,
   getProyect,
@@ -22,5 +24,9 @@ module.exports = {
   AnticipoGastos,
   logout,
   Ocr,
-  Entregables
+  Entregables,
+
+  //?Middlewares
+  ConsultaIndicadoresMiddleware,
+  ConsultaIndicadores2Middleware
 };
