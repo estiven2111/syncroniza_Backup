@@ -13,6 +13,7 @@ const consultaIndicadores2Controller = async(req) =>{
     let HorasFrecuencia
     let atrazo
     let HorasCumplidas
+    
 try {
     //? consulta uno para sacar Horas programadas y el valor de cumplidas en el periodo
     let Consulta1 = await sequelize.query(
@@ -93,14 +94,23 @@ HorasCumplidas = CumplidasPeriodo + atrazo
 console.log("HorasCumplidasSinFrecuencia +  HorasCumplidasConFrecuencia = CumplidasPeriodo",CumplidasPeriodo )
 console.log("HorasProgramadaConFrecuencia", HorasFrecuencia)
 console.log("HorasProgramadaSinFrecuencia",HoraProgramada)
+const numero = ((HorasCumplidas + HorasFrecuencia) / HoraProgramada)* 100
+// const numero = ((186 + 70) / 312)* 100
+let nivActividad = parseFloat(numero.toFixed(1))
+if (nivActividad) {
+    nivActividad = nivActividad
+}else{
+    nivActividad = 0
+}
+
     const datos = {
         HoraProgramada,
         HorasCumplidas,
         CumplidasPeriodo,
         atrazo,
         HorasFrecuencia,
-        
-    }
+        nivActividad
+      }
     return datos
 } catch (error) {
     console.log("el error es este,",error.message)
