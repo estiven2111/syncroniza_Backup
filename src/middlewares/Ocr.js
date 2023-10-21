@@ -23,7 +23,7 @@ async function Ocr(req, res) {
   const { imagen } = req.files;
   const { latitud, longitud } = req.body;
   const { token } = req.body;
-  console.log(imagen);
+  console.log(latitud, longitud);
   let imgs;
   let imagePath;
   let imageBuffer;
@@ -83,7 +83,7 @@ async function Ocr(req, res) {
               const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
               const ubicacion = await axios.get(geoUrl);
               codepostal = ubicacion.data.address.postcode;
-              municipio = ubicacion.data.address.town;
+              municipio = ubicacion.data.address.city;
               const printedResult = await readTextFromStream(
                 computerVisionClient,
                 imageBuffer

@@ -24,6 +24,7 @@ const login = async (req, res) => {
         usuario = existUser[0][0];
 
         if (password !== usuario.clave) {
+          console.log("aca")
           res.status(401).json({ message: "Clave incorrecta" });
           return;
         }
