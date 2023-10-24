@@ -200,12 +200,7 @@ userRouter.post("/api/login", login);
 userRouter.get("/api/microsoft",(req,res)=>{
   res.redirect("/user/api/callback")
 })
-const {validation} = req.params 
-  if (validation === true) {
-    passport.authenticate("azuread-openidconnect")
-  }else{
-    
-  }
+
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 userRouter.get(
   "/api/callback",
@@ -215,7 +210,7 @@ userRouter.get(
   (req, res) => {
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-    const {validation} = req.params 
+    const validation = req.user
   if (validation === true) {
     res.send(
       ` 
