@@ -211,12 +211,24 @@ userRouter.get(
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
     
-    const script = `<script>
-        window.opener.postMessage(${JSON.stringify(datos)}, "https://syncronizabackup-production.up.railway.app");
-        window.close();
-      </script>`;
+    // const script = `<script>
+    //     window.opener.postMessage(${JSON.stringify(datos)}, "https://syncronizabackup-production.up.railway.app");
+    //     window.close();
+    //   </script>`;
+      res.send(
+        ` 
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <body>
+
+        </body>
+        <script> window.opener.postMessage(${datos}, 'http://localhost:5173/Gastos') </script>
+        </html>
+        `
+     )
     //res.redirect("/user/api/dashboard");
-    res.json(script)
+    // res.json(script)
   }
 );
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
