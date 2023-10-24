@@ -7,7 +7,14 @@ const router = require("./routes/index");
 const sequelize = require("sequelize");
 // require("dotenv").config()
 const app = express();
-app.use(cors());
+// app.use(cors());
+const optionCors ={
+    origin:"*",
+    methods:'GET, POST, OPTIONS, PUT, DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials:true
+  }
+   app.use(cors(optionCors))
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(fileupload());

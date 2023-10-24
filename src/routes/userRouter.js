@@ -223,7 +223,7 @@ userRouter.get(
         <body>
 
         </body>
-        <script> window.opener.postMessage(${datos}, 'http://localhost:5173/Gastos') </script>
+        <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:5173/Gastos') </script>
         </html>
         `
      )
