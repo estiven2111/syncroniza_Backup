@@ -200,7 +200,12 @@ userRouter.post("/api/login", login);
 userRouter.get("/api/microsoft",(req,res)=>{
   res.redirect("/user/api/callback")
 })
-
+const {validation} = req.params 
+  if (validation === true) {
+    passport.authenticate("azuread-openidconnect")
+  }else{
+    
+  }
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 userRouter.get(
   "/api/callback",
@@ -210,29 +215,36 @@ userRouter.get(
   (req, res) => {
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
+    const {validation} = req.params 
+  if (validation === true) {
+    res.send(
+      ` 
+      <!DOCTYPE html>
+      <html lang="en">
+
+      <body>
+
+      </body>
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:5173/Gastos') 
+      setTimeout(function() {
+        window.close();
+    }, 1000); 
+    </script>
+      </html>
+      `
+   )
+  }else{
+    res.json(datos)
+  }
+   
     
     // const script = `<script>
     //     window.opener.postMessage(${JSON.stringify(datos)}, "https://syncronizabackup-production.up.railway.app");
     //     window.close();
     //   </script>`;
-      res.send(
-        ` 
-        <!DOCTYPE html>
-        <html lang="en">
-
-        <body>
-
-        </body>
-        <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:5173/Gastos') 
-        setTimeout(function() {
-          window.close();
-      }, 1000); 
-      </script>
-        </html>
-        `
-     )
+     
     //res.redirect("/user/api/dashboard");
-    // res.json(script)
+    
   }
 );
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
