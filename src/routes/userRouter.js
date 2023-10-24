@@ -210,9 +210,13 @@ userRouter.get(
   (req, res) => {
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-  
+    
+    const script = `<script>
+        window.opener.postMessage(${JSON.stringify(datos)}, "https://syncronizabackup-production.up.railway.app");
+        window.close();
+      </script>`;
     //res.redirect("/user/api/dashboard");
-    res.json(datos)
+    res.json(script)
   }
 );
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
