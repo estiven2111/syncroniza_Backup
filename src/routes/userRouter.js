@@ -210,7 +210,7 @@ userRouter.get(
   (req, res) => {
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-    const {validation} = req.params
+    const {validation} = req.query
     console.log(validation)
   if (validation === true) {
     res.send(
