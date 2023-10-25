@@ -224,7 +224,7 @@ userRouter.get("/api/microsoft",(req,res)=>{
 })
 
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-userRouter.get("/api/filess", passport.authenticate("azuread-openidconnects"));
+userRouter.get("/api/web", passport.authenticate("azuread-openidconnects"));
 userRouter.get(
   "/api/callback",
   passport.authenticate("azuread-openidconnect", {
@@ -243,7 +243,7 @@ userRouter.get(
 userRouter.get(
   "/api/callbacks",
   passport.authenticate("azuread-openidconnects", {
-    failureRedirect: "/user/api/filess",
+    failureRedirect: "/user/api/web",
   }),
   (req, res) => {
     const auth = req.isAuthenticated()
