@@ -227,7 +227,7 @@ userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
 userRouter.get(
   "/api/callback",
-  passport.authenticate("web-openidconnect", {
+  passport.authenticate("azuread-openidconnect", {
     failureRedirect: "/user/api/files",
   }),
   (req, res) => {
@@ -242,7 +242,7 @@ userRouter.get(
 
 userRouter.get(
   "/api/validation",
-  passport.authenticate("azuread-openidconnects", {
+  passport.authenticate("web-openidconnect", {
     failureRedirect: "/user/api/web",
   }),
   (req, res) => {
