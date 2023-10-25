@@ -125,11 +125,11 @@ const fs = require("fs");
 const request = require("request");
 const cors = require("cors");
 require("dotenv").config();
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIA } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW } = process.env;
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
-const callbackURLW = REDIRECT_URIA; //"http://localhost:5000/validation";
+const callbackURLW = REDIRECT_URIW; //"http://localhost:5000/validation";
 const tenantID = TENANT_ID;
 
 const userRouter = Router();
