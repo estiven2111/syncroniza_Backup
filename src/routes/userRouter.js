@@ -156,7 +156,7 @@ userRouter.use(passport.initialize());
 userRouter.use(passport.session());
 
 passport.use(
-  "azuread-openidconnects",
+  "web-openidconnect",
   new AzureAdOAuth2Strategy(
     {
       clientID: clientID,
@@ -224,7 +224,7 @@ userRouter.get("/api/microsoft",(req,res)=>{
 })
 
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-userRouter.get("/api/web", passport.authenticate("azuread-openidconnects"));
+userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
 userRouter.get(
   "/api/callback",
   passport.authenticate("azuread-openidconnect", {
