@@ -211,9 +211,20 @@ userRouter.get(
     console.log(req.query)
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-    const validation = req.query.validation
-    console.log(validation,"valida")
-  if (validation === true) {
+    res.json(datos)
+
+  }
+);
+
+
+userRouter.get(
+  "/api/callbacks",
+  passport.authenticate("azuread-openidconnect", {
+    failureRedirect: "/user/api/files",
+  }),
+  (req, res) => {
+    const auth = req.isAuthenticated()
+    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
     res.send(
       ` 
       <!DOCTYPE html>
@@ -230,20 +241,11 @@ userRouter.get(
       </html>
       `
    )
-  }else{
-    res.json(datos)
-  }
-   
-    
-    // const script = `<script>
-    //     window.opener.postMessage(${JSON.stringify(datos)}, "https://syncronizabackup-production.up.railway.app");
-    //     window.close();
-    //   </script>`;
-     
-    //res.redirect("/user/api/dashboard");
     
   }
 );
+
+
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
 // userRouter.post("/api/dashboard", dashboard);
 // ensureAuthenticated
