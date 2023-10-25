@@ -241,7 +241,7 @@ userRouter.get(
 
 
 userRouter.get(
-  "/api/callbacks",
+  "/api/validation",
   passport.authenticate("azuread-openidconnects", {
     failureRedirect: "/user/api/web",
   }),
