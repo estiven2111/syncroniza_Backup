@@ -129,7 +129,7 @@ const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIA } = pro
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
-const callbackURLA = REDIRECT_URIA; //"http://localhost:5000/callback";
+const callbackURLW = REDIRECT_URIA; //"http://localhost:5000/validation";
 const tenantID = TENANT_ID;
 
 const userRouter = Router();
@@ -142,7 +142,7 @@ const optionCors = {
 userRouter.use(cors());
 // const userRouter = express()
 const sessionSecret = crypto.randomBytes(64).toString("hex");
-console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIA);
+console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW);
 // Configura y utiliza sesiones en Express
 userRouter.use(
   session({
@@ -161,7 +161,7 @@ passport.use(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-      callbackURL: callbackURL,
+      callbackURL: callbackURLW,
       tenant: tenantID,
       resource: "https://graph.microsoft.com/",
     },
@@ -182,7 +182,7 @@ passport.use(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-      callbackURL: callbackURLA,
+      callbackURL: callbackURL,
       tenant: tenantID,
       resource: "https://graph.microsoft.com/",
     },
