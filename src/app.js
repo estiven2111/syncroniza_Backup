@@ -9,7 +9,7 @@ const sequelize = require("sequelize");
 const app = express();
 // app.use(cors());
 const optionCors = {
-    origin: "*",
+    origin: "http://localhost:5173",
     methods: 'GET, POST, OPTIONS, PUT, DELETE',
     allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
     credentials: true
