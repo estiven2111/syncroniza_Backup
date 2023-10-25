@@ -125,10 +125,11 @@ const fs = require("fs");
 const request = require("request");
 const cors = require("cors");
 require("dotenv").config();
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIA } = process.env;
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
+const callbackURLA = REDIRECT_URIA; //"http://localhost:5000/callback";
 const tenantID = TENANT_ID;
 
 const userRouter = Router();
@@ -141,7 +142,7 @@ const optionCors = {
 userRouter.use(cors());
 // const userRouter = express()
 const sessionSecret = crypto.randomBytes(64).toString("hex");
-console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID);
+console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIA);
 // Configura y utiliza sesiones en Express
 userRouter.use(
   session({
@@ -155,12 +156,33 @@ userRouter.use(passport.initialize());
 userRouter.use(passport.session());
 
 passport.use(
-  "azuread-openidconnect",
+  "azuread-openidconnects",
   new AzureAdOAuth2Strategy(
     {
       clientID: clientID,
       clientSecret: clientSecret,
       callbackURL: callbackURL,
+      tenant: tenantID,
+      resource: "https://graph.microsoft.com/",
+    },
+    (accessToken, refreshToken, params, profile, done) => {
+      console.log("params", params);
+     
+      // aca puede realizar acciones para obtener los datos de los usuarios
+      //para enviar ala base datos o lo que desee y se pueda hacer
+
+      return done(null, { accessToken, refreshToken, profile });
+    }
+  )
+);
+
+passport.use(
+  "azuread-openidconnect",
+  new AzureAdOAuth2Strategy(
+    {
+      clientID: clientID,
+      clientSecret: clientSecret,
+      callbackURL: callbackURLA,
       tenant: tenantID,
       resource: "https://graph.microsoft.com/",
     },
@@ -219,7 +241,7 @@ userRouter.get(
 
 userRouter.get(
   "/api/callbacks",
-  passport.authenticate("azuread-openidconnect", {
+  passport.authenticate("azuread-openidconnects", {
     failureRedirect: "/user/api/files",
   }),
   (req, res) => {
