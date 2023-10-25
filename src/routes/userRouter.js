@@ -208,6 +208,7 @@ userRouter.get(
     failureRedirect: "/user/api/files",
   }),
   (req, res) => {
+    console.log(req.query)
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
     const validation = req.query.validation
