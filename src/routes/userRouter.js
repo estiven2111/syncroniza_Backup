@@ -224,7 +224,7 @@ userRouter.get("/api/microsoft",(req,res)=>{
 })
 
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-userRouter.get("/api/web", passport.authenticate("azuread-openidconnect"));
+userRouter.get("/api/web", passport.authenticate("azuread-openidconnects"));
 userRouter.get(
   "/api/callback",
   passport.authenticate("azuread-openidconnect", {
