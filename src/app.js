@@ -8,13 +8,15 @@ const sequelize = require("sequelize");
 // require("dotenv").config()
 const app = express();
 // app.use(cors());
-const optionCors ={
-    origin:"*",
-    methods:'GET, POST, OPTIONS, PUT, DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
-    credentials:true
-  }
-   app.use(cors(optionCors))
+const optionCors = {
+    origin: "*",
+    methods: 'GET, POST, OPTIONS, PUT, DELETE',
+    allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
+    credentials: true
+  };
+  
+  app.use(cors(optionCors));
+  
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(fileupload());
