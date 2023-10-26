@@ -136,6 +136,7 @@ async function Ocr(req, res) {
                     };
                     console.log(objeto);
                     res.send(objeto);
+                    return
                   }
                 }
                 // await fs.unlink(uploadPath);
