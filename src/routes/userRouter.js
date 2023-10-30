@@ -257,14 +257,14 @@ userRouter.get(
 
       </body>
       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:5173/Gastos') 
-      setTimeout(function() {
-        window.close();
-    }, 1000); 
+      window.close();
     </script>
       </html>
       `
    )
-    
+//    setTimeout(function() {
+//     window.close();
+// }, 1000);
   }
 );
 
