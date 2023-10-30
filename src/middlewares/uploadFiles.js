@@ -49,7 +49,7 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable)
   }
-  console.log(obj_ActualizarEntregable)
+  console.log(req.files)
   // if (req.files) {
   //   for (const key in req.files) {
   //     const archivo = req.files[key];
@@ -105,8 +105,6 @@ const dashboard = async (req, res) => {
         if (req.files) {
           for (const key in req.files) {
             const  imagen  = req.files[key];
-            console.log("key",key)
-            console.log( "req.files[key]",req.files[key])
             console.log( "req.files",imagen)
           let imgs;
           let imagePath;
@@ -119,8 +117,8 @@ const dashboard = async (req, res) => {
          
           }
         
-        } else {
-          res.json({ msg: "suba almenos un archivo" });
+        } else {  
+          res.json({ msg: "suba almenos un archivo" }); peticionOcr();
           return
         }
       } catch (error) {
@@ -186,7 +184,7 @@ const nomuser = user.split(" ").join("_")
 
     fs.readFile(file, async function(err, data) {
       if (err) {
-        console.error(err);
+        console.error(err); 
         return;
       }
       console.log("aca vamos ");
@@ -200,7 +198,7 @@ const nomuser = user.split(" ").join("_")
       };
       // Subir el archivo a OneDrive
       try {
-      console.log("aca vamos 2",uploadOptions);
+      // console.log("aca vamos 2",uploadOptions);
       await request.put(uploadOptions, async function (err, response, body) {
         if (err) {
           console.error(err);
@@ -211,10 +209,10 @@ const nomuser = user.split(" ").join("_")
         console.log("URL de acceso:", accessUrl);
         const responseBody = JSON.parse(body);
         const driveId = responseBody.parentReference.driveId; // Obtener el driveId
-        const itemId = responseBody.id;
-        console.log("aca vamos 1");
+        const itemId = responseBody.id; 
+        console.log("aca vamos 1"); 
         // Compartir el archivo de OneDrive públicamente
-        const shareOptions = {
+        const shareOptions = { 
           url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
           headers: {
             Authorization: "Bearer " + token,
@@ -267,7 +265,7 @@ const nomuser = user.split(" ").join("_")
 };
 
 const insertInto = async(data,tipo) =>{
-  console.log(data,"data")
+  console.log(data,"data") 
  switch (tipo) {
   case "OCR":
     

@@ -134,9 +134,9 @@ async function Ocr(req, res) {
                       municipio: municipio,
                       codepostal: codepostal,
                     };
-                    console.log(objeto);
-                    res.send(objeto);
-                    return
+                    // console.log(objeto);
+                    // res.send(objeto);
+                    
                   }
                 }
                 // await fs.unlink(uploadPath);

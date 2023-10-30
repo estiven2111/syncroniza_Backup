@@ -270,6 +270,7 @@ userRouter.get(
 
 
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
+userRouter.post("/api/creame-dashboard",dashboard);
 // userRouter.post("/api/dashboard", dashboard);
 // ensureAuthenticated
 // userRouter.post("/api/register",registerUser)
