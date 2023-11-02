@@ -256,8 +256,8 @@ userRouter.get(
       <body>
 
       </body>
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:5173/Gastos') 
-      window.close();
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/Gastos') 
+        window.close();
     </script>
       </html>
       `
