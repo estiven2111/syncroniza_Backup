@@ -43,7 +43,7 @@ const login = async (req, res) => {
         expiresIn: "1h",
       });
       console.log(usuario.Doc_id)
-      LoadProyect(usuario.Doc_id,usuario.Email);
+      await LoadProyect(usuario.Doc_id,usuario.Email);
       res.json({ token, userEmail: usuario.Email, userName: usuario.Nombre, doc_empleado:usuario.Doc_id });
     } catch (error) {
       console.error("Error al autenticar al usuario:", error);

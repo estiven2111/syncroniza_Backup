@@ -197,6 +197,7 @@ const LoadProyect = async (Doc_id, email) => {
     }
 
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
+    return
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
     console.log({"error": error});
@@ -231,6 +232,21 @@ const getProyectName = async (req, res) => {
   }
 };
 
+//todo me va devolver los nombres de los proyectos en un array
+const NameProyects = (req, res) => {
+try {
+  const { email } = req.query;
+  console.log(email,"el email es ")
+  const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+  const  nombres = proyects.proyectos.map((obj) => {
+    return obj.proyecto
+      })
+      res.json(nombres);
+} catch (error) {
+  res.json({"error": error});
+}
+}
+
 //todo hacer consulta para enviar el proyectos
 const getProyect = async (req, res) => {
   const { search, email } = req.query;
@@ -244,7 +260,17 @@ const getProyect = async (req, res) => {
       return obj.proyecto.includes(search.toUpperCase());
     });
 
+    const  nombres = proyects.proyectos.map((obj) => {
+  return obj.proyecto
+    })
+console.log(nombres)
     res.json(proyect);
+
+
+
+
+
+
   } catch (error) {
     res.json({"error": error});
   }
@@ -455,5 +481,6 @@ module.exports = {
   UpdatProyect,
   AnticipoGastos,
   logout,
-  Entregables
+  Entregables,
+  NameProyects
 };
