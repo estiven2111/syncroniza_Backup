@@ -330,16 +330,28 @@ const registerActivities = async (req, res) => {
 
 //todo devuelve la sumatoria de las actividades
 const hourActivities = async (req, res) => {
+ 
   try {
-    const { idNodoProyecto, idNodoActividad } = req.query;
-    const hours = await sequelize.query(
-      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
-    );
-    const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
-    res.json(TotalH);
+    const consulta = await sequelize.query(`select * from Tbl_USUARIOS`);
+    res.json(consulta);
   } catch (error) {
-    res.json({"error": error});
+    console.error("Error de Sequelize:", error);
+    res.status(500).json({ error: "Error al ejecutar la consulta en la base de datos." });
   }
+  
+
+
+
+  // try {
+  //   const { idNodoProyecto, idNodoActividad } = req.query;
+  //   const hours = await sequelize.query(
+  //     `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
+  //   );
+  //   const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
+  //   res.json(TotalH);
+  // } catch (error) {
+  //   res.json({"error": error});
+  // }
 };
 
 const updateProyecto = async (req, res) => {
