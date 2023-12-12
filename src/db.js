@@ -45,12 +45,12 @@ const handb = async (req, res) => {
 //   console.log("no hay variables de configuracion para la db");
 // }
 
-// sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", {
-//   host: "Fritomania.mssql.somee.com",
-//   dialect:
-//     "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
-//   // port:"1433"
-// });
+sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", {
+  host: "Fritomania.mssql.somee.com",
+  dialect:
+    "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+  // port:"1433"
+});
 
 //  sequelize = new Sequelize("BDCREAME", "sql_admin", "$$Incubadora2024", {
 //   host: "creame-sim\\SQLEXPRESS",
@@ -58,21 +58,21 @@ const handb = async (req, res) => {
 //   port: 1433, // El puerto predeterminado de SQL Server es 1433
 // });
 
-sequelize = new Sequelize({
-  dialect: 'mssql',
-  host: 'creame-sim-sql.database.windows.net',
-  port: 1433,
-  database: 'creame-sim-db',
-  username: 'sql_admin',
-  password: '$$Incubadora2024',
-  dialectOptions: {
-    options: {
-      encrypt: true,
-      trustServerCertificate: false,
-      authentication: 'ActiveDirectoryDefault',
-    },
-  },
-});
+// sequelize = new Sequelize({
+//   dialect: 'mssql',
+//   host: 'creame-sim-sql.database.windows.net',
+//   port: 1433,
+//   database: 'creame-sim-db',
+//   username: 'sql_admin',
+//   password: '$$Incubadora2024',
+//   dialectOptions: {
+//     options: {
+//       encrypt: true,
+//       trustServerCertificate: false,
+//       authentication: 'ActiveDirectoryDefault',
+//     },
+//   },
+// });
 
 
 // sequelize = new Sequelize({
