@@ -332,8 +332,9 @@ const registerActivities = async (req, res) => {
 const hourActivities = async (req, res) => {
  
   try {
-    const consulta = await sequelize.query(`select * from Tbl_USUARIOS`);
-    res.json(consulta);
+    // const consulta = await sequelize.query(`select * from Tbl_USUARIOS`);
+    // res.json(consulta);
+    res.json("hola")
   } catch (error) {
     console.error("Error de Sequelize:", error);
     res.status(500).json({ error: "Error al ejecutar la consulta en la base de datos." });
