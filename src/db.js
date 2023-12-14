@@ -45,12 +45,12 @@ const handb = async (req, res) => {
 //   console.log("no hay variables de configuracion para la db");
 // }
 
-sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", {
-  host: "Fritomania.mssql.somee.com",
-  dialect:
-    "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
-  // port:"1433"
-});
+// sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", {
+//   host: "Fritomania.mssql.somee.com",
+//   dialect:
+//     "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+//   // port:"1433"
+// });
 
 //  sequelize = new Sequelize("BDCREAME", "sql_admin", "$$Incubadora2024", {
 //   host: "creame-sim\\SQLEXPRESS",
@@ -74,26 +74,25 @@ sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", 
 //   },
 // });
 
-
-// sequelize = new Sequelize({
-//   dialect: "mssql",
-//   host: "creame-sim-sql.database.windows.net",
-//   port: 1433,
-//   database: "creame-sim-db",
-//   username: "sql_admin", // Reemplaza con tu nombre de usuario
-//   password: "$$Incubadora2024", // Reemplaza con tu contraseña
-//   dialectOptions: {
-//     options: {
-//       encrypt: true,
-//       trustServerCertificate: false,
-//       authentication: "ActiveDirectoryDefault",
-//     },
-//   },
-//   define: {
-//     timestamps: false, // Si no estás usando campos de timestamp en tus modelos
-//   },
-//   logging: console.log, // Muestra logs en la consola (opcional, para debug)
-// });
+sequelize = new Sequelize({
+  dialect: "mssql",
+  host: "creame-sim-sql.database.windows.net",
+  port: 1433,
+  database: "creame-sim-db",
+  username: "sql_admin", // Reemplaza con tu nombre de usuario
+  password: "$$Incubadora2024", // Reemplaza con tu contraseña
+  dialectOptions: {
+    options: {
+      encrypt: true,
+      trustServerCertificate: false,
+      authentication: "ActiveDirectoryDefault",
+    },
+  },
+  define: {
+    timestamps: false, // Si no estás usando campos de timestamp en tus modelos
+  },
+  logging: console.log, // Muestra logs en la consola (opcional, para debug)
+});
 
 // Validar la conexión
 sequelize
