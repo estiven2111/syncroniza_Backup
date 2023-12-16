@@ -76,14 +76,14 @@ const handb = async (req, res) => {
 
 sequelize = new Sequelize({
   dialect: "mssql",
-  host: "creame-sim\\SQLEXPRESS ",//creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
+  host: "20.186.17.228", //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
   port: 1433,
-  database: "BDCREAME",//BDCREAME    creame-sim-db  
+  database: "BDCREAME", //BDCREAME    creame-sim-db
   username: "sql_admin", // Reemplaza con tu nombre de usuario
   password: "$$Incubadora2024", // Reemplaza con tu contraseña
   dialectOptions: {
     options: {
-      encrypt: true,
+      encrypt: false,
       trustServerCertificate: false,
       authentication: "ActiveDirectoryDefault",
     },
