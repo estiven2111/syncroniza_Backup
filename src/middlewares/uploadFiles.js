@@ -291,6 +291,7 @@ const insertInto = async(data,tipo) =>{
       ,[idAnticipo]
       ,[ipc]
       ,[Sub_Total]
+      ,[Descripcion]
       )
   VALUES
       ('${data.SKU_Proyecto}',
@@ -311,7 +312,8 @@ const insertInto = async(data,tipo) =>{
         '${data.CCostos}',
          '${data.idAnticipo}',
          ${data.ipc},
-       ${data.Sub_Total}
+       ${data.Sub_Total},
+       '${Descripcion}'
        )
   `
     );
