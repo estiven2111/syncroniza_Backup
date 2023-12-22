@@ -12,6 +12,7 @@ const passport = require("../routes/userRouter");
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, TOKEN } =
   process.env;
 const { sequelize } = require("../db");
+const { clearScreenDown } = require("readline");
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
@@ -266,6 +267,7 @@ const nomuser = user.split(" ").join("_")
 
 const insertInto = async(data,tipo) =>{
   console.log(data,"data") 
+  console.log(typeof data.Descripcion,"descripcion")
  switch (tipo) {
   case "OCR":
     
