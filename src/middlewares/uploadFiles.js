@@ -267,6 +267,14 @@ const nomuser = user.split(" ").join("_")
 
 const insertInto = async(data,tipo) =>{
   console.log(data,"data") 
+  if (data) {
+
+    data.SKU_Proyecto = data.SKU_Proyecto?data.SKU_Proyecto:""
+    data.NitCliente = data.NitCliente?data.NitCliente:"";
+    data.idNodoProyecto = data.idNodoProyecto ? data.idNodoProyecto : 0
+    data.idProceso = data.idProceso ? data.idProceso : 0;
+    data.Descripcion = data.Descripcion ? data.Descripcion : ""
+  }
   console.log(typeof data.Descripcion,"descripcion")
  switch (tipo) {
   case "OCR":
@@ -315,7 +323,7 @@ const insertInto = async(data,tipo) =>{
          '${data.idAnticipo}',
          ${data.ipc},
        ${data.Sub_Total},
-       '${data.gitDescripcion}'
+       '${data.Descripcion}'
        )
   `
     );
