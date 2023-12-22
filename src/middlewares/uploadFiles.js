@@ -315,7 +315,7 @@ const insertInto = async(data,tipo) =>{
          '${data.idAnticipo}',
          ${data.ipc},
        ${data.Sub_Total},
-       '${Descripcion}'
+       '${data.gitDescripcion}'
        )
   `
     );
