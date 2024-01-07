@@ -274,6 +274,8 @@ const insertInto = async(data,tipo) =>{
     data.idNodoProyecto = data.idNodoProyecto ? data.idNodoProyecto : 0
     data.idProceso = data.idProceso ? data.idProceso : 0;
     data.Descripcion = data.Descripcion ? data.Descripcion : ""
+    data.iva = data.iva ? data.iva : 0
+    data.ipc = data.ipc ? data.ipc : 0
   }
   console.log(typeof data.Descripcion,"descripcion")
  switch (tipo) {
