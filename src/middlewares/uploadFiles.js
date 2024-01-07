@@ -276,7 +276,6 @@ const insertInto = async(data,tipo) =>{
     data.Descripcion = data.Descripcion ? data.Descripcion : ""
     data.iva = data.iva ? data.iva : 0
     data.ipc = data.ipc ? data.ipc : 0
-    
   }
   console.log(typeof data.Descripcion,"descripcion")
  switch (tipo) {
