@@ -525,7 +525,6 @@ async function Ocr(req, res) {
 
                 const resultadoIPC = textoEnMinusculas.match(regexIPC);
                 if (resultadoIPC !== null && resultadoIPC !== undefined) {
-                  console.log(`ipccccccccccccccccccc: ${resultadoIPC[1]}`);
                   const IPC = resultadoIPC[1].replace(",", "");
                   objeto.ipc = IPC;
                 }
