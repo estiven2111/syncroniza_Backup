@@ -273,6 +273,7 @@ const insertInto = async(data,tipo) =>{
     data.NitCliente = data.NitCliente?data.NitCliente:"";
     data.idNodoProyecto = data.idNodoProyecto ? data.idNodoProyecto : 0
     data.idProceso = data.idProceso ? data.idProceso : 0;
+    data.Sub_Total = data.Sub_Total ? data.Sub_Total : 0;
     data.Descripcion = data.Descripcion ? data.Descripcion : ""
     data.iva = data.iva ? data.iva : 0
     data.ipc = data.ipc ? data.ipc : 0
