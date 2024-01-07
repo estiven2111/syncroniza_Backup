@@ -299,7 +299,9 @@ const insertInto = async(data,tipo) =>{
       ,[DireccionComprobante]
       ,[CCostos]
       ,[idAnticipo]
-      ,[ipc]
+      ,[impoconsumo]
+      ,[iva]
+      ,[retefuente]
       ,[Sub_Total]
       ,[Descripcion]
       )
@@ -322,6 +324,8 @@ const insertInto = async(data,tipo) =>{
         '${data.CCostos}',
          '${data.idAnticipo}',
          ${data.ipc},
+         ${data.iva},
+         ${data.reteFuente},
        ${data.Sub_Total},
        '${data.Descripcion}'
        )
