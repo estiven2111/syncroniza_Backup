@@ -31,13 +31,13 @@ async function Ocr(req, res) {
   let objeto;
   imgs = req.files.imagen;
   uploadPath = `uploads/${imgs.name}`;
-  console.log(uploadPath,"ruta");
+  console.log(uploadPath, "ruta");
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) {
       console.log("el error: " + err.message);
-      return
+      return;
       //  res.status(500).send(err)
-    };
+    }
 
     const anchoDeseado = 800;
     const altoDeseado = 600;
@@ -89,7 +89,10 @@ async function Ocr(req, res) {
               if (ubicacion.data.address.county) {
                 municipio = ubicacion.data.address.county;
               }
-              
+              if (ubicacion.data.address.town) {
+                municipio = ubicacion.data.address.town;
+              }
+
               const printedResult = await readTextFromStream(
                 computerVisionClient,
                 imageBuffer
@@ -142,7 +145,6 @@ async function Ocr(req, res) {
                     };
                     // console.log(objeto);
                     // res.send(objeto);
-                    
                   }
                 }
                 // await fs.unlink(uploadPath);
@@ -188,382 +190,438 @@ async function Ocr(req, res) {
               console.error(err);
               res.status(500).json({ error: "Error al procesar la imagen" });
             } else {
-             try {
-              objeto = {
-                nit: "",
-                numFact: "",
-                doc: "",
-                total: "",
-                totalSinIva: "",
-                nombre: "",
-                fecha: "",
-                iva: "",
-                rete: "",
-                ipc: "",
-                concepto: "",
-                municipio: municipio,
-                codepostal: codepostal,
-              };
-              const textoEnMinusculas = texto.toLowerCase();
-              console.log(textoEnMinusculas)
-              const regexFecha = /(\d{2}[-/]\d{2}[-/]\d{2,4})/;
+              try {
+                objeto = {
+                  nit: "",
+                  numFact: "",
+                  doc: "",
+                  total: "",
+                  totalSinIva: "",
+                  nombre: "",
+                  fecha: "",
+                  iva: "",
+                  rete: "",
+                  ipc: "",
+                  concepto: "",
+                  municipio: municipio,
+                  codepostal: codepostal,
+                };
+                const textoEnMinusculas = texto.toLowerCase();
+                console.log(textoEnMinusculas);
+                const regexFecha = /(\d{2}[-/]\d{2}[-/]\d{2,4})/;
 
-              const resultadoFecha = textoEnMinusculas.match(regexFecha);
-              if (resultadoFecha) {
-                // Si se encontró una fecha, el primer elemento en resultadoFecha contiene la fecha encontrada
-                const fechaEncontrada = resultadoFecha[0];
-                console.log("Fecha encontrada:", fechaEncontrada);
-                objeto.fecha = fechaEncontrada;
-              } else {
-                const fechaIndex = textoEnMinusculas.indexOf("fecha:");
-                if (fechaIndex !== -1) {
-                  // Extrae la fecha que sigue a "Fecha"
-                  const fecha = texto
-                    .substr(fechaIndex + "fecha:".length, 10)
-                    .trim();
-                  console.log("FECHA:", fecha);
-                  objeto.fecha = fecha;
+                const resultadoFecha = textoEnMinusculas.match(regexFecha);
+                if (resultadoFecha) {
+                  // Si se encontró una fecha, el primer elemento en resultadoFecha contiene la fecha encontrada
+                  const fechaEncontrada = resultadoFecha[0];
+                  console.log("Fecha encontrada:", fechaEncontrada);
+                  objeto.fecha = fechaEncontrada;
+                } else {
+                  const fechaIndex = textoEnMinusculas.indexOf("fecha:");
+                  if (fechaIndex !== -1) {
+                    // Extrae la fecha que sigue a "Fecha"
+                    const fecha = texto
+                      .substr(fechaIndex + "fecha:".length, 10)
+                      .trim();
+                    console.log("FECHA:", fecha);
+                    objeto.fecha = fecha;
+                  }
                 }
-              }
-              // Expresión regular para buscar "nit:" o "no:" seguido de números
-              const regexNitNo = /nit\s*([\d.-]+)/i;
-              // /(nit|no)\s*(\d+)/i;
-              const resultadoNitNo = textoEnMinusculas.match(regexNitNo);
-
-              if (resultadoNitNo) {
-                const palabraClave = resultadoNitNo[1];
-                console.log(`nit encontrado: ${palabraClave}`);
-                objeto.nit = palabraClave;
-              } else {
-                const regexNitNo = /nit:\s*([\d.-]+)/i;
+                // Expresión regular para buscar "nit:" o "no:" seguido de números
+                const regexNitNo = /nit\s*([\d.-]+)/i;
+                // /(nit|no)\s*(\d+)/i;
                 const resultadoNitNo = textoEnMinusculas.match(regexNitNo);
+
                 if (resultadoNitNo) {
                   const palabraClave = resultadoNitNo[1];
-                  console.log(`nit encontrado1: ${palabraClave}`);
+                  console.log(`nit encontrado: ${palabraClave}`);
                   objeto.nit = palabraClave;
                 } else {
-                  const regexNitNo = /nit.\s*([\d.-]+)/i;
+                  const regexNitNo = /nit:\s*([\d.-]+)/i;
                   const resultadoNitNo = textoEnMinusculas.match(regexNitNo);
                   if (resultadoNitNo) {
                     const palabraClave = resultadoNitNo[1];
-                    console.log(`nit encontrado2: ${palabraClave}`);
+                    console.log(`nit encontrado1: ${palabraClave}`);
                     objeto.nit = palabraClave;
                   } else {
-                    // const regexNitNo = /no\s*([\d.-]+)/i;
-                    const regexNitNo = /no[:.]?\s*([\d.-]+)/gi;
+                    const regexNitNo = /nit.\s*([\d.-]+)/i;
                     const resultadoNitNo = textoEnMinusculas.match(regexNitNo);
                     if (resultadoNitNo) {
                       const palabraClave = resultadoNitNo[1];
                       console.log(`nit encontrado2: ${palabraClave}`);
                       objeto.nit = palabraClave;
                     } else {
-                      // Buscar "nit:" o "no:" en el texto utilizando indexOf
-                      const indiceNitNo =
-                        textoEnMinusculas.toLowerCase().indexOf("nit:") !== -1
-                          ? textoEnMinusculas.toLowerCase().indexOf("nit:")
-                          : textoEnMinusculas.toLowerCase().indexOf("no:");
-                      if (indiceNitNo !== -1) {
-                        const valorTexto = texto.substr(indiceNitNo).trim();
-                        console.log("nit encontrado 3: " + valorTexto);
-                        objeto.nit = valorTexto;
+                      // const regexNitNo = /no\s*([\d.-]+)/i;
+                      const regexNitNo = /no[:.]?\s*([\d.-]+)/gi;
+                      const resultadoNitNo =
+                        textoEnMinusculas.match(regexNitNo);
+                      if (resultadoNitNo) {
+                        const palabraClave = resultadoNitNo[1];
+                        console.log(`nit encontrado2: ${palabraClave}`);
+                        objeto.nit = palabraClave;
+                      } else {
+                        // Buscar "nit:" o "no:" en el texto utilizando indexOf
+                        const indiceNitNo =
+                          textoEnMinusculas.toLowerCase().indexOf("nit:") !== -1
+                            ? textoEnMinusculas.toLowerCase().indexOf("nit:")
+                            : textoEnMinusculas.toLowerCase().indexOf("no:");
+                        if (indiceNitNo !== -1) {
+                          const valorTexto = texto.substr(indiceNitNo).trim();
+                          console.log("nit encontrado 3: " + valorTexto);
+                          objeto.nit = valorTexto;
+                        }
                       }
                     }
                   }
                 }
-              }
 
-              //todo TOTAL
+                //todo TOTAL *****************************************
+                let regexvalor = /\$\s*([\d,.]+)/;
+                // regexvalor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
 
+                let resultadoValor2 = textoEnMinusculas.match(regexvalor);
 
-             let regexvalor = /\$\s*([\d,.]+)/; 
-              // regexvalor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
-
-             let resultadoValor2 = textoEnMinusculas.match(regexvalor);
-
-              if (resultadoValor2) {
-                console.log(`TOTAL: : ${resultadoValor2[1]}`);
-                const total = resultadoValor2[1].replace(",", "");
-                objeto.total = total;
-              } 
-
-              regexvalor = /total:\s*([\d,.]+)/i;
-                resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
-                  console.log(`TOTAL: 1: ${resultadoValor2[1]}`);
-                  const total = resultadoValor2[1].replace(",", "");
+                  console.log(`TOTAL: : ${resultadoValor2[1]}`);
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
 
-                regexvalor = /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i
+                regexvalor = /total:\s*([\d,.]+)/i;
+                // const regex = /TOTAL:\s*([\d,]+\.\d{2})/;
+                resultadoValor2 = textoEnMinusculas.match(regexvalor);
+                if (resultadoValor2) {
+                  console.log(`TOTAL: 1: ${resultadoValor2[1]}`);
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const total = Math.floor(parseFloat(valorSinComas));
+                  objeto.total = total;
+                }
+
+                regexvalor =
+                  /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i;
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-                  const total = resultadoValor2[1].replace(",", "");
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
-                  
                 }
 
                 regexvalorNumerico = /\bvalor\s*:\s*([\d,.]+)/i;
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
-                  console.log(
-                    `TOTAL: 2333: ${resultadoValor2[1]}`
-                  );
-                  const total = resultadoValor2[1].replace(",", "");
+                  console.log(`TOTAL: 2333: ${resultadoValor2[1]}`);
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
 
-                regexvalor = /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i
+                regexvalor =
+                  /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i;
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-                  const total = resultadoValor2[1].replace(",", "");
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
-
                 }
-                regexvalor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
+                regexvalor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i;
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-                  const total = resultadoValor2[1].replace(",", "");
+                  // const total = resultadoValor2[1].replace(",", "");
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
-
                 }
 
-                const indiceNitNo =
-                textoEnMinusculas.toLowerCase().indexOf("$") !== -1
-                  ? textoEnMinusculas.toLowerCase().indexOf("total:")
-                  : textoEnMinusculas.toLowerCase().indexOf("total");
-              if (indiceNitNo !== -1) {
-                const valorTexto = texto.substr(indiceNitNo).trim();
-                console.log("TOTAL 3: " + valorTexto);
-                const total = valorTexto.replace(",", "");
-                objeto.total = total; 
-              }
+                // const indiceNitNo =
+                //   textoEnMinusculas.toLowerCase().indexOf("$") !== -1
+                //     ? textoEnMinusculas.toLowerCase().indexOf("total:")
+                //     : textoEnMinusculas.toLowerCase().indexOf("total");
+                // if (indiceNitNo !== -1) {
+                //   const valorTexto = texto.substr(indiceNitNo).trim();
+                //   // console.log("TOTAL 3: " + valorTexto);
+                //   // const total = valorTexto.replace(",", "");
+                //   const valorSinComas = valorTexto.replace(/,/g, '');
+                //     const total = Math.floor(parseFloat(valorSinComas));
+                //   objeto.total = total;
+                // }
 
-             
+                //todo totalSinIva SUBTOTAL *************************************************
+                const regextotalSinIva = /subtotal:\s*([\d,.]+)/i;
+                const resultadototalSinIva =
+                  textoEnMinusculas.match(regextotalSinIva);
 
+                if (resultadototalSinIva) {
+                  console.log(`totalSinIva: ${resultadototalSinIva[1]}`);
+                  const valorSinComas = resultadototalSinIva[1].replace(/,/g, '');
+                    const totalSinIva = Math.floor(parseFloat(valorSinComas));
+                  objeto.totalSinIva = totalSinIva;
+                } else {
+                  const regextotalSinIva = /subtotali\s*([\d,.]+)/i;
+                  const resultadototalSinIva =
+                    textoEnMinusculas.match(regextotalSinIva);
+                  if (resultadototalSinIva) {
+                    const valorSinComas = resultadototalSinIva[1].replace(/,/g, '');
+                    const totalSinIva = Math.floor(parseFloat(valorSinComas));
+                    objeto.totalSinIva = totalSinIva;
+                  } else {
+                    const regextotalSinIva =
+                      /Total Bruto (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i;
+                    const resultadototalSinIva =
+                      textoEnMinusculas.match(regextotalSinIva);
 
+                    if (resultadototalSinIva) {
+                      console.log(`totalSinIva: ${resultadototalSinIva[1]}`);
 
+                      // Eliminar las comas
+                      const valorSinComas = resultadototalSinIva[1].replace(/,/g, '');
+                      const valorFinal = Math.floor(parseFloat(valorSinComas));
+                      objeto.totalSinIva = valorFinal;
+                    }
+                  }
+                }
 
+                // const regexvalor = /\$\s*([\d,.]+)/;
+                // // const regexvalor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
 
+                // const resultadoValor2 = textoEnMinusculas.match(regexvalor);
 
+                // if (resultadoValor2) {
+                //   console.log(`TOTAL: : ${resultadoValor2[1]}`);
+                //   const total = resultadoValor2[1].replace(",", "");
+                //   objeto.total = total;
+                // }
+                // else {
+                //   const regexvalor = /total:\s*([\d,.]+)/i;
+                //   const resultadoValor2 = textoEnMinusculas.match(regexvalor);
+                //   if (resultadoValor2) {
+                //     console.log(`TOTAL: 1: ${resultadoValor2[1]}`);
+                //     const total = resultadoValor2[1].replace(",", "");
+                //     objeto.total = total;
+                //   } else {
+                //     // const regexvalor = /total\s*a\s*pagar:\s*([\d,.]+)/i;
+                //     const regexValor = /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i
+                //     const resultadoValor2 = textoEnMinusculas.match(regexvalor);
+                //     if (resultadoValor2) {
+                //       console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
+                //       const total = resultadoValor2[1].replace(",", "");
+                //       objeto.total = total;
 
+                //     } else {
+                //       // const regexvalor = /\bvalor\b/i;
+                //       const regexValorNumerico = /\bvalor\s*:\s*([\d,.]+)/i;
+                //       const resultadoValor2 = textoEnMinusculas.match(regexvalor);
+                //       if (resultadoValor2) {
+                //         console.log(
+                //           `TOTAL: 2333: ${resultadoValor2[1]}`
+                //         );
+                //         const total = resultadoValor2[1].replace(",", "");
+                //         objeto.total = total;
+                //       } else {
+                //         const regexValor = /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i
+                //     const resultadoValor2 = textoEnMinusculas.match(regexvalor);
+                //     if (resultadoValor2) {
+                //       console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
+                //       const total = resultadoValor2[1].replace(",", "");
+                //       objeto.total = total;
 
+                //     }else{
+                //       const regexValor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
+                //     const resultadoValor2 = textoEnMinusculas.match(regexvalor);
+                //     if (resultadoValor2) {
+                //       console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
+                //       const total = resultadoValor2[1].replace(",", "");
+                //       objeto.total = total;
 
+                //     }else{
+                //       const indiceNitNo =
+                //       textoEnMinusculas.toLowerCase().indexOf("$") !== -1
+                //         ? textoEnMinusculas.toLowerCase().indexOf("total:")
+                //         : textoEnMinusculas.toLowerCase().indexOf("total");
+                //     if (indiceNitNo !== -1) {
+                //       const valorTexto = texto.substr(indiceNitNo).trim();
+                //       console.log("TOTAL 3: " + valorTexto);
+                //       const total = valorTexto.replace(",", "");
+                //       objeto.total = total;
+                //     }
+                //     }
 
+                //     }
 
+                //       }
+                //     }
+                //   }
+                // }
 
-
-
-
-
-
-
-              // const regexvalor = /\$\s*([\d,.]+)/; 
-              // // const regexvalor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
-
-              // const resultadoValor2 = textoEnMinusculas.match(regexvalor);
-
-              // if (resultadoValor2) {
-              //   console.log(`TOTAL: : ${resultadoValor2[1]}`);
-              //   const total = resultadoValor2[1].replace(",", "");
-              //   objeto.total = total;
-              // } 
-              // else {
-              //   const regexvalor = /total:\s*([\d,.]+)/i;
-              //   const resultadoValor2 = textoEnMinusculas.match(regexvalor);
-              //   if (resultadoValor2) {
-              //     console.log(`TOTAL: 1: ${resultadoValor2[1]}`);
-              //     const total = resultadoValor2[1].replace(",", "");
-              //     objeto.total = total;
-              //   } else {
-              //     // const regexvalor = /total\s*a\s*pagar:\s*([\d,.]+)/i;
-              //     const regexValor = /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i
-              //     const resultadoValor2 = textoEnMinusculas.match(regexvalor);
-              //     if (resultadoValor2) {
-              //       console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-              //       const total = resultadoValor2[1].replace(",", "");
-              //       objeto.total = total;
-                    
-              //     } else {
-              //       // const regexvalor = /\bvalor\b/i;
-              //       const regexValorNumerico = /\bvalor\s*:\s*([\d,.]+)/i;
-              //       const resultadoValor2 = textoEnMinusculas.match(regexvalor);
-              //       if (resultadoValor2) {
-              //         console.log(
-              //           `TOTAL: 2333: ${resultadoValor2[1]}`
-              //         );
-              //         const total = resultadoValor2[1].replace(",", "");
-              //         objeto.total = total;
-              //       } else {
-              //         const regexValor = /total\s*a\s*pagar:\s*([\d.]+(?:,\d{3})*(?:\.\d{2})?)/i
-              //     const resultadoValor2 = textoEnMinusculas.match(regexvalor);
-              //     if (resultadoValor2) {
-              //       console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-              //       const total = resultadoValor2[1].replace(",", "");
-              //       objeto.total = total;
-
-              //     }else{
-              //       const regexValor = /Total a Pagar (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i
-              //     const resultadoValor2 = textoEnMinusculas.match(regexvalor);
-              //     if (resultadoValor2) {
-              //       console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-              //       const total = resultadoValor2[1].replace(",", "");
-              //       objeto.total = total;
-
-              //     }else{
-              //       const indiceNitNo =
-              //       textoEnMinusculas.toLowerCase().indexOf("$") !== -1
-              //         ? textoEnMinusculas.toLowerCase().indexOf("total:")
-              //         : textoEnMinusculas.toLowerCase().indexOf("total");
-              //     if (indiceNitNo !== -1) {
-              //       const valorTexto = texto.substr(indiceNitNo).trim();
-              //       console.log("TOTAL 3: " + valorTexto);
-              //       const total = valorTexto.replace(",", "");
-              //       objeto.total = total; 
-              //     }
-              //     }
-                   
-              //     }
-                      
-              //       }
-              //     }
-              //   }
-              // }
-
-              // todo descripcion conceptos
-              const regexDescrip = /descripción\s+(\d+)/;
-              const resultadoDescrip = textoEnMinusculas.match(regexDescrip);
-
-              if (resultadoDescrip) {
-                const palabraClave = resultadoDescrip[1];
-                console.log(`DESCRIPCION ${palabraClave}`);
-                objeto.concepto = palabraClave;
-              } else {
-                const regexDescrip = /descripcion\s+(\d+)/;
+                // todo descripcion conceptos
+                const regexDescrip = /descripción\s+(\d+)/;
                 const resultadoDescrip = textoEnMinusculas.match(regexDescrip);
+
                 if (resultadoDescrip) {
                   const palabraClave = resultadoDescrip[1];
-                  console.log(`DESCRIPCION 1: ${palabraClave}`);
-                  objeto.concepto = palabraClave;
-                }else{
-                  const regexDescrip = /por\s+concepto\s+de:\s*([^0-9]+)/i;
-                const resultadoDescrip = textoEnMinusculas.match(regexDescrip);
-                if (resultadoDescrip) {
-                  const palabraClave = resultadoDescrip[1];
-                  console.log(`CONCEPTO ${palabraClave}`);
+                  console.log(`DESCRIPCION ${palabraClave}`);
                   objeto.concepto = palabraClave;
                 } else {
-                  const regexDescrip = /descripción:\s*([^0-9]+)/i;
+                  const regexDescrip = /descripcion\s+(\d+)/;
                   const resultadoDescrip =
                     textoEnMinusculas.match(regexDescrip);
                   if (resultadoDescrip) {
                     const palabraClave = resultadoDescrip[1];
-                    console.log(`CONCEPTO 1 ${palabraClave}`);
+                    console.log(`DESCRIPCION 1: ${palabraClave}`);
                     objeto.concepto = palabraClave;
+                  } else {
+                    const regexDescrip = /por\s+concepto\s+de:\s*([^0-9]+)/i;
+                    const resultadoDescrip =
+                      textoEnMinusculas.match(regexDescrip);
+                    if (resultadoDescrip) {
+                      const palabraClave = resultadoDescrip[1];
+                      console.log(`CONCEPTO ${palabraClave}`);
+                      objeto.concepto = palabraClave;
+                    } else {
+                      const regexDescrip = /descripción:\s*([^0-9]+)/i;
+                      const resultadoDescrip =
+                        textoEnMinusculas.match(regexDescrip);
+                      if (resultadoDescrip) {
+                        const palabraClave = resultadoDescrip[1];
+                        console.log(`CONCEPTO 1 ${palabraClave}`);
+                        objeto.concepto = palabraClave;
+                      }
+                    }
                   }
                 }
-                }
-              }
 
-              // todo numero de factura
-              const regexNoFact = /no.\s*([\d.-]+)/i;
-              const resultadoNoFact = textoEnMinusculas.match(regexNoFact);
+                // todo numero de factura
+                const regexNoFact = /no.\s*([\d.-]+)/i;
+                const resultadoNoFact = textoEnMinusculas.match(regexNoFact);
 
-              if (resultadoNoFact) {
-                const palabraClave = resultadoNoFact[1];
-                console.log(`Numero Factura ${palabraClave}`);
-                objeto.numFact = palabraClave;
-              }else{
-                const regexNoFact = /no\s*([\d.-]+)/i;
-              const resultadoNoFact = textoEnMinusculas.match(regexNoFact);
                 if (resultadoNoFact) {
                   const palabraClave = resultadoNoFact[1];
                   console.log(`Numero Factura ${palabraClave}`);
                   objeto.numFact = palabraClave;
-                }
-              }
-
-              //todo totalSinIva 
-              const regextotalSinIva = /subtotal:\s*([\d,.]+)/i;
-              const resultadototalSinIva = textoEnMinusculas.match(regextotalSinIva);
-
-              if (resultadototalSinIva) {
-                console.log(`totalSinIva: ${resultadototalSinIva[1]}`);
-                const totalSinIva = resultadototalSinIva[1].replace(",", "");
-                objeto.totalSinIva = totalSinIva;
-              }else{
-                const regextotalSinIva = /subtotali\s*([\d,.]+)/i;
-                const resultadototalSinIva = textoEnMinusculas.match(regextotalSinIva);
-                if (resultadototalSinIva) {
-                  const totalSinIva = resultadototalSinIva[1].replace(",", "");
-                  objeto.totalSinIva = totalSinIva;
-                }else{
-                  const regextotalSinIva = /Total Bruto (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i;
-                  const resultadototalSinIva = textoEnMinusculas.match(regextotalSinIva);
-    
-                  if (resultadototalSinIva) {
-                    console.log(`totalSinIva: ${resultadototalSinIva[1]}`);
-                    const totalSinIva = resultadototalSinIva[1].replace(",", "");
-                    objeto.totalSinIva = totalSinIva;
+                } else {
+                  const regexNoFact = /no\s*([\d.-]+)/i;
+                  const resultadoNoFact = textoEnMinusculas.match(regexNoFact);
+                  if (resultadoNoFact) {
+                    const palabraClave = resultadoNoFact[1];
+                    console.log(`Numero Factura ${palabraClave}`);
+                    objeto.numFact = palabraClave;
                   }
                 }
+
+                //todo IPC
+                //  const regexIPC = /inc : 8\.00% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
+
+                // const regexIPC =
+                //   /inc : 8\.00% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
+
+                // const resultadoIPC = textoEnMinusculas.match(regexIPC);
+                // if (resultadoIPC !== null && resultadoIPC !== undefined) {
+                //   console.log(`ipccccccccccccccccccc: ${resultadoIPC[1]}`);
+                //   const IPC = resultadoIPC[1].replace(",", "");
+                //   objeto.ipc = IPC;
+                // } else {
+                //   const regexIPC =
+                //     /Impoconsumo 8% (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i;
+
+                //   const resultadoIPC = textoEnMinusculas.match(regexIPC);
+                //   if (resultadoIPC !== null && resultadoIPC !== undefined) {
+                //     const IPC = resultadoIPC[1].replace(",", "");
+                //     objeto.ipc = IPC;
+                //   }
+                // }
+
+                const variableipc = /impoconsumo (\d+(\.\d+)?)%/i; // La "i" al final hace que la búsqueda sea insensible a mayúsculas/minúsculas
+                const porcentajeVariableipc = textoEnMinusculas.match(variableipc);
+                
+                if (porcentajeVariableipc) {
+                  const regex = new RegExp(`impoconsumo\\s*${porcentajeVariableipc[1]}%\\s*(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`);
+                  const match = textoEnMinusculas.match(regex);
+                
+                  if (match) {
+                    const impoconsumoValue = match[1];
+                    console.log("Valor de Impoconsumo:", impoconsumoValue);
+                  } else {
+                    console.log("No se encontró el valor de Impoconsumo");
+                  }
+                } else {
+                  console.log("No se encontró el porcentaje de Impoconsumo");
+                }
+                
+
+
+                const variableipc1 = /inc (\d+(\.\d+)?)%/i; // La "i" al final hace que la búsqueda sea insensible a mayúsculas/minúsculas
+                const porcentajeVariableipc1 = textoEnMinusculas.match(variableipc1);
+                
+                if (porcentajeVariableipc1) {
+                  const regex = new RegExp(`inc\\s*${porcentajeVariableipc1[1]}%\\s*(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`);
+                  const match = textoEnMinusculas.match(regex);
+                
+                  if (match) {
+                    const impoconsumoValue = match[1];
+                    console.log("Valor de Impoconsumo:", impoconsumoValue);
+                  } else {
+                    const regex = /inc(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
+                    const match = textoEnMinusculas.match(regex);
+                  
+                    if (match) {
+                      const impoconsumoValue = match[1];
+                      console.log("Valor de Impoconsumo:", impoconsumoValue);
+                    }
+                  }
+                } else {
+                  console.log("No se encontró el porcentaje de Impoconsumo");
+                }
+
+                //TODO RETE ICA ********
+                const variableica = /reteica (\d+(\.\d+)?)%/;
+                const porcentajeVariableica = textoEnMinusculas.match(variableica);
+                if (porcentajeVariableica) {
+            // const regex = /reteica \d+% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
+
+            const regex = new RegExp(`reteica ${porcentajeVariableica[1]}% (\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`);
+            const match = textoEnMinusculas.match(regex);
+            
+            if (match) {
+              const icaValue = match[1];
+              console.log("Valor de reteica:", icaValue);
+            } else {
+              console.log("No se encontró el valor de reteica");
+            }
+          }
+
+
+              } catch (error) {
+                console.log(error);
               }
-
-               //todo IPC
-              //  const regexIPC = /inc : 8\.00% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
-              const regexIPC = /inc : 8\.00% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
-
-               const resultadoIPC = textoEnMinusculas.match(regexIPC);
-               if (resultadoIPC !== null && resultadoIPC !== undefined) {
-                 console.log(`ipccccccccccccccccccc: ${resultadoIPC[1]}`);
-                 const IPC = resultadoIPC[1].replace(",", "");
-                 objeto.ipc = IPC;
-               }else{
-                const regexIPC =  /Impoconsumo 8% (\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i;
-
-                const resultadoIPC = textoEnMinusculas.match(regexIPC);
-                if (resultadoIPC !== null && resultadoIPC !== undefined) {
-                  const IPC = resultadoIPC[1].replace(",", "");
-                  objeto.ipc = IPC;
-                }
-               }
-              
-               
-
-
-
-           
-             } catch (error) {
-              console.log(error);
-             }
-                //? ELIMINACION DE IMAGEN TEMPORAL 
-                const pathnomimg = path.join(
-                  __dirname,
-                  "../..",
-                  "uploads",
-                  imgs.name
-                );
-                const pathnomimgR = path.join(
-                  __dirname,
-                  "../..",
-                  "uploads",
-                  "imagenrender.png"
-                );
-                eliminar(pathnomimg);
-                eliminar(pathnomimgR);
-                if (objeto.total) {
-                  console.log(objeto.total)
-                  // const total = objeto.total.replace(".", "");
-                  // console.log(total)
-                  objeto.total = parseFloat(objeto.total)
-                }
-                if (objeto.totalSinIva) {
-                  objeto.totalSinIva = parseFloat(objeto.totalSinIva)
-                }
-                console.log(objeto)
-                res.json(objeto);
+              //? ELIMINACION DE IMAGEN TEMPORAL
+              const pathnomimg = path.join(
+                __dirname,
+                "../..",
+                "uploads",
+                imgs.name
+              );
+              const pathnomimgR = path.join(
+                __dirname,
+                "../..",
+                "uploads",
+                "imagenrender.png"
+              );
+              eliminar(pathnomimg);
+              eliminar(pathnomimgR);
+              if (objeto.total) {
+                console.log(objeto.total);
+                // const total = objeto.total.replace(".", "");
+                // console.log(total)
+                objeto.total = parseFloat(objeto.total);
+              }
+              if (objeto.totalSinIva) {
+                objeto.totalSinIva = parseFloat(objeto.totalSinIva);
+              }
+              console.log(objeto);
+              res.json(objeto);
             }
           }
         );
