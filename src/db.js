@@ -158,7 +158,7 @@ sequelize
   });
 
 const reincioNode = () => {
-  const comando =
+  const comando =//prueba
     process.platform === "win32" ? "taskkill /F /IM node" : "pkill -f nodemon";
 
   const proceso = spawn(comando, [], { shell: true });
