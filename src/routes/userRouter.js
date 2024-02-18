@@ -256,7 +256,7 @@ userRouter.get(
       <body>
 
       </body>
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://creame-web.web.app/actividades') 
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/actividades') 
       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/Gastos') 
         window.close();
     </script>
