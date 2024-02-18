@@ -277,7 +277,8 @@ const insertInto = async(data,tipo) =>{
     data.Descripcion = data.Descripcion ? data.Descripcion : ""
     data.iva = data.iva ? data.iva : 0
     data.ipc = data.ipc ? data.ipc : 0
-    data.retefuente = data.retefuente ? data.retefuente : 0
+    data.retefuente = data.retefuente ? data.retefuente : 0,
+    data.ica = data.ica ? data.ica : 0
   }
   console.log(typeof data.Descripcion,"descripcion")
  switch (tipo) {
@@ -304,6 +305,7 @@ const insertInto = async(data,tipo) =>{
       ,[CCostos]
       ,[idAnticipo]
       ,[impoconsumo]
+      ,[ica]
       ,[iva]
       ,[retefuente]
       ,[Sub_Total]
@@ -328,6 +330,7 @@ const insertInto = async(data,tipo) =>{
         '${data.CCostos}',
          '${data.idAnticipo}',
          ${data.ipc},
+         ${data.ica},
          ${data.iva},
          ${data.reteFuente},
        ${data.Sub_Total},

@@ -203,6 +203,7 @@ async function Ocr(req, res) {
                   rete: "",
                   ipc: "",
                   concepto: "",
+                  ica : "",
                   municipio: municipio,
                   codepostal: codepostal,
                 };
@@ -586,7 +587,18 @@ async function Ocr(req, res) {
             
             if (match) {
               const icaValue = match[1];
-              console.log("Valor de reteica:", icaValue);
+              // objeto.ica = icaValue
+               // Eliminar las comas
+               const icaSinComas =icaValue.replace(/,/g, '');
+               const icaFinal = Math.floor(parseFloat(icaSinComas));
+               objeto.ica = icaFinal;
+
+
+
+
+
+
+              console.log("Valor de reteica:", icaFinal);
             } else {
               console.log("No se encontró el valor de reteica");
             }
