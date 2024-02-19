@@ -1,3 +1,4 @@
+const natural = require("natural");
 const sharp = require("sharp");
 const async = require("async");
 const fs = require("fs");
@@ -203,7 +204,7 @@ async function Ocr(req, res) {
                   rete: "",
                   ipc: "",
                   concepto: "",
-                  ica : "",
+                  ica: "",
                   municipio: municipio,
                   codepostal: codepostal,
                 };
@@ -235,22 +236,25 @@ async function Ocr(req, res) {
 
                 if (resultadoNitNo) {
                   const palabraClave = resultadoNitNo[1];
-                  console.log(`nit encontrado: ${palabraClave}`);
-                  objeto.nit = palabraClave;
+                  console.log(`nit encontrado: ${palabraClave.split("-")[0]}`);
+
+                  objeto.nit = palabraClave.split("-")[0];
                 } else {
                   const regexNitNo = /nit:\s*([\d.-]+)/i;
                   const resultadoNitNo = textoEnMinusculas.match(regexNitNo);
                   if (resultadoNitNo) {
                     const palabraClave = resultadoNitNo[1];
                     console.log(`nit encontrado1: ${palabraClave}`);
-                    objeto.nit = palabraClave;
+
+                    objeto.nit = palabraClave.split("-")[0];
                   } else {
                     const regexNitNo = /nit.\s*([\d.-]+)/i;
                     const resultadoNitNo = textoEnMinusculas.match(regexNitNo);
                     if (resultadoNitNo) {
                       const palabraClave = resultadoNitNo[1];
                       console.log(`nit encontrado2: ${palabraClave}`);
-                      objeto.nit = palabraClave;
+
+                      objeto.nit = palabraClave.split("-")[0];
                     } else {
                       // const regexNitNo = /no\s*([\d.-]+)/i;
                       const regexNitNo = /no[:.]?\s*([\d.-]+)/gi;
@@ -259,7 +263,8 @@ async function Ocr(req, res) {
                       if (resultadoNitNo) {
                         const palabraClave = resultadoNitNo[1];
                         console.log(`nit encontrado2: ${palabraClave}`);
-                        objeto.nit = palabraClave;
+
+                        objeto.nit = palabraClave.split("-")[0];
                       } else {
                         // Buscar "nit:" o "no:" en el texto utilizando indexOf
                         const indiceNitNo =
@@ -269,7 +274,8 @@ async function Ocr(req, res) {
                         if (indiceNitNo !== -1) {
                           const valorTexto = texto.substr(indiceNitNo).trim();
                           console.log("nit encontrado 3: " + valorTexto);
-                          objeto.nit = valorTexto;
+
+                          objeto.nit = valorTexto.split("-")[0];
                         }
                       }
                     }
@@ -284,7 +290,7 @@ async function Ocr(req, res) {
 
                 if (resultadoValor2) {
                   console.log(`TOTAL: : ${resultadoValor2[1]}`);
-                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, "");
                   const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
@@ -294,7 +300,7 @@ async function Ocr(req, res) {
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: 1: ${resultadoValor2[1]}`);
-                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, "");
                   const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
@@ -304,7 +310,7 @@ async function Ocr(req, res) {
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, "");
                   const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
@@ -313,7 +319,7 @@ async function Ocr(req, res) {
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: 2333: ${resultadoValor2[1]}`);
-                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, "");
                   const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
@@ -323,7 +329,7 @@ async function Ocr(req, res) {
                 resultadoValor2 = textoEnMinusculas.match(regexvalor);
                 if (resultadoValor2) {
                   console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
-                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, "");
                   const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
@@ -332,7 +338,7 @@ async function Ocr(req, res) {
                 if (resultadoValor2) {
                   console.log(`TOTAL: a pagar: ${resultadoValor2[1]}`);
                   // const total = resultadoValor2[1].replace(",", "");
-                  const valorSinComas = resultadoValor2[1].replace(/,/g, '');
+                  const valorSinComas = resultadoValor2[1].replace(/,/g, "");
                   const total = Math.floor(parseFloat(valorSinComas));
                   objeto.total = total;
                 }
@@ -357,15 +363,21 @@ async function Ocr(req, res) {
 
                 if (resultadototalSinIva) {
                   console.log(`totalSinIva: ${resultadototalSinIva[1]}`);
-                  const valorSinComas = resultadototalSinIva[1].replace(/,/g, '');
-                    const totalSinIva = Math.floor(parseFloat(valorSinComas));
+                  const valorSinComas = resultadototalSinIva[1].replace(
+                    /,/g,
+                    ""
+                  );
+                  const totalSinIva = Math.floor(parseFloat(valorSinComas));
                   objeto.totalSinIva = totalSinIva;
                 } else {
                   const regextotalSinIva = /subtotali\s*([\d,.]+)/i;
                   const resultadototalSinIva =
                     textoEnMinusculas.match(regextotalSinIva);
                   if (resultadototalSinIva) {
-                    const valorSinComas = resultadototalSinIva[1].replace(/,/g, '');
+                    const valorSinComas = resultadototalSinIva[1].replace(
+                      /,/g,
+                      ""
+                    );
                     const totalSinIva = Math.floor(parseFloat(valorSinComas));
                     objeto.totalSinIva = totalSinIva;
                   } else {
@@ -378,7 +390,10 @@ async function Ocr(req, res) {
                       console.log(`totalSinIva: ${resultadototalSinIva[1]}`);
 
                       // Eliminar las comas
-                      const valorSinComas = resultadototalSinIva[1].replace(/,/g, '');
+                      const valorSinComas = resultadototalSinIva[1].replace(
+                        /,/g,
+                        ""
+                      );
                       const valorFinal = Math.floor(parseFloat(valorSinComas));
                       objeto.totalSinIva = valorFinal;
                     }
@@ -489,10 +504,78 @@ async function Ocr(req, res) {
                         const palabraClave = resultadoDescrip[1];
                         console.log(`CONCEPTO 1 ${palabraClave}`);
                         objeto.concepto = palabraClave;
+                      } else {
+                        const regexobservacion = /observaciones:\s*([\s\S]*)/i;
+
+                        // Buscar la dirección del cliente en el texto
+                        const match = textoEnMinusculas.match(regexobservacion);
+
+                        // Si se encontró la dirección del cliente, extraer el valor
+                        if (match && match[1]) {
+                          const observacion = match[1].trim();
+                          console.log(
+                            `observaciones: ${observacion}`
+                          );
+                          objeto.concepto = observacion
+                        } else {
+                          console.log(
+                            "no se encontraron observaciones"
+                          );
+                        }
                       }
                     }
                   }
                 }
+                //TODO: RAZON SOCIAL
+
+                // const regexRazonSocial =
+                // /razón\s+social\/nombre:\s+(.*?)(?=\s*razón\s+social\/nombre:|$)/i;
+                const regexRazonSocial =
+                  /razón\s+social\/nombre:\s+(.*?)(?=\s*nit:|$)/i;
+
+                // Buscar la razón social en el texto
+                const resultadoRazonSocial =
+                  textoEnMinusculas.match(regexRazonSocial);
+
+                // Si se encontró la razón social, extraer el valor
+                if (resultadoRazonSocial) {
+                  const razonSocial = resultadoRazonSocial[1];
+                  console.log(
+                    `Razón Social************************: ${razonSocial}`
+                  );
+                  objeto.nombre = razonSocial;
+                } else {
+                  const regexDestinatario = /destinatario\s+([^0-9]+)/i;
+
+                  // Buscar el destinatario en el texto
+                  const match = textoEnMinusculas.match(regexDestinatario);
+
+                  // Si se encontró el destinatario, extraer el valor
+                  if (match && match[1]) {
+                    const destinatario = match[1].trim();
+                    console.log(`Destinatario: ${destinatario}`);
+                    objeto.nombre = destinatario;
+                  } else {
+                    const regexPagadoA = /pagado\s+a:\s+([^:\n]+)/i;
+
+                    // Buscar "pagado a" en el texto
+                    const match = textoEnMinusculas.match(regexPagadoA);
+
+                    // Si se encontró "pagado a", extraer el valor
+                    if (match && match[1]) {
+                      const pagadoA = match[1].trim();
+                      console.log(`Pagado a: ${pagadoA}`);
+                      objeto.nombre = pagadoA;
+                    } else {
+                      console.log(
+                        'Información de "pagado a" no encontrada en el texto.'
+                      );
+                    }
+                  }
+                }
+
+                //todo *********nlp natural
+                //
 
                 // todo numero de factura
                 const regexNoFact = /no.\s*([\d.-]+)/i;
@@ -535,12 +618,15 @@ async function Ocr(req, res) {
                 // }
 
                 const variableipc = /impoconsumo (\d+(\.\d+)?)%/i; // La "i" al final hace que la búsqueda sea insensible a mayúsculas/minúsculas
-                const porcentajeVariableipc = textoEnMinusculas.match(variableipc);
-                
+                const porcentajeVariableipc =
+                  textoEnMinusculas.match(variableipc);
+
                 if (porcentajeVariableipc) {
-                  const regex = new RegExp(`impoconsumo\\s*${porcentajeVariableipc[1]}%\\s*(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`);
+                  const regex = new RegExp(
+                    `impoconsumo\\s*${porcentajeVariableipc[1]}%\\s*(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`
+                  );
                   const match = textoEnMinusculas.match(regex);
-                
+
                   if (match) {
                     const impoconsumoValue = match[1];
                     console.log("Valor de Impoconsumo:", impoconsumoValue);
@@ -550,23 +636,24 @@ async function Ocr(req, res) {
                 } else {
                   console.log("No se encontró el porcentaje de Impoconsumo");
                 }
-                
-
 
                 const variableipc1 = /inc (\d+(\.\d+)?)%/i; // La "i" al final hace que la búsqueda sea insensible a mayúsculas/minúsculas
-                const porcentajeVariableipc1 = textoEnMinusculas.match(variableipc1);
-                
+                const porcentajeVariableipc1 =
+                  textoEnMinusculas.match(variableipc1);
+
                 if (porcentajeVariableipc1) {
-                  const regex = new RegExp(`inc\\s*${porcentajeVariableipc1[1]}%\\s*(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`);
+                  const regex = new RegExp(
+                    `inc\\s*${porcentajeVariableipc1[1]}%\\s*(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`
+                  );
                   const match = textoEnMinusculas.match(regex);
-                
+
                   if (match) {
                     const impoconsumoValue = match[1];
                     console.log("Valor de Impoconsumo:", impoconsumoValue);
                   } else {
                     const regex = /inc(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
                     const match = textoEnMinusculas.match(regex);
-                  
+
                     if (match) {
                       const impoconsumoValue = match[1];
                       console.log("Valor de Impoconsumo:", impoconsumoValue);
@@ -578,33 +665,29 @@ async function Ocr(req, res) {
 
                 //TODO RETE ICA ********
                 const variableica = /reteica (\d+(\.\d+)?)%/;
-                const porcentajeVariableica = textoEnMinusculas.match(variableica);
+                const porcentajeVariableica =
+                  textoEnMinusculas.match(variableica);
                 if (porcentajeVariableica) {
-            // const regex = /reteica \d+% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
+                  // const regex = /reteica \d+% (\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/;
 
-            const regex = new RegExp(`reteica ${porcentajeVariableica[1]}% (\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`);
-            const match = textoEnMinusculas.match(regex);
-            
-            if (match) {
-              const icaValue = match[1];
-              // objeto.ica = icaValue
-               // Eliminar las comas
-               const icaSinComas =icaValue.replace(/,/g, '');
-               const icaFinal = Math.floor(parseFloat(icaSinComas));
-               objeto.ica = icaFinal;
+                  const regex = new RegExp(
+                    `reteica ${porcentajeVariableica[1]}% (\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2}))`
+                  );
+                  const match = textoEnMinusculas.match(regex);
 
+                  if (match) {
+                    const icaValue = match[1];
+                    // objeto.ica = icaValue
+                    // Eliminar las comas
+                    const icaSinComas = icaValue.replace(/,/g, "");
+                    const icaFinal = Math.floor(parseFloat(icaSinComas));
+                    objeto.ica = icaFinal;
 
-
-
-
-
-              console.log("Valor de reteica:", icaFinal);
-            } else {
-              console.log("No se encontró el valor de reteica");
-            }
-          }
-
-
+                    console.log("Valor de reteica:", icaFinal);
+                  } else {
+                    console.log("No se encontró el valor de reteica");
+                  }
+                }
               } catch (error) {
                 console.log(error);
               }
