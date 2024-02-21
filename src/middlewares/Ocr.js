@@ -136,6 +136,7 @@ async function Ocr(req, res) {
                       total: "",
                       totalSinIva: "",
                       nombre: "",
+                      razon_social: "",
                       fecha: "",
                       iva: "",
                       rete: "",
@@ -199,6 +200,7 @@ async function Ocr(req, res) {
                   total: "",
                   totalSinIva: "",
                   nombre: "",
+                  razon_social: "",
                   fecha: "",
                   iva: "",
                   rete: "",
@@ -543,7 +545,7 @@ async function Ocr(req, res) {
                   console.log(
                     `Razón Social************************: ${razonSocial}`
                   );
-                  objeto.nombre = razonSocial;
+                  objeto.razon_social = razonSocial;
                 } else {
                   const regexDestinatario = /destinatario\s+([^0-9]+)/i;
 
@@ -554,7 +556,7 @@ async function Ocr(req, res) {
                   if (match && match[1]) {
                     const destinatario = match[1].trim();
                     console.log(`Destinatario: ${destinatario}`);
-                    objeto.nombre = destinatario;
+                    objeto.razon_social = destinatario;
                   } else {
                     const regexPagadoA = /pagado\s+a:\s+([^:\n]+)/i;
 
@@ -565,7 +567,7 @@ async function Ocr(req, res) {
                     if (match && match[1]) {
                       const pagadoA = match[1].trim();
                       console.log(`Pagado a: ${pagadoA}`);
-                      objeto.nombre = pagadoA;
+                      objeto.razon_social = pagadoA;
                     } else {
                       console.log(
                         'Información de "pagado a" no encontrada en el texto.'
