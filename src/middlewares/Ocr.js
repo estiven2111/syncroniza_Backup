@@ -474,60 +474,94 @@ async function Ocr(req, res) {
                 //   }
                 // }
 
-                // todo descripcion conceptos
-                const regexDescrip = /descripción\s+(\d+)/;
-                const resultadoDescrip = textoEnMinusculas.match(regexDescrip);
+                // todo descripcion conceptos esto para descripcion si se llegase a necesitar por el momento servicio o producto 
+                // const regexDescrip = /descripción\s+(\d+)/;
+                // const resultadoDescrip = textoEnMinusculas.match(regexDescrip);
 
-                if (resultadoDescrip) {
-                  const palabraClave = resultadoDescrip[1];
-                  console.log(`DESCRIPCION ${palabraClave}`);
-                  objeto.concepto = palabraClave;
-                } else {
-                  const regexDescrip = /descripcion\s+(\d+)/;
-                  const resultadoDescrip =
-                    textoEnMinusculas.match(regexDescrip);
-                  if (resultadoDescrip) {
-                    const palabraClave = resultadoDescrip[1];
-                    console.log(`DESCRIPCION 1: ${palabraClave}`);
-                    objeto.concepto = palabraClave;
-                  } else {
-                    const regexDescrip = /por\s+concepto\s+de:\s*([^0-9]+)/i;
-                    const resultadoDescrip =
-                      textoEnMinusculas.match(regexDescrip);
-                    if (resultadoDescrip) {
-                      const palabraClave = resultadoDescrip[1];
-                      console.log(`CONCEPTO ${palabraClave}`);
-                      objeto.concepto = palabraClave;
-                    } else {
-                      const regexDescrip = /descripción:\s*([^0-9]+)/i;
-                      const resultadoDescrip =
-                        textoEnMinusculas.match(regexDescrip);
-                      if (resultadoDescrip) {
-                        const palabraClave = resultadoDescrip[1];
-                        console.log(`CONCEPTO 1 ${palabraClave}`);
-                        objeto.concepto = palabraClave;
-                      } else {
-                        const regexobservacion = /observaciones:\s*([\s\S]*)/i;
+                // if (resultadoDescrip) {
+                //   const palabraClave = resultadoDescrip[1];
+                //   console.log(`DESCRIPCION ${palabraClave}`);
+                //   objeto.concepto = palabraClave;
+                // } else {
+                //   const regexDescrip = /descripcion\s+(\d+)/;
+                //   const resultadoDescrip =
+                //     textoEnMinusculas.match(regexDescrip);
+                //   if (resultadoDescrip) {
+                //     const palabraClave = resultadoDescrip[1];
+                //     console.log(`DESCRIPCION 1: ${palabraClave}`);
+                //     objeto.concepto = palabraClave;
+                //   } else {
+                //     const regexDescrip = /por\s+concepto\s+de:\s*([^0-9]+)/i;
+                //     const resultadoDescrip =
+                //       textoEnMinusculas.match(regexDescrip);
+                //     if (resultadoDescrip) {
+                //       const palabraClave = resultadoDescrip[1];
+                //       console.log(`CONCEPTO ${palabraClave}`);
+                //       objeto.concepto = palabraClave;
+                //     } else {
+                //       const regexDescrip = /descripción:\s*([^0-9]+)/i;
+                //       const resultadoDescrip =
+                //         textoEnMinusculas.match(regexDescrip);
+                //       if (resultadoDescrip) {
+                //         const palabraClave = resultadoDescrip[1];
+                //         console.log(`CONCEPTO 1 ${palabraClave}`);
+                //         objeto.concepto = palabraClave;
+                //       } else {
+                //         const regexobservacion = /observaciones:\s*([\s\S]*)/i;
 
-                        // Buscar la dirección del cliente en el texto
-                        const match = textoEnMinusculas.match(regexobservacion);
+                //         // Buscar la dirección del cliente en el texto
+                //         const match = textoEnMinusculas.match(regexobservacion);
 
-                        // Si se encontró la dirección del cliente, extraer el valor
-                        if (match && match[1]) {
-                          const observacion = match[1].trim();
-                          console.log(
-                            `observaciones: ${observacion}`
-                          );
-                          objeto.concepto = observacion
-                        } else {
-                          console.log(
-                            "no se encontraron observaciones"
-                          );
-                        }
-                      }
-                    }
-                  }
-                }
+                //         // Si se encontró la dirección del cliente, extraer el valor
+                //         if (match && match[1]) {
+                //           const observacion = match[1].trim();
+                //           console.log(
+                //             `observaciones: ${observacion}`
+                //           );
+                //           objeto.concepto = observacion
+                //         } else {
+                //           console.log(
+                //             "no se encontraron observaciones"
+                //           );
+                //         }
+                //       }
+                //     }
+                //   }
+                // }
+
+
+                //TODO CONCEPTO SERVICIO O PRODUCTO 
+
+                // Buscar la palabra "servicio" o "producto" en el texto
+var servicioRegex = /\bservicio\b/gi;
+var productoRegex = /\bproducto\b/gi;
+
+// Verificar si se encuentra la palabra "servicio"
+if (servicioRegex.test(textoEnMinusculas)) {
+    console.log("Se encontró la palabra 'servicio'.");
+    objeto.concepto = "servicio"
+    // Aquí puedes hacer más acciones si se encuentra la palabra "servicio"
+} else if (productoRegex.test(textoEnMinusculas)) {
+    console.log("Se encontró la palabra 'producto'.");
+    objeto.concepto = "producto"
+    // Aquí puedes hacer más acciones si se encuentra la palabra "producto"
+} else {
+  objeto.concepto = ""
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //TODO: RAZON SOCIAL
 
                 // const regexRazonSocial =

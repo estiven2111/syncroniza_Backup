@@ -76,7 +76,7 @@ const handb = async (req, res) => {
 // });
 
 
-//todo base datos de azure
+//todo base datos de azure ********************************************
 
 sequelize = new Sequelize({
   dialect: "mssql",
