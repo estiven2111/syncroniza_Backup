@@ -280,6 +280,7 @@ const insertInto = async(data,tipo) =>{
     data.retefuente = data.retefuente ? data.retefuente : 0,
     data.ica = data.ica ? data.ica : 0,
     data.razon_social = data.razon_social ? data.razon_social : ""
+    data.notas =  data.notas ? data.notas : ""
   }
   console.log(typeof data.Descripcion,"descripcion")
  switch (tipo) {
@@ -312,6 +313,7 @@ const insertInto = async(data,tipo) =>{
       ,[retefuente]
       ,[Sub_Total]
       ,[Descripcion]
+      ,[notas]
       )
   VALUES
       ('${data.SKU_Proyecto}',
@@ -337,7 +339,8 @@ const insertInto = async(data,tipo) =>{
          ${data.iva},
          ${data.reteFuente},
        ${data.Sub_Total},
-       '${data.Descripcion}'
+       '${data.Descripcion}',
+       '${data.notas}'
        )
   `
     );
