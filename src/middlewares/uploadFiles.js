@@ -313,7 +313,7 @@ const insertInto = async(data,tipo) =>{
       ,[retefuente]
       ,[Sub_Total]
       ,[Descripcion]
-      ,[notas]
+      ,[Notas]
       )
   VALUES
       ('${data.SKU_Proyecto}',
