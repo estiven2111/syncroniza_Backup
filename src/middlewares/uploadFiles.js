@@ -282,7 +282,7 @@ const insertInto = async(data,tipo) =>{
     data.razon_social = data.razon_social ? data.razon_social : ""
     data.notas =  data.notas ? data.notas : ""
   }
-  console.log(typeof data.Descripcion,"descripcion")
+  console.log("la data es estaaaaaaaaaaaaaaaa", data)
  switch (tipo) {
   case "OCR":
     
