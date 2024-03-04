@@ -1,7 +1,8 @@
 const { Sequelize } = require("sequelize");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
-const { DB_NAME,DB_PASSWORD,BD_USERNAME,DB_HOST} = process.env;
+require("dotenv").config();
+const { DB_NAME,DB_PASSWORD,BD_USERNAME,DB_HOST,DB_NAME1,DB_PASSWORD1,BD_USERNAME1,DB_HOST1} = process.env;
 // const { spawn } = require("child_process");
 const spawn = require("cross-spawn");
 let sequelize;
@@ -49,6 +50,13 @@ const handb = async (req, res) => {
 
 // sequelize = new Sequelize("Fritomania", "estiven2111_SQLLogin_1", "lxsl4f4uji", {
 //   host: "Fritomania.mssql.somee.com",
+//   dialect:
+//     "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+//   // port:"1433"
+// });
+
+// sequelize = new Sequelize(DB_NAME1, BD_USERNAME1, DB_PASSWORD1, {
+//   host: DB_HOST1,
 //   dialect:
 //     "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
 //   // port:"1433"
