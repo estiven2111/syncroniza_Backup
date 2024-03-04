@@ -63,38 +63,37 @@ const handb = async (req, res) => {
 // });
 
 
-//  sequelize = new Sequelize("BDCREAME", "sql_admin", "$$Incubadora2024", {
-//   host: "creame-sim\\SQLEXPRESS",
-//   dialect: "mssql",
-//   port: 1433, // El puerto predeterminado de SQL Server es 1433
-// });
-
-// sequelize = new Sequelize({
-//   dialect: 'mssql',
-//   host: 'creame-sim-sql.database.windows.net',
-//   port: 1433,
-//   database: 'creame-sim-db',
-//   username: 'sql_admin',
-//   password: '$$Incubadora2024',
-//   dialectOptions: {
-//     options: {
-//       encrypt: true,
-//       trustServerCertificate: false,
-//       authentication: 'ActiveDirectoryDefault',
-//     },
-//   },
-// });
 
 
 //todo base datos de azure ********************************************
+
+// sequelize = new Sequelize({
+//   dialect: "mssql",
+//   host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
+//   port: 1433,
+//   database: DB_NAME, //BDCREAME    creame-sim-db
+//   username: DB_PASSWORD, // Reemplaza con tu nombre de usuario
+//   password: BD_USERNAME, // Reemplaza con tu contraseña
+//   dialectOptions: {
+//     options: {
+//       encrypt: false,
+//       trustServerCertificate: false,
+//       authentication: "ActiveDirectoryDefault",
+//     },
+//   },
+//   define: {
+//     timestamps: false, // Si no estás usando campos de timestamp en tus modelos
+//   },
+//   logging: console.log, // Muestra logs en la consola (opcional, para debug)
+// });
 
 sequelize = new Sequelize({
   dialect: "mssql",
   host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
   port: 1433,
   database: DB_NAME, //BDCREAME    creame-sim-db
-  username: DB_PASSWORD, // Reemplaza con tu nombre de usuario
-  password: BD_USERNAME, // Reemplaza con tu contraseña
+  username: BD_USERNAME, // Reemplaza con tu nombre de usuario
+  password: DB_PASSWORD, // Reemplaza con tu contraseña
   dialectOptions: {
     options: {
       encrypt: false,
@@ -110,51 +109,6 @@ sequelize = new Sequelize({
 
 //todo esto para conectar las dos solo si es una o otra
 
-// const Sequelize = require('sequelize');
-
-// // Configuración para la primera base de datos (BDCREAME)
-// const sequelizeBDCREAME = new Sequelize({
-//   dialect: "mssql",
-//   host: "20.131.17.456",
-//   port: 1433,
-//   database: "BDCREAME",
-//   username: "sql_admin",
-//   password: "$$Insdfsdfsdfsd",
-//   dialectOptions: {
-//     options: {
-//       encrypt: false,
-//       trustServerCertificate: false,
-//       authentication: "ActiveDirectoryDefault",
-//     },
-//   },
-//   define: {
-//     timestamps: false,
-//   },
-//   logging: console.log,
-// });
-
-// // Configuración para la segunda base de datos (BDAUDAZ)
-// const sequelizeBDAUDAZ = new Sequelize({
-//   dialect: "mssql",
-//   host: "20.131.17.456", // Mismo host que la primera base de datos
-//   port: 1433,
-//   database: "BDAUDAZ",
-//   username: "otro_usuario", // Usuario diferente para la segunda base de datos
-//   password: "otra_contraseña", // Contraseña diferente para la segunda base de datos
-//   dialectOptions: {
-//     options: {
-//       encrypt: false,
-//       trustServerCertificate: false,
-//       authentication: "ActiveDirectoryDefault",
-//     },
-//   },
-//   define: {
-//     timestamps: false,
-//   },
-//   logging: console.log,
-// });
-
-// // Ahora puedes usar sequelizeBDCREAME y sequelizeBDAUDAZ para interactuar con las dos bases de datos respectivamente.
 
 
 // Validar la conexión
