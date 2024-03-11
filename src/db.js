@@ -55,12 +55,12 @@ const handb = async (req, res) => {
 //   // port:"1433"
 // });
 
-// sequelize = new Sequelize(DB_NAME1, BD_USERNAME1, DB_PASSWORD1, {
-//   host: DB_HOST1,
-//   dialect:
-//     "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
-//   // port:"1433"
-// });
+sequelize = new Sequelize(DB_NAME1, BD_USERNAME1, DB_PASSWORD1, {
+  host: DB_HOST1,
+  dialect:
+    "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+  // port:"1433"
+});
 
 
 
@@ -87,25 +87,25 @@ const handb = async (req, res) => {
 //   logging: console.log, // Muestra logs en la consola (opcional, para debug)
 // });
 
-sequelize = new Sequelize({
-  dialect: "mssql",
-  host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
-  port: 1433,
-  database: DB_NAME, //BDCREAME    creame-sim-db
-  username: BD_USERNAME, // Reemplaza con tu nombre de usuario
-  password: DB_PASSWORD, // Reemplaza con tu contraseña
-  dialectOptions: {
-    options: {
-      encrypt: false,
-      trustServerCertificate: false,
-      authentication: "ActiveDirectoryDefault",
-    },
-  },
-  define: {
-    timestamps: false, // Si no estás usando campos de timestamp en tus modelos
-  },
-  logging: console.log, // Muestra logs en la consola (opcional, para debug)
-});
+// sequelize = new Sequelize({
+//   dialect: "mssql",
+//   host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
+//   port: 1433,
+//   database: DB_NAME, //BDCREAME    creame-sim-db
+//   username: BD_USERNAME, // Reemplaza con tu nombre de usuario
+//   password: DB_PASSWORD, // Reemplaza con tu contraseña
+//   dialectOptions: {
+//     options: {
+//       encrypt: false,
+//       trustServerCertificate: false,
+//       authentication: "ActiveDirectoryDefault",
+//     },
+//   },
+//   define: {
+//     timestamps: false, // Si no estás usando campos de timestamp en tus modelos
+//   },
+//   logging: console.log, // Muestra logs en la consola (opcional, para debug)
+// });
 
 //todo esto para conectar las dos solo si es una o otra
 

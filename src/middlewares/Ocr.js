@@ -32,7 +32,6 @@ async function Ocr(req, res) {
   let objeto;
   imgs = req.files.imagen;
   uploadPath = `uploads/${imgs.name}`;
-  console.log(uploadPath, "ruta");
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) {
       console.log("el error: " + err.message);
@@ -40,33 +39,59 @@ async function Ocr(req, res) {
       //  res.status(500).send(err)
     }
 
-    const anchoDeseado = 800;
-    const altoDeseado = 600;
-
-    // Utilizar una promesa para esperar a que la imagen se guarde
-    const resizeImage = new Promise((resolve, reject) => {
-      sharp(uploadPath)
-        .resize(anchoDeseado, altoDeseado, { fit: "inside" })
-        .toFile(`uploads/imagenrender.png`, (err) => {
-          if (err) {
-            console.error("Error al redimensionar la imagen:", err);
-            reject(err);
-          } else {
-            console.log("Imagen redimensionada correctamente.");
-            resolve();
-          }
-        });
+    if (uploadPath.split(".").pop("") === "pdf") {
+      readOcr(uploadPath)
+    }else{
+      const anchoDeseado = 800;
+      const altoDeseado = 600;
+  
+      // Utilizar una promesa para esperar a que la imagen se guarde
+      const resizeImage = new Promise((resolve, reject) => {
+        sharp(uploadPath)
+          .resize(anchoDeseado, altoDeseado, { fit: "inside" })
+          .toFile(`uploads/imagenrender.png`, (err) => {
+            if (err) {
+              console.error("Error al redimensionar la imagen:", err);
+              reject(err);
+            } else {
+              console.log("Imagen redimensionada correctamente.");
+              resolve();
+            }
+          });
+      });
+      // Continuar con el resto de la lógica después de que la imagen se haya redimensionado
+    resizeImage
+    .then(() => {
+      readOcr("uploads/imagenrender.png")
+    })
+    .catch((error) => {
+      // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
+      res.status(500).send("Error al redimensionar la imagen.");
     });
 
-    // Continuar con el resto de la lógica después de que la imagen se haya redimensionado
-    resizeImage
-      .then(() => {
-        // Aquí puedes realizar otras operaciones con la imagen redimensionada
+    }
+
+    // res.json("imagen")
+    // return
+
+   
+
+    
+  });
+
+
+  const readOcr = (paths) => {
+   try {
+
+      // Aquí puedes realizar otras operaciones con la imagen redimensionada
         // o enviar una respuesta al cliente, si es necesario.
+        // console.log(path)
+        // res.json(path)
+        // return
         let municipio;
         let codepostal;
-        imagePath = "uploads/imagenrender.png";
-        imageBuffer = fs.readFileSync("uploads/imagenrender.png");
+        imagePath = paths;
+        imageBuffer = fs.readFileSync(paths);
         let texto = "";
         let texto1 = [];
         let cont = 0;
@@ -474,7 +499,7 @@ async function Ocr(req, res) {
                 //   }
                 // }
 
-                // todo descripcion conceptos esto para descripcion si se llegase a necesitar por el momento servicio o producto 
+                // todo descripcion conceptos esto para descripcion si se llegase a necesitar por el momento servicio o producto
                 // const regexDescrip = /descripción\s+(\d+)/;
                 // const resultadoDescrip = textoEnMinusculas.match(regexDescrip);
 
@@ -529,38 +554,24 @@ async function Ocr(req, res) {
                 //   }
                 // }
 
-
-                //TODO CONCEPTO SERVICIO O PRODUCTO 
+                //TODO CONCEPTO SERVICIO O PRODUCTO
 
                 // Buscar la palabra "servicio" o "producto" en el texto
-var servicioRegex = /\bservicio\b/gi;
-var productoRegex = /\bproducto\b/gi;
+                var servicioRegex = /\bservicio\b/gi;
+                var productoRegex = /\bproducto\b/gi;
 
-// Verificar si se encuentra la palabra "servicio"
-if (servicioRegex.test(textoEnMinusculas)) {
-    console.log("Se encontró la palabra 'servicio'.");
-    objeto.concepto = "servicio"
-    // Aquí puedes hacer más acciones si se encuentra la palabra "servicio"
-} else if (productoRegex.test(textoEnMinusculas)) {
-    console.log("Se encontró la palabra 'producto'.");
-    objeto.concepto = "producto"
-    // Aquí puedes hacer más acciones si se encuentra la palabra "producto"
-} else {
-  objeto.concepto = ""
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
+                // Verificar si se encuentra la palabra "servicio"
+                if (servicioRegex.test(textoEnMinusculas)) {
+                  console.log("Se encontró la palabra 'servicio'.");
+                  objeto.concepto = "servicio";
+                  // Aquí puedes hacer más acciones si se encuentra la palabra "servicio"
+                } else if (productoRegex.test(textoEnMinusculas)) {
+                  console.log("Se encontró la palabra 'producto'.");
+                  objeto.concepto = "producto";
+                  // Aquí puedes hacer más acciones si se encuentra la palabra "producto"
+                } else {
+                  objeto.concepto = "";
+                }
 
                 //TODO: RAZON SOCIAL
 
@@ -756,12 +767,11 @@ if (servicioRegex.test(textoEnMinusculas)) {
             }
           }
         );
-      })
-      .catch((error) => {
-        // Manejar cualquier error que ocurra durante el redimensionamiento de la imagen
-        res.status(500).send("Error al redimensionar la imagen.");
-      });
-  });
+    
+   } catch (error) {
+    res.json("error en lectura del archivo")
+   }
+  }
 
   const eliminar = async (file) => {
     if (fs_extra.existsSync(file)) {

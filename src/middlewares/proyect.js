@@ -9,9 +9,14 @@ const LoadProyect = async (Doc_id, email) => {
   //? se selecciona los idNodo para saber que proyectos tiene el usuario
   try {
     const idnodo = await sequelize.query(
-      `SELECT idNodoProyecto FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id} and Terminada = 0 `
+      `SELECT idNodoProyecto,Terminada FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id}`
     );
 
+    const idnodo1 = await sequelize.query(
+      `SELECT idNodoProyecto FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id}`
+    );
+  
+     
     let proyect;
     let Cod_parte;
     let obj_proyecto = {
@@ -26,7 +31,7 @@ const LoadProyect = async (Doc_id, email) => {
       N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
         { replacements: { docId: Doc_id } }
       );
-
+      console.log("ddddddddddddddddddddddddddddddddddddd",i.Terminada)
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
       let idPadre = proyect[0][0].idPadre;
       let componentes = [];
@@ -52,6 +57,7 @@ const LoadProyect = async (Doc_id, email) => {
       let skuP = "";
       let skuC = "";
       let skuA = "";
+      let terminada = i.Terminada
 
       Cod_parte = await sequelize.query(
         `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
@@ -78,6 +84,7 @@ const LoadProyect = async (Doc_id, email) => {
         Codi_parteA = proyect[0][0].Cod_parte;
         idPadreA = proyect[0][0].idPadre;
         skuA = proyect[0][0].SKU;
+         terminada = terminada
       }
       do {
         tipoParte = await sequelize.query(
@@ -132,6 +139,7 @@ const LoadProyect = async (Doc_id, email) => {
               Codi_parteA,
               idPadreA,
               skuA,
+              terminada
             });
           } else {
             //? Agregar un nuevo componente con la actividad al proyecto existente
@@ -153,6 +161,7 @@ const LoadProyect = async (Doc_id, email) => {
                   Codi_parteA,
                   idPadreA,
                   skuA,
+                  terminada
                 },
               ],
             });
@@ -186,6 +195,7 @@ const LoadProyect = async (Doc_id, email) => {
                       Codi_parteA,
                       idPadreA,
                       skuA,
+                      terminada
                     },
                   ],
                 },
@@ -263,7 +273,7 @@ const getProyect = async (req, res) => {
     const  nombres = proyects.proyectos.map((obj) => {
   return obj.proyecto
     })
-console.log(nombres)
+console.log(proyect)
     res.json(proyect);
 
 
