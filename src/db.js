@@ -67,33 +67,13 @@ const handb = async (req, res) => {
 
 //todo base datos de azure ********************************************
 
-sequelize = new Sequelize({
-  dialect: "mssql",
-  host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
-  port: 1433,
-  database: DB_NAME, //BDCREAME    creame-sim-db
-  username: DB_PASSWORD, // Reemplaza con tu nombre de usuario
-  password: BD_USERNAME, // Reemplaza con tu contraseña
-  dialectOptions: {
-    options: {
-      encrypt: false,
-      trustServerCertificate: false,
-      authentication: "ActiveDirectoryDefault",
-    },
-  },
-  define: {
-    timestamps: false, // Si no estás usando campos de timestamp en tus modelos
-  },
-  logging: console.log, // Muestra logs en la consola (opcional, para debug)
-});
-
 // sequelize = new Sequelize({
 //   dialect: "mssql",
 //   host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
 //   port: 1433,
 //   database: DB_NAME, //BDCREAME    creame-sim-db
-//   username: BD_USERNAME, // Reemplaza con tu nombre de usuario
-//   password: DB_PASSWORD, // Reemplaza con tu contraseña
+//   username: DB_PASSWORD, // Reemplaza con tu nombre de usuario
+//   password: BD_USERNAME, // Reemplaza con tu contraseña
 //   dialectOptions: {
 //     options: {
 //       encrypt: false,
@@ -106,6 +86,26 @@ sequelize = new Sequelize({
 //   },
 //   logging: console.log, // Muestra logs en la consola (opcional, para debug)
 // });
+
+sequelize = new Sequelize({
+  dialect: "mssql",
+  host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
+  port: 1433,
+  database: DB_NAME, //BDCREAME    creame-sim-db
+  username: BD_USERNAME, // Reemplaza con tu nombre de usuario
+  password: DB_PASSWORD, // Reemplaza con tu contraseña
+  dialectOptions: {
+    options: {
+      encrypt: false,
+      trustServerCertificate: false,
+      authentication: "ActiveDirectoryDefault",
+    },
+  },
+  define: {
+    timestamps: false, // Si no estás usando campos de timestamp en tus modelos
+  },
+  logging: console.log, // Muestra logs en la consola (opcional, para debug)
+});
 
 //todo esto para conectar las dos solo si es una o otra
 
