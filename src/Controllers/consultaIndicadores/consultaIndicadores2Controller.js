@@ -26,8 +26,7 @@ inner join TBL_ESP_OperacionMO D on C.ID=D.id_MO
 where cedula= '${docId}'
 group by B.Horas
     `)
-    console.log(consulta1[0][0])
-    console.log(Consulta1[0][0],"consultaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa22222222222222222222")
+    console.log(consulta1,"ddddddddddddddd")
     let Consulta2 = await sequelize.query(
         `
         select sum(RequeridoProyectoHH) HorasProgramadaSinFrecuencia, Sum(HorasRealProyecto) HorasCumplidasSinFrecuencia
