@@ -18,7 +18,7 @@ try {
     //? consulta uno para sacar Horas programadas y el valor de cumplidas en el periodo
 
     let consulta1 = await sequelize.query(`
-    select B.Horas HorasDias,B.Horas*30 HorasMes, AVG(PorcEF) Eficiencia,(B.Horas*30)*(AVG(PorcEF)/100) hdisp
+    select B.Horas HorasDias,B.Horas*30 HorasMes, AVG(PorcEF) Eficiencia,(B.Horas*30)*(AVG(PorcEF)/100) HorasDisponibles
 from TBL_NOM_Empleado A
 inner join TBL_ESP_Turnos B on A.turno=b.Id
 inner join TBL_ESP_PersonalMO C on A.cedula=C.DocumentoId
