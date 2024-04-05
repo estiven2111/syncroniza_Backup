@@ -64,7 +64,7 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
 //        }else{
 //         hdisp = 0
 //        }
-       hdisp = Consulta1[0][0].HorasDisponibles
+       hdisp = consulta1[0][0].HorasDisponibles
     //? validaciones consulta 1
     if (Consulta2[0].length > 0 ) {
         //! HorasProgramadaSinFrecuencia
