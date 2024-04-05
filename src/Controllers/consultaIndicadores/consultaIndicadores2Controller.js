@@ -22,11 +22,11 @@ try {
 from TBL_SER_PROYECTOS A
 inner join TBL_SER_ProyectoActividadesEmpleados b on a.idNodo=b.idNodoProyecto
 inner join TBL_ESP_Procesos C on A.Cod_parte=C.ID
-where (N_DocumentoEmpleado= :docId and C.AplicaFrecuencia=0)
-and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id= :id) AND FechaInicio >= (select Inicio from TBL_CON_PERIODOCONTABLE where id= :id))
-  or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id= :id) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id= :id)))
+where (N_DocumentoEmpleado= ${docId} and C.AplicaFrecuencia=0)
+and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id= ${id}) AND FechaInicio >= (select Inicio from TBL_CON_PERIODOCONTABLE where id= ${id}))
+  or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id= ${id}) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id= ${id})))
         `,
-        {replacements:{ docId: docId, id:id}}
+        // {replacements:{ docId: docId, id:id}}
     )
 
        //? consulta dos para sacar Horas programadas y el valor de cumplidas en el periodo
@@ -36,11 +36,11 @@ and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id= :id) AND
         from TBL_SER_PROYECTOS A
         inner join TBL_SER_ProyectoActividadesEmpleados b on a.idNodo=b.idNodoProyecto
         inner join TBL_ESP_Procesos C on A.Cod_parte=C.ID
-        where (N_DocumentoEmpleado= :docId and C.AplicaFrecuencia=1)
-        and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id=:id) AND FechaInicio >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=:id))
-          or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id=:id) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=:id)))
+        where (N_DocumentoEmpleado= ${docId} and C.AplicaFrecuencia=1)
+        and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id=${id}) AND FechaInicio >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=${id}))
+          or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id=${id}) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=${id})))
         `,
-        {replacements:{ docId: docId, id:id}}
+        // {replacements:{ docId: docId, id:id}}
     )
 //todo ************************************************
     //? validaciones consulta 1
