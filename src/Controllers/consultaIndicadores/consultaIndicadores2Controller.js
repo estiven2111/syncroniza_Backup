@@ -116,6 +116,9 @@ HorasCumplidas = CumplidasPeriodo + atrazo
 console.log("HorasCumplidasSinFrecuencia +  HorasCumplidasConFrecuencia = CumplidasPeriodo",CumplidasPeriodo )
 console.log("HorasProgramadaConFrecuencia", HorasFrecuencia)
 console.log("HorasProgramadaSinFrecuencia",HoraProgramada)
+const Atiempo =  (HorasProgramadaSinFrecuencia / CumplidasPeriodo)
+const ConRetrazo = HorasProgramadaSinFrecuencia / atrazo
+const PorFrecuencia = HorasProgramadaConFrecuencia
 const numero = ((HorasCumplidas + HorasFrecuencia) / HoraProgramada)* 100
 // const numero = ((186 + 70) / 312)* 100
 let nivActividad = parseFloat(numero.toFixed(1))
@@ -132,7 +135,10 @@ if (nivActividad) {
         CumplidasPeriodo,
         atrazo,
         HorasFrecuencia,
-        nivActividad
+        nivActividad,
+        Atiempo,
+        ConRetrazo,
+        PorFrecuencia
       }
     return datos
 } catch (error) {
