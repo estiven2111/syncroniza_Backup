@@ -57,12 +57,13 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
     // or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id=${id}) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=${id})))
 //todo ************************************************
 
-
- if (consulta1[0][0].HorasDisponibles > 0) {
-        hdisp = Consulta1[0][0].HorasDisponibles
-       }else{
-        hdisp = 0
-       }
+console.log(typeof consulta1[0][0].HorasDisponibles)
+//  if (consulta1[0][0].HorasDisponibles > 0) {
+//         hdisp = Consulta1[0][0].HorasDisponibles
+//        }else{
+//         hdisp = 0
+//        }
+       hdisp = Consulta1[0][0].HorasDisponibles
     //? validaciones consulta 1
     if (Consulta2[0].length > 0 ) {
         //! HorasProgramadaSinFrecuencia
