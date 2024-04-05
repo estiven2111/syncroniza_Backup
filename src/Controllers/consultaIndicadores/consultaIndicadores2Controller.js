@@ -26,7 +26,8 @@ inner join TBL_ESP_OperacionMO D on C.ID=D.id_MO
 where cedula= '${docId}'
 group by B.Horas
     `)
-
+    console.log(Consulta1[0],"consultaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log(Consulta1[0][0],"consultaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa22222222222222222222")
     let Consulta2 = await sequelize.query(
         `
         select sum(RequeridoProyectoHH) HorasProgramadaSinFrecuencia, Sum(HorasRealProyecto) HorasCumplidasSinFrecuencia
@@ -57,7 +58,7 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
     // or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id=${id}) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=${id})))
 //todo ************************************************
 
-console.log(Consulta1[0],"consultaaaaaaaaaa")
+
 if (Consulta1[0].length > 0) {
     if (Consulta1[0][0].HorasDisponibles) {
         hdisp = Consulta1[0][0].hdisp
