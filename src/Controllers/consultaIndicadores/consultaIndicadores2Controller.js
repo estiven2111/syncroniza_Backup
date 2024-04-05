@@ -27,7 +27,6 @@ where cedula= '${docId}'
 group by B.Horas
     `)
     console.log(consulta1[0][0])
-    console.log(Consulta1[0],"consultaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     console.log(Consulta1[0][0],"consultaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa22222222222222222222")
     let Consulta2 = await sequelize.query(
         `
@@ -60,7 +59,7 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
 //todo ************************************************
 
 
-if (Consulta1[0].length > 0) {
+if (Consulta1[0][0].length > 0) {
     if (Consulta1[0][0].HorasDisponibles) {
         hdisp = Consulta1[0][0].hdisp
        }else{
