@@ -26,7 +26,6 @@ inner join TBL_ESP_OperacionMO D on C.ID=D.id_MO
 where cedula= '${docId}'
 group by B.Horas
     `)
-    console.log(consulta1[0][0].length,"ddddddddddddddd")
     
     let Consulta2 = await sequelize.query(
         `
@@ -59,12 +58,11 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
 //todo ************************************************
 
 
-//  if (Consulta1[0][0].HorasDisponibles > 0) {
-//         hdisp = Consulta1[0][0].HorasDisponibles
-//        }else{
-//         hdisp = 0
-//        }
-       hdisp = consulta1[0][0].HorasDisponibles
+ if (consulta1[0][0].HorasDisponibles > 0) {
+        hdisp = Consulta1[0][0].HorasDisponibles
+       }else{
+        hdisp = 0
+       }
     //? validaciones consulta 1
     if (Consulta2[0].length > 0 ) {
         //! HorasProgramadaSinFrecuencia
