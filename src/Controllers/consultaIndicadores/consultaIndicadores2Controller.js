@@ -26,7 +26,7 @@ inner join TBL_ESP_OperacionMO D on C.ID=D.id_MO
 where cedula= '${docId}'
 group by B.Horas
     `)
-    console.log(consulta1[0][0].HorasDisponibles,"ddddddddddddddd")
+    console.log(consulta1[0][0].length,"ddddddddddddddd")
     
     let Consulta2 = await sequelize.query(
         `
