@@ -27,7 +27,7 @@ where cedula= '${docId}'
 group by B.Horas
     `)
     console.log(consulta1[0][0].HorasDisponibles,"ddddddddddddddd")
-    console.log(Consulta1[0][0].length )
+    
     let Consulta2 = await sequelize.query(
         `
         select sum(RequeridoProyectoHH) HorasProgramadaSinFrecuencia, Sum(HorasRealProyecto) HorasCumplidasSinFrecuencia
@@ -59,15 +59,11 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
 //todo ************************************************
 
 
-// if (Consulta1[0][0].length > 0) {
-//     // if (Consulta1[0][0].HorasDisponibles) {
-//     //     hdisp = Consulta1[0][0].hdisp
-//     //    }else{
-//     //     hdisp = 0
-//     //    }
-  
-// }
-
+ if (Consulta1[0][0].HorasDisponibles) {
+        hdisp = Consulta1[0][0].HorasDisponibles
+       }else{
+        hdisp = 0
+       }
 
     //? validaciones consulta 1
     if (Consulta2[0].length > 0 ) {
