@@ -86,7 +86,7 @@ const handb = async (req, res) => {
 //   },
 //   logging: console.log, // Muestra logs en la consola (opcional, para debug)
 // });
-
+//todo ******************
 sequelize = new Sequelize({
   dialect: "mssql",
   host: DB_HOST, //creame-sim\\SQLEXPRESS   creame-sim-sql.database.windows.net
