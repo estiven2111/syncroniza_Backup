@@ -8,9 +8,9 @@ const consultaIndicadores2Controller = async(req) =>{
     let HorasProgramadaConFrecuencia
     let HorasCumplidasConFrecuencia
 
-    let HoraProgramada
+    let horaPSinFre
     let CumplidasPeriodo
-    let HorasFrecuencia
+    let horaPConFre
     let atrazo
     let HorasCumplidas
     
@@ -65,76 +65,81 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
 //         hdisp = 0
 //        }
        hdisp = consulta1[0][0].HorasDisponibles
-    //? validaciones consulta 1
-    if (Consulta2[0].length > 0 ) {
-        //! HorasProgramadaSinFrecuencia
-       if (Consulta2[0][0].HorasProgramadaSinFrecuencia) {
-        HorasProgramadaSinFrecuencia = Consulta2[0][0].HorasProgramadaSinFrecuencia
-       }else{
-        HorasProgramadaSinFrecuencia = 0
-       }
-       //! HorasCumplidasSinFrecuencia
-       if (Consulta2[0][0].HorasCumplidasSinFrecuencia) {
 
-        HorasCumplidasSinFrecuencia = Consulta2[0][0].HorasCumplidasSinFrecuencia
-       }else{
-        HorasCumplidasSinFrecuencia = 0
-       }
-    }else{
-        HorasProgramadaSinFrecuencia = 0
-        HorasCumplidasSinFrecuencia = 0
-    }
-    //todo ************************************************
+       if (Consulta2[0].length > 0) {
+        if (Consulta2[0][0].HorasProgramadaSinFrecuencia) {
+            HorasProgramadaSinFrecuencia = Consulta2[0][0].HorasProgramadaSinFrecuencia
+        }else{
+            HorasProgramadaSinFrecuencia = 0
+        }
+        if (Consulta2[0][0].HorasCumplidasSinFrecuencia) {
 
-    //todo ************************************************
-    //? validaciones consulta 2
-
-    if (Consulta3[0].length > 0 ) {
-        //! HorasCumplidasConFrecuencia
-       if (Consulta2[0][0].HorasProgramadaConFrecuencia) {
-        HorasProgramadaConFrecuencia = Consulta2[0][0].HorasProgramadaConFrecuencia
+                HorasCumplidasSinFrecuencia = Consulta2[0][0].HorasCumplidasSinFrecuencia
+               }else{
+                HorasCumplidasSinFrecuencia = 0
+               }
        }else{
-        HorasProgramadaConFrecuencia = 0
-       }
-       //! HorasCumplidasConFrecuencia
-       if (Consulta2[0][0].HorasCumplidasConFrecuencia) {
+            HorasProgramadaSinFrecuencia = 0
+            HorasCumplidasSinFrecuencia = 0
+        }
 
-        HorasCumplidasConFrecuencia = Consulta2[0][0].HorasCumplidasConFrecuencia
-       }else{
-        HorasCumplidasConFrecuencia = 0
-       }
-    }else{
-        HorasProgramadaConFrecuencia = 0
-        HorasCumplidasConFrecuencia = 0
-    }
-//todo ************************************************
+
+
+       if (Consulta3[0].length > 0 ) {
+    //! HorasCumplidasConFrecuencia
+   if (Consulta3[0][0].HorasProgramadaConFrecuencia) {
+    HorasProgramadaConFrecuencia = Consulta2[0][0].HorasProgramadaConFrecuencia
+   }else{
+    HorasProgramadaConFrecuencia = 0
+   }
+   //! HorasCumplidasConFrecuencia
+   if (Consulta3[0][0].HorasCumplidasConFrecuencia) {
+
+    HorasCumplidasConFrecuencia = Consulta2[0][0].HorasCumplidasConFrecuencia
+   }else{
+    HorasCumplidasConFrecuencia = 0
+   }
+}else{
+    HorasProgramadaConFrecuencia = 0
+    HorasCumplidasConFrecuencia = 0
+}
+
+
 CumplidasPeriodo = HorasCumplidasSinFrecuencia + HorasCumplidasConFrecuencia
-HorasFrecuencia = HorasProgramadaConFrecuencia
-HoraProgramada = HorasProgramadaSinFrecuencia
+
+
+horaPConFre = HorasProgramadaConFrecuencia
+horaPSinFre = HorasProgramadaSinFrecuencia
 atrazo = (HorasProgramadaSinFrecuencia + HorasProgramadaConFrecuencia - CumplidasPeriodo)
 HorasCumplidas = CumplidasPeriodo + atrazo
 console.log("HorasCumplidasSinFrecuencia +  HorasCumplidasConFrecuencia = CumplidasPeriodo",CumplidasPeriodo )
-console.log("HorasProgramadaConFrecuencia", HorasFrecuencia)
-console.log("HorasProgramadaSinFrecuencia",HoraProgramada)
-const Atiempo =  (HorasProgramadaSinFrecuencia / CumplidasPeriodo)
+console.log("HorasProgramadaConFrecuencia", horaPConFre)
+console.log("HorasProgramadaSinFrecuencia",horaPSinFre)
+const Atiempo =  (  CumplidasPeriodo / HorasProgramadaSinFrecuencia)
 const ConRetrazo = HorasProgramadaSinFrecuencia / atrazo
 const PorFrecuencia = HorasProgramadaConFrecuencia
-const numero = ((HorasCumplidas + HorasFrecuencia) / HoraProgramada)* 100
+const numero = ((HorasCumplidas + horaPConFre) / horaPSinFre)* 100
 // const numero = ((186 + 70) / 312)* 100
 let nivActividad = parseFloat(numero.toFixed(1))
 if (nivActividad) {
-    nivActividad = nivActividad
+nivActividad = nivActividad
 }else{
-    nivActividad = 0
+nivActividad = 0
 }
 
+
+
+
+
+
+ 
     const datos = {
         hdisp,
-        HoraProgramada,
+        horaPSinFre,
         HorasCumplidas,
         CumplidasPeriodo,
         atrazo,
-        HorasFrecuencia,
+        horaPConFre,
         nivActividad,
         Atiempo,
         ConRetrazo,
@@ -146,3 +151,67 @@ if (nivActividad) {
 }
 }
 module.exports = consultaIndicadores2Controller
+
+
+
+// if (Consulta2[0].length > 0 ) {
+//     //! HorasProgramadaSinFrecuencia
+//    if (Consulta2[0][0].HorasProgramadaSinFrecuencia) {
+//     HorasProgramadaSinFrecuencia = Consulta2[0][0].HorasProgramadaSinFrecuencia
+//    }else{
+//     HorasProgramadaSinFrecuencia = 0
+//    }
+//    //! HorasCumplidasSinFrecuencia
+//    if (Consulta2[0][0].HorasCumplidasSinFrecuencia) {
+
+//     HorasCumplidasSinFrecuencia = Consulta2[0][0].HorasCumplidasSinFrecuencia
+//    }else{
+//     HorasCumplidasSinFrecuencia = 0
+//    }
+// }else{
+//     HorasProgramadaSinFrecuencia = 0
+//     HorasCumplidasSinFrecuencia = 0
+// }
+// //todo ************************************************
+
+// //todo ************************************************
+// //? validaciones consulta 2
+
+// if (Consulta3[0].length > 0 ) {
+//     //! HorasCumplidasConFrecuencia
+//    if (Consulta2[0][0].HorasProgramadaConFrecuencia) {
+//     HorasProgramadaConFrecuencia = Consulta2[0][0].HorasProgramadaConFrecuencia
+//    }else{
+//     HorasProgramadaConFrecuencia = 0
+//    }
+//    //! HorasCumplidasConFrecuencia
+//    if (Consulta2[0][0].HorasCumplidasConFrecuencia) {
+
+//     HorasCumplidasConFrecuencia = Consulta2[0][0].HorasCumplidasConFrecuencia
+//    }else{
+//     HorasCumplidasConFrecuencia = 0
+//    }
+// }else{
+//     HorasProgramadaConFrecuencia = 0
+//     HorasCumplidasConFrecuencia = 0
+// }
+// //todo ************************************************
+// CumplidasPeriodo = HorasCumplidasSinFrecuencia + HorasCumplidasConFrecuencia
+// horaPConFre = HorasProgramadaConFrecuencia
+// horaPSinFre = HorasProgramadaSinFrecuencia
+// atrazo = (HorasProgramadaSinFrecuencia + HorasProgramadaConFrecuencia - CumplidasPeriodo)
+// HorasCumplidas = CumplidasPeriodo + atrazo
+// console.log("HorasCumplidasSinFrecuencia +  HorasCumplidasConFrecuencia = CumplidasPeriodo",CumplidasPeriodo )
+// console.log("HorasProgramadaConFrecuencia", horaPConFre)
+// console.log("HorasProgramadaSinFrecuencia",horaPSinFre)
+// const Atiempo =  (HorasProgramadaSinFrecuencia / CumplidasPeriodo)
+// const ConRetrazo = HorasProgramadaSinFrecuencia / atrazo
+// const PorFrecuencia = HorasProgramadaConFrecuencia
+// const numero = ((HorasCumplidas + horaPConFre) / horaPSinFre)* 100
+// // const numero = ((186 + 70) / 312)* 100
+// let nivActividad = parseFloat(numero.toFixed(1))
+// if (nivActividad) {
+// nivActividad = nivActividad
+// }else{
+// nivActividad = 0
+// }

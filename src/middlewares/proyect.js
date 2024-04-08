@@ -15,7 +15,7 @@ const LoadProyect = async (Doc_id, email) => {
     const idnodo1 = await sequelize.query(
       `SELECT idNodoProyecto FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id}`
     );
-  
+    // select* from TBL_ESP_Procesos  where ID = 324
      
     let proyect;
     let Cod_parte;
@@ -31,8 +31,8 @@ const LoadProyect = async (Doc_id, email) => {
       N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
         { replacements: { docId: Doc_id } }
       );
-      console.log("ddddddddddddddddddddddddddddddddddddd",i.Terminada)
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
+      console.log("ddddddddddddddddddddddddddddddddddddd",ID_parte)
       let idPadre = proyect[0][0].idPadre;
       let componentes = [];
       let actividades = [];
