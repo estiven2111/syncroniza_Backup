@@ -71,9 +71,11 @@ const LoadProyect = async (Doc_id, email) => {
           // {replacements:{Codigo:}}
         );
         if (Cod_parte[0].length === 0) {
+          console.log("continueeeeeeeeeee...........",ID_parte)
           continue;
         }
       }
+      console.log("encontroooooooooooooooooooooooooooooooooooeeeeeeeeeeeeeeee",ID_parte)
       const entrega = await sequelize.query(
         `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
       );
