@@ -53,7 +53,7 @@ const handb = async (req, res) => {
 //   dialect:
 //     "mssql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
 //   // port:"1433"
-// });
+// }); 
 
 // sequelize = new Sequelize(DB_NAME1, BD_USERNAME1, DB_PASSWORD1, {
 //   host: DB_HOST1,

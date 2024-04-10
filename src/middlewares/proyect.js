@@ -31,6 +31,7 @@ const LoadProyect = async (Doc_id, email) => {
       N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
         { replacements: { docId: Doc_id } }
       );
+     if (proyect[0]) {
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
       console.log("ddddddddddddddddddddddddddddddddddddd",ID_parte)
       let idPadre = proyect[0][0].idPadre;
@@ -63,6 +64,13 @@ const LoadProyect = async (Doc_id, email) => {
         `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
         // {replacements:{Codigo:}}
       );
+
+      if (Cod_parte[0].length <= 0) {
+        Cod_parte = await sequelize.query(
+          `select* from TBL_ESP_Procesos  where Descripcion =  '${proyect[0][0].Nombre}'`
+          // {replacements:{Codigo:}}
+        );
+      }
       const entrega = await sequelize.query(
         `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
       );
@@ -70,7 +78,7 @@ const LoadProyect = async (Doc_id, email) => {
         return {
           id_proceso: nom.id_Proceso,
           Numero: nom.Numero,
-          Nom_Entregable: nom.Nombre,
+          // Nom_Entregable: nom.Nombre,
           subido: nom.Subido,
         };
       });
@@ -204,6 +212,9 @@ const LoadProyect = async (Doc_id, email) => {
           }
         }
       } while (tipoParte[0][0].TipoParte !== "Cabecera");
+     }else{
+      break;
+     }
     }
 
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
