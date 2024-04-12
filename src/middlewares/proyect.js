@@ -39,8 +39,7 @@ order by SKU_Logistica desc
       `
     )
 
-    console.log(validateproyect[0][0].SKU_Logistica,"skiuuuuuuuuuuuuuuu")
-    console.log(validateproyect[0],"eeeeeeeeeeeeeeee")
+   
 
     for (const i of idnodo[0]) {
       proyect = await sequelize.query(
@@ -52,9 +51,8 @@ order by SKU_Logistica desc
 
         //todo Validar que el proyecto este correcto 
 
-   
-    const existe = validateproyect[0][0].SKU_Logistica.includes(proyect[0][0].SKU)
-    console.log(existe,"EXISTE",proyect[0][0].SKU)
+       
+    const existe = validateproyect[0].some(proyect[0][0].SKU)
 
     if (existe) {
       if (proyect[0]) {
