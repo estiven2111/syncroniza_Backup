@@ -53,7 +53,7 @@ order by SKU_Logistica desc
 
     
     const existe = validateproyect[0][0].SKU_Logistica.includes(i.SKU)
-    console.log(existe,"EXISTE")
+    console.log(existe,"EXISTE",i.SKU)
 
     if (existe) {
       if (proyect[0]) {
