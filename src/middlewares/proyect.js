@@ -39,8 +39,8 @@ order by SKU_Logistica desc
       `
     )
 
-    console.log(validateproyect[0][0].SKU_Logistica)
-    console.log(validateproyect[0])
+    console.log(validateproyect[0][0].SKU_Logistica,"skiuuuuuuuuuuuuuuu")
+    console.log(validateproyect[0],"eeeeeeeeeeeeeeee")
 
     for (const i of idnodo[0]) {
       proyect = await sequelize.query(
