@@ -52,7 +52,7 @@ order by SKU_Logistica desc
         //todo Validar que el proyecto este correcto 
 
        
-    const existe = validateproyect[0].some(SKU => SKU.SKU === proyect[0][0].SKU)
+    const existe = validateproyect[0].some(SKU => SKU.SKU_Logistica === proyect[0][0].SKU)
 
     if (existe) {
       if (proyect[0]) {
