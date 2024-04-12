@@ -237,7 +237,7 @@ order by SKU_Logistica desc
         break;
        }
     }else{
-      console.log("no se encontro el proyecto ",i.SKU)
+     continue;
     }
     }
 
