@@ -51,191 +51,194 @@ order by SKU_Logistica desc
       `
     )
 
-console.log(validateproyect[0],"asi ")
-console.log(validateproyect[0][0],"el otro es asi")
+    
+    const existe = validateproyect[0][0].SKU_Logistica.includes(i.SKU)
+    console.log(existe,"EXISTE")
 
-
-
-     if (proyect[0]) {
-      let ID_parte = parseInt(proyect[0][0].Cod_parte);
-      let idPadre = proyect[0][0].idPadre;
-      let componentes = [];
-      let actividades = [];
-      let tipoParte;
-      let Parte = idPadre;
-      let actividad = "";
-      let componente = "";
-      let proyecto = "";
-      let fecha = "";
-      let frecuencia = 0;
-      let entregable = false;
-      let nitCliente = "";
-      let Codi_parteP = "";
-      let idNodoP = "";
-      let idPadreP = "";
-      let Codi_parteC = "";
-      let idNodoC = "";
-      let idPadreC = "";
-      let Codi_parteA = "";
-      let idNodoA = "";
-      let idPadreA = "";
-      let skuP = "";
-      let skuC = "";
-      let skuA = "";
-      let terminada = i.Terminada
-
-      Cod_parte = await sequelize.query(
-        `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
-        // {replacements:{Codigo:}}
-      );
-
-      if (Cod_parte[0].length <= 0) {
+    if (existe) {
+      if (proyect[0]) {
+        let ID_parte = parseInt(proyect[0][0].Cod_parte);
+        let idPadre = proyect[0][0].idPadre;
+        let componentes = [];
+        let actividades = [];
+        let tipoParte;
+        let Parte = idPadre;
+        let actividad = "";
+        let componente = "";
+        let proyecto = "";
+        let fecha = "";
+        let frecuencia = 0;
+        let entregable = false;
+        let nitCliente = "";
+        let Codi_parteP = "";
+        let idNodoP = "";
+        let idPadreP = "";
+        let Codi_parteC = "";
+        let idNodoC = "";
+        let idPadreC = "";
+        let Codi_parteA = "";
+        let idNodoA = "";
+        let idPadreA = "";
+        let skuP = "";
+        let skuC = "";
+        let skuA = "";
+        let terminada = i.Terminada
+  
         Cod_parte = await sequelize.query(
-          `select* from TBL_ESP_Procesos  where Descripcion =  '${proyect[0][0].Nombre}'`
+          `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
           // {replacements:{Codigo:}}
         );
-        if (Cod_parte[0].length === 0) {
-          continue;
-        }
-      }
-      
-      const entrega = await sequelize.query(
-        `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
-      );
-      const nomEntregable = entrega[0]?.map((nom) => {
-        return {
-          id_proceso: nom.id_Proceso,
-          Numero: nom.Numero,
-           Nom_Entregable: nom.Nombre,
-          subido: nom.Subido,
-        };
-      });
-
-      if (proyect[0][0].TipoParte === "Actividad") {
-        actividad = proyect[0][0].Nombre;
-        frecuencia = Cod_parte[0][0].FrecuenciaVeces;
-        entregable = Cod_parte[0][0].AplicaEntregables;
-        nom_entregable = nomEntregable;
-        idNodoA = proyect[0][0].idNodo;
-        Codi_parteA = proyect[0][0].Cod_parte;
-        idPadreA = proyect[0][0].idPadre;
-        skuA = proyect[0][0].SKU;
-         terminada = terminada
-      }
-      do {
-        tipoParte = await sequelize.query(
-          `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
-          { replacements: { docId: Doc_id } }
-        );
-        Parte = tipoParte[0][0].idPadre;
-        if (tipoParte[0][0].TipoParte === "PP") {
-          componente = tipoParte[0][0].Nombre;
-          //? saca la fecha exacta del string
-          fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
-          idNodoC = tipoParte[0][0].idNodo;
-          Codi_parteC = tipoParte[0][0].Cod_parte;
-          idPadreC = tipoParte[0][0].idPadre;
-          skuC = tipoParte[0][0].SKU;
-          nitCliente = tipoParte[0][0].NitCliente;
-        }
-        if (tipoParte[0][0].TipoParte === "Cabecera") {
-          proyecto = tipoParte[0][0].Nombre;
-          idNodoP = tipoParte[0][0].idNodo;
-          Codi_parteP = tipoParte[0][0].Cod_parte;
-          idPadreP = tipoParte[0][0].idPadre;
-          skuP = tipoParte[0][0].SKU;
-          //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
-        }
-        //? Verificar si el proyecto ya existe en el objeto obj_proyecto
-        let proyectoExistente = obj_proyecto.proyectos.find(
-          (p) => p.proyecto === proyecto
-        );
-
-        if (proyectoExistente) {
-          //? Verificar si el componente ya existe en el proyecto
-          let componenteExistente = proyectoExistente.componentes.find(
-            (c) => c.componente === componente
+  
+        if (Cod_parte[0].length <= 0) {
+          Cod_parte = await sequelize.query(
+            `select* from TBL_ESP_Procesos  where Descripcion =  '${proyect[0][0].Nombre}'`
+            // {replacements:{Codigo:}}
           );
-
-          if (componenteExistente) {
-            //? Agregar la actividad al componente existente
-            
-            componenteExistente.actividades.push({
-              actividad: actividad,
-              frecuencia,
-              entregable,
-              nombre_entregable: nom_entregable,
-              idNodoA,
-              Codi_parteA,
-              idPadreA,
-              skuA,
-              terminada
-            });
-          } else {
-            //? Agregar un nuevo componente con la actividad al proyecto existente
-            
-            proyectoExistente.componentes.push({
-              fecha,
-              componente: componente,
-              idNodoC,
-              Codi_parteC,
-              idPadreC,
-              skuC,
-              actividades: [
-                {
-                  actividad: actividad,
-                  frecuencia,
-                  entregable,
-                  nombre_entregable: nom_entregable,
-                  idNodoA,
-                  Codi_parteA,
-                  idPadreA,
-                  skuA,
-                  terminada
-                },
-              ],
-            });
-          }
-        } else {
-          //? Agregar un nuevo proyecto con el componente y actividad
-          if (proyecto !== "") {
-            obj_proyecto.proyectos?.push({
-              proyecto: proyecto,
-              idNodoP,
-              Codi_parteP,
-              idPadreP,
-              skuP,
-              nitCliente,
-              componentes: [
-                {
-                  fecha,
-                  componente: componente,
-                  idNodoC,
-                  Codi_parteC,
-                  idPadreC,
-                  skuC,
-                  actividades: [
-                    {
-                      actividad: actividad,
-                      frecuencia,
-                      entregable,
-                      nombre_entregable: nom_entregable,
-                      idNodoA,
-                      Codi_parteA,
-                      idPadreA,
-                      skuA,
-                      terminada
-                    },
-                  ],
-                },
-              ],
-            });
+          if (Cod_parte[0].length === 0) {
+            continue;
           }
         }
-      } while (tipoParte[0][0].TipoParte !== "Cabecera");
-     }else{
-      break;
-     }
+        
+        const entrega = await sequelize.query(
+          `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
+        );
+        const nomEntregable = entrega[0]?.map((nom) => {
+          return {
+            id_proceso: nom.id_Proceso,
+            Numero: nom.Numero,
+             Nom_Entregable: nom.Nombre,
+            subido: nom.Subido,
+          };
+        });
+  
+        if (proyect[0][0].TipoParte === "Actividad") {
+          actividad = proyect[0][0].Nombre;
+          frecuencia = Cod_parte[0][0].FrecuenciaVeces;
+          entregable = Cod_parte[0][0].AplicaEntregables;
+          nom_entregable = nomEntregable;
+          idNodoA = proyect[0][0].idNodo;
+          Codi_parteA = proyect[0][0].Cod_parte;
+          idPadreA = proyect[0][0].idPadre;
+          skuA = proyect[0][0].SKU;
+           terminada = terminada
+        }
+        do {
+          tipoParte = await sequelize.query(
+            `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
+            { replacements: { docId: Doc_id } }
+          );
+          Parte = tipoParte[0][0].idPadre;
+          if (tipoParte[0][0].TipoParte === "PP") {
+            componente = tipoParte[0][0].Nombre;
+            //? saca la fecha exacta del string
+            fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+            idNodoC = tipoParte[0][0].idNodo;
+            Codi_parteC = tipoParte[0][0].Cod_parte;
+            idPadreC = tipoParte[0][0].idPadre;
+            skuC = tipoParte[0][0].SKU;
+            nitCliente = tipoParte[0][0].NitCliente;
+          }
+          if (tipoParte[0][0].TipoParte === "Cabecera") {
+            proyecto = tipoParte[0][0].Nombre;
+            idNodoP = tipoParte[0][0].idNodo;
+            Codi_parteP = tipoParte[0][0].Cod_parte;
+            idPadreP = tipoParte[0][0].idPadre;
+            skuP = tipoParte[0][0].SKU;
+            //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+          }
+          //? Verificar si el proyecto ya existe en el objeto obj_proyecto
+          let proyectoExistente = obj_proyecto.proyectos.find(
+            (p) => p.proyecto === proyecto
+          );
+  
+          if (proyectoExistente) {
+            //? Verificar si el componente ya existe en el proyecto
+            let componenteExistente = proyectoExistente.componentes.find(
+              (c) => c.componente === componente
+            );
+  
+            if (componenteExistente) {
+              //? Agregar la actividad al componente existente
+              
+              componenteExistente.actividades.push({
+                actividad: actividad,
+                frecuencia,
+                entregable,
+                nombre_entregable: nom_entregable,
+                idNodoA,
+                Codi_parteA,
+                idPadreA,
+                skuA,
+                terminada
+              });
+            } else {
+              //? Agregar un nuevo componente con la actividad al proyecto existente
+              
+              proyectoExistente.componentes.push({
+                fecha,
+                componente: componente,
+                idNodoC,
+                Codi_parteC,
+                idPadreC,
+                skuC,
+                actividades: [
+                  {
+                    actividad: actividad,
+                    frecuencia,
+                    entregable,
+                    nombre_entregable: nom_entregable,
+                    idNodoA,
+                    Codi_parteA,
+                    idPadreA,
+                    skuA,
+                    terminada
+                  },
+                ],
+              });
+            }
+          } else {
+            //? Agregar un nuevo proyecto con el componente y actividad
+            if (proyecto !== "") {
+              obj_proyecto.proyectos?.push({
+                proyecto: proyecto,
+                idNodoP,
+                Codi_parteP,
+                idPadreP,
+                skuP,
+                nitCliente,
+                componentes: [
+                  {
+                    fecha,
+                    componente: componente,
+                    idNodoC,
+                    Codi_parteC,
+                    idPadreC,
+                    skuC,
+                    actividades: [
+                      {
+                        actividad: actividad,
+                        frecuencia,
+                        entregable,
+                        nombre_entregable: nom_entregable,
+                        idNodoA,
+                        Codi_parteA,
+                        idPadreA,
+                        skuA,
+                        terminada
+                      },
+                    ],
+                  },
+                ],
+              });
+            }
+          }
+        } while (tipoParte[0][0].TipoParte !== "Cabecera");
+       }else{
+        break;
+       }
+    }else{
+      console.log("no se encontro el proyecto ",i.SKU)
+    }
     }
 
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
