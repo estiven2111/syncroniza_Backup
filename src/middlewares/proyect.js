@@ -28,21 +28,9 @@ const LoadProyect = async (Doc_id, email) => {
       proyectos: [],
     };
     let con = 0;
-
-    for (const i of idnodo[0]) {
-      proyect = await sequelize.query(
-        `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) 
-      FROM TBL_SER_ProyectoActividadesEmpleados WHERE 
-      N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
-        { replacements: { docId: Doc_id } }
-      );
-
-        //todo Validar que el proyecto este correcto 
-
     const validateproyect = await sequelize.query(
       `
-      select A.SKU_Logistica, b.Descripcion, isnull(V.NitCliente,'Sin cliente asignado') NitProyecto, isnull(Ter.RazonSocial,'Sin cliente asignado') 
-RazonSocial,isnull(Op.OP,'Sin OP') OP,isnull(v.ValorPresupuesto,0) Valoracion,isnull(v.Etapa,'Valoración') Etapa
+      select A.SKU_Logistica
 from TBL_INV_UNIDAD_ALMACENAMIENTO A inner join TBL_INV_ITEM B on A.Referencia=B.Referencia 
 inner join TBL_INV_TipoEstructuraITEM C on B.Referencia=C.Referencia left join TBL_SER_ValoracionEncabezado V on A.SKU_Logistica=V.SKU 
 left join TBL_CON_TERCEROS Ter on V.NitCliente=Ter.N_Documento left join TBL_PRO_OrdenesPlan OP on A.SKU_Logistica=OP.RefDistr and V.OP=op.OP
@@ -54,6 +42,17 @@ order by SKU_Logistica desc
     console.log(validateproyect[0][0].SKU_Logistica)
     console.log(validateproyect[0])
 
+    for (const i of idnodo[0]) {
+      proyect = await sequelize.query(
+        `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) 
+      FROM TBL_SER_ProyectoActividadesEmpleados WHERE 
+      N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
+        { replacements: { docId: Doc_id } }
+      );
+
+        //todo Validar que el proyecto este correcto 
+
+   
     const existe = validateproyect[0][0].SKU_Logistica.includes(proyect[0][0].SKU)
     console.log(existe,"EXISTE",proyect[0][0].SKU)
 
