@@ -8,6 +8,11 @@ const LoadProyect = async (Doc_id, email) => {
   // const user = JSON.parse(localStorage.getItem("user"));
   //? se selecciona los idNodo para saber que proyectos tiene el usuario
   try {
+
+  
+
+
+
     const idnodo = await sequelize.query(
       `SELECT idNodoProyecto,Terminada FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id}`
     );
@@ -31,6 +36,26 @@ const LoadProyect = async (Doc_id, email) => {
       N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
         { replacements: { docId: Doc_id } }
       );
+
+        //todo Validar que el proyecto este correcto 
+
+    const validateproyect = await sequelize.query(
+      `
+      select A.SKU_Logistica, b.Descripcion, isnull(V.NitCliente,'Sin cliente asignado') NitProyecto, isnull(Ter.RazonSocial,'Sin cliente asignado') 
+RazonSocial,isnull(Op.OP,'Sin OP') OP,isnull(v.ValorPresupuesto,0) Valoracion,isnull(v.Etapa,'Valoración') Etapa
+from TBL_INV_UNIDAD_ALMACENAMIENTO A inner join TBL_INV_ITEM B on A.Referencia=B.Referencia 
+inner join TBL_INV_TipoEstructuraITEM C on B.Referencia=C.Referencia left join TBL_SER_ValoracionEncabezado V on A.SKU_Logistica=V.SKU 
+left join TBL_CON_TERCEROS Ter on V.NitCliente=Ter.N_Documento left join TBL_PRO_OrdenesPlan OP on A.SKU_Logistica=OP.RefDistr and V.OP=op.OP
+where c.TipoItem=9 
+order by SKU_Logistica desc
+      `
+    )
+
+console.log(validateproyect[0],"asi ")
+console.log(validateproyect[0][0],"el otro es asi")
+
+
+
      if (proyect[0]) {
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
       console.log("ddddddddddddddddddddddddddddddddddddd",ID_parte)
