@@ -58,7 +58,6 @@ console.log(validateproyect[0][0],"el otro es asi")
 
      if (proyect[0]) {
       let ID_parte = parseInt(proyect[0][0].Cod_parte);
-      console.log("ddddddddddddddddddddddddddddddddddddd",ID_parte)
       let idPadre = proyect[0][0].idPadre;
       let componentes = [];
       let actividades = [];
@@ -96,11 +95,10 @@ console.log(validateproyect[0][0],"el otro es asi")
           // {replacements:{Codigo:}}
         );
         if (Cod_parte[0].length === 0) {
-          console.log("continueeeeeeeeeee...........",ID_parte)
           continue;
         }
       }
-      console.log("encontroooooooooooooooooooooooooooooooooooeeeeeeeeeeeeeeee",ID_parte)
+      
       const entrega = await sequelize.query(
         `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
       );
@@ -161,13 +159,7 @@ console.log(validateproyect[0][0],"el otro es asi")
 
           if (componenteExistente) {
             //? Agregar la actividad al componente existente
-            console.log(
-              "push Actividad",
-              idNodoA,
-              Codi_parteA,
-              idPadreA,
-              actividades
-            );
+            
             componenteExistente.actividades.push({
               actividad: actividad,
               frecuencia,
@@ -181,7 +173,7 @@ console.log(validateproyect[0][0],"el otro es asi")
             });
           } else {
             //? Agregar un nuevo componente con la actividad al proyecto existente
-            console.log("push componente");
+            
             proyectoExistente.componentes.push({
               fecha,
               componente: componente,
@@ -207,7 +199,6 @@ console.log(validateproyect[0][0],"el otro es asi")
         } else {
           //? Agregar un nuevo proyecto con el componente y actividad
           if (proyecto !== "") {
-            console.log("entra al if", componentes);
             obj_proyecto.proyectos?.push({
               proyecto: proyecto,
               idNodoP,
@@ -259,7 +250,6 @@ console.log(validateproyect[0][0],"el otro es asi")
 //todo hacer consulta para proyectos enviando respuesta automatica
 const getProyectName = async (req, res) => {
   const { search, email } = req.query;
-  console.log("entro", email);
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     // localStorage.removeItem(`Proyecto`)
@@ -287,7 +277,6 @@ const getProyectName = async (req, res) => {
 const NameProyects = (req, res) => {
 try {
   const { email } = req.query;
-  console.log(email,"el email es ")
   const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
   const  nombres = proyects.proyectos.map((obj) => {
     return obj.proyecto
@@ -314,7 +303,6 @@ const getProyect = async (req, res) => {
     const  nombres = proyects.proyectos.map((obj) => {
   return obj.proyecto
     })
-console.log(proyect)
     res.json(proyect);
 
 
@@ -341,7 +329,6 @@ const registerActivities = async (req, res) => {
     FechaFinal,
     DuracionHoras,
   } = req.body;
-  console.log(req.body)
   try {
     await sequelize.query(
       `INSERT INTO [dbo].[TBL_SER_ReporteHorasActividadEmpleado]
@@ -474,7 +461,6 @@ try {
 const Entregables = async(req,res) =>{
 const {SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable,idProceso} =  req.query
 
-console.log(SKU_Proyecto,NitCliente,idNodoProyecto,NumeroEntregable,idProceso)
 // res.send("ok")
 // return
 let entrega = false
