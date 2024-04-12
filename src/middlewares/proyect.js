@@ -83,7 +83,7 @@ const LoadProyect = async (Doc_id, email) => {
         return {
           id_proceso: nom.id_Proceso,
           Numero: nom.Numero,
-          // Nom_Entregable: nom.Nombre,
+           Nom_Entregable: nom.Nombre,
           subido: nom.Subido,
         };
       });
