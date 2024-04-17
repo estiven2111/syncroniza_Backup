@@ -21,7 +21,7 @@ const computerVisionClient = new ComputerVisionClient(
 );
 
 async function Ocr(req, res) {
-  const { imagen } = req.files;
+  
   const { latitud, longitud } = req.body;
   const { token } = req.body;
   console.log(latitud, longitud);
@@ -31,6 +31,11 @@ async function Ocr(req, res) {
   let uploadPath;
   let objeto;
   imgs = req.files.imagen;
+  if (imgs) {
+    console.log("si hay imagen")
+  }else{
+    return res.send("debes subir una imagen")
+  }
   uploadPath = `uploads/${imgs.name}`;
   imgs.mv(`${uploadPath}`, (err) => {
     if (err) {
