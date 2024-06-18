@@ -83,6 +83,7 @@ async function Ocr(req, res) {
                 "Read printed text from local file:",
                 imagePath.split("/").pop()
               );
+             try {
               const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
               const ubicacion = await axios.get(geoUrl);
               codepostal = ubicacion.data.address.postcode;
@@ -95,6 +96,9 @@ async function Ocr(req, res) {
               if (ubicacion.data.address.town) {
                 municipio = ubicacion.data.address.town;
               }
+             } catch (error) {
+              console.log("error en geolocalizacion", error);
+             }
 
               const printedResult = await readTextFromStream(
                 computerVisionClient,

@@ -38,7 +38,7 @@ where c.TipoItem=9
 order by SKU_Logistica desc
       `
     )
-
+    
    
 
     for (const i of idnodo[0]) {

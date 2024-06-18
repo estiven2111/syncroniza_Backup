@@ -26,7 +26,7 @@ inner join TBL_ESP_OperacionMO D on C.ID=D.id_MO
 where cedula= '${docId}'
 group by B.Horas
     `)
-    console.log(consulta1[0][0].length,"ddddddddddddddd")
+    // console.log(consulta1[0][0].length,"ddddddddddddddd")
     
     let Consulta2 = await sequelize.query(
         `
@@ -35,7 +35,8 @@ from TBL_SER_PROYECTOS A
 inner join TBL_SER_ProyectoActividadesEmpleados b on a.idNodo=b.idNodoProyecto
 inner join TBL_ESP_Procesos C on A.Cod_parte=C.ID
 where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
-
+ and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id= ${id}) AND FechaInicio >= (select Inicio from TBL_CON_PERIODOCONTABLE where id= ${id}))
+     or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id= ${id}) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id= ${id})))
         `,
         // {replacements:{ docId: docId, id:id}}
     )
@@ -49,7 +50,8 @@ where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=0)
         inner join TBL_SER_ProyectoActividadesEmpleados b on a.idNodo=b.idNodoProyecto
         inner join TBL_ESP_Procesos C on A.Cod_parte=C.ID
         where (N_DocumentoEmpleado= '${docId}' and C.AplicaFrecuencia=1)
-       
+        and ((FechaInicio <= (select fin from TBL_CON_PERIODOCONTABLE where id=${id}) AND FechaInicio >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=${id}))
+        or (FechaFinal <= (select fin from TBL_CON_PERIODOCONTABLE where id=${id}) AND FechaFinal >= (select Inicio from TBL_CON_PERIODOCONTABLE where id=${id})))
         `,
         // {replacements:{ docId: docId, id:id}}
     )
@@ -126,13 +128,6 @@ nivActividad = nivActividad
 }else{
 nivActividad = 0
 }
-
-
-
-
-
-
- 
     const datos = {
         hdisp,
         horaPSinFre,
