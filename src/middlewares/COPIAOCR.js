@@ -83,23 +83,49 @@ async function Ocr(req, res) {
                 "Read printed text from local file:",
                 imagePath.split("/").pop()
               );
+            //  try {
+            //   const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
+            //   const ubicacion = await axios.get(geoUrl);
+            //   console.log(ubicacion.data);
+            //   codepostal = ubicacion.data.address.postcode;
+            //   if (ubicacion.data.address.city) {
+            //     municipio = ubicacion.data.address.city;
+            //   }
+            //   if (ubicacion.data.address.county) {
+            //     municipio = ubicacion.data.address.county;
+            //   }
+            //   if (ubicacion.data.address.town) {
+            //     municipio = ubicacion.data.address.town;
+            //   }
+            //  } catch (error) {
+            //   console.log("error en geolocalizacion", error);
+            //  }
+
+             const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
              try {
-              const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
-              const ubicacion = await axios.get(geoUrl);
+              const ubicacion = await axios.get(geoUrl, {
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                },
+                xsrfCookieName: '',
+                xsrfHeaderName: ''
+              });
               console.log(ubicacion.data);
-              codepostal = ubicacion.data.address.postcode;
-              if (ubicacion.data.address.city) {
-                municipio = ubicacion.data.address.city;
+              return ubicacion.data;
+            } catch (error) {
+              if (error.response) {
+                console.error('Error data:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+              } else if (error.request) {
+                console.error('Error request:', error.request);
+              } else {
+                console.error('Error message:', error.message);
               }
-              if (ubicacion.data.address.county) {
-                municipio = ubicacion.data.address.county;
-              }
-              if (ubicacion.data.address.town) {
-                municipio = ubicacion.data.address.town;
-              }
-             } catch (error) {
-              console.log("error en geolocalizacion", error);
-             }
+            }
+
+
+
 
               const printedResult = await readTextFromStream(
                 computerVisionClient,
