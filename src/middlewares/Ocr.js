@@ -48,16 +48,14 @@ async function Ocr(req, res) {
 //      console.error('Error message:', error.message);
 //    }
 //  }
+
 const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
 
-try {
-  const response = await axios.get(geoUrl, {
-    headers: {
-      'User-Agent': 'Creame/1.0 (estiven.a.martinez@gmail.com)', // Cambia esto para identificar tu aplicación
-    }
-  });
-
-
+const response = await axios.get(geoUrl, {
+  headers: {
+    'User-Agent': 'TuAplicacion/1.0 (tu_email@ejemplo.com)', // Cambia esto para identificar tu aplicación
+  }
+});
 
 
   const { token } = req.body;
