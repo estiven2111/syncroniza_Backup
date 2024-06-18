@@ -86,6 +86,7 @@ async function Ocr(req, res) {
              try {
               const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
               const ubicacion = await axios.get(geoUrl);
+              console.log(ubicacion.data);
               codepostal = ubicacion.data.address.postcode;
               if (ubicacion.data.address.city) {
                 municipio = ubicacion.data.address.city;
