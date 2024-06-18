@@ -26,28 +26,37 @@ async function Ocr(req, res) {
 
 
   
-  const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
-  try {
-   const ubicacion = await axios.get(geoUrl, {
-     headers: {
-       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-     },
-     xsrfCookieName: '',
-     xsrfHeaderName: ''
-   });
-   console.log(ubicacion.data);
-   return ubicacion.data;
- } catch (error) {
-   if (error.response) {
-     console.error('Error data:', error.response.data);
-     console.error('Error status:', error.response.status);
-     console.error('Error headers:', error.response.headers);
-   } else if (error.request) {
-     console.error('Error request:', error.request);
-   } else {
-     console.error('Error message:', error.message);
-   }
- }
+//   const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
+//   try {
+//    const ubicacion = await axios.get(geoUrl, {
+//      headers: {
+//        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+//      },
+//      xsrfCookieName: '',
+//      xsrfHeaderName: ''
+//    });
+//    console.log(ubicacion.data);
+//    return ubicacion.data;
+//  } catch (error) {
+//    if (error.response) {
+//      console.error('Error data:', error.response.data);
+//      console.error('Error status:', error.response.status);
+//      console.error('Error headers:', error.response.headers);
+//    } else if (error.request) {
+//      console.error('Error request:', error.request);
+//    } else {
+//      console.error('Error message:', error.message);
+//    }
+//  }
+const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
+
+try {
+  const response = await axios.get(geoUrl, {
+    headers: {
+      'User-Agent': 'Creame/1.0 (estiven.a.martinez@gmail.com)', // Cambia esto para identificar tu aplicación
+    }
+  });
+
 
 
 
