@@ -197,7 +197,7 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
       onedrive_folder = `CONTABILIDAD/Recibos_Caja/${añoActual}/${mesFormateado}/${nomfolder}`;
     }
     if (tipo === "entregable") {
-      onedrive_folder = `GESTION PROYECTO/${nomfolder}${añoActual}/${mesFormateado}`;
+      onedrive_folder = `GESTION PROYECTO/${nomfolder}/${añoActual}/${mesFormateado}`;
     }
     const onedrive_filename = path.basename(file);
     // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
