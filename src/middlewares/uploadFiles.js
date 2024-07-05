@@ -179,7 +179,26 @@ const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
     const file = path.join(__dirname, "../..", "uploads", imgs.name);
 const nomuser = user.split(" ").join("_")
   const nomfolder  = nomuser.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    const onedrive_folder = `${tipo}/${nomfolder}`;
+  // Obtengo asi la fecha actual
+let fechaActual = new Date();
+
+// Obtengo asi el año actual
+let añoActual = fechaActual.getFullYear();
+
+// Obtengo asi el mes actual (los meses van de 0 a 11, así que sumamos 1)
+let mesActual = fechaActual.getMonth() + 1;
+
+// Formatear el mes para que siempre tenga dos dígitos
+let mesFormateado = mesActual.toString().padStart(2, '0');
+
+    let onedrive_folder = ``;
+    if (tipo === "OCR") {
+      // onedrive_folder = `${tipo}/${nomfolder}`;
+      onedrive_folder = `CONTABILIDAD/Recibos_Caja/${añoActual}/${mesFormateado}/${nomfolder}`;
+    }
+    if (tipo === "entregable") {
+      onedrive_folder = `GESTION PROYECTO/${nomfolder}${añoActual}/${mesFormateado}`;
+    }
     const onedrive_filename = path.basename(file);
     // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
 
