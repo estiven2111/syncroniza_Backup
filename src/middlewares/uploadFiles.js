@@ -257,11 +257,13 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
           if (sharedResponse.link && sharedResponse.link.webUrl) {
              sharedUrl = sharedResponse.link.webUrl;
             console.log("URL de acceso compartida:", sharedUrl);
+            console.log(SaveDatos,"antes de guardarrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeeeee")
             if (tipo === "entregable") {
               SaveDatos.NumeroEntregable = archivo.split("-")[0]
+
             }
             SaveDatos.URLArchivo = sharedUrl
-            console.log(SaveDatos)
+            console.log(SaveDatos,"despues de guardarrrrrrrrrrrrrrr")
             insertInto(SaveDatos,tipo)
             eliminar(file);
            
