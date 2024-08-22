@@ -24,6 +24,7 @@ const LoadProyect = async (Doc_id, email) => {
      
     let proyect;
     let Cod_parte;
+    let idNodo_falta = 0;
     let obj_proyecto = {
       proyectos: [],
     };
@@ -245,13 +246,14 @@ order by SKU_Logistica desc
         continue;
        }
     }else{
+      idNodo_falta++;
      continue;
     }
     }
    } catch (error) {
     console.log({"error": error});
    }
-
+    console.log(idNodo_falta)
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     return
     //! en el deploy validar que el archivo no se sobreescriba
