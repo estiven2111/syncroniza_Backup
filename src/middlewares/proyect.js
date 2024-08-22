@@ -2,7 +2,7 @@
 const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
-TIN
+
 const LoadProyect = async (Doc_id, email) => {
   //? se piden los datos del usuario en el localStorage
   // const user = JSON.parse(localStorage.getItem("user"));
@@ -124,116 +124,116 @@ order by SKU_Logistica desc
         }
         try {
           do {
-            tipoParte = await sequelize.query(
-              `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
-              { replacements: { docId: Doc_id } }
+          tipoParte = await sequelize.query(
+            `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
+            { replacements: { docId: Doc_id } }
+          );
+          Parte = tipoParte[0][0].idPadre;
+          if (tipoParte[0][0].TipoParte === "PP") {
+            componente = tipoParte[0][0].Nombre;
+            //? saca la fecha exacta del string
+            fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+            idNodoC = tipoParte[0][0].idNodo;
+            Codi_parteC = tipoParte[0][0].Cod_parte;
+            idPadreC = tipoParte[0][0].idPadre;
+            skuC = tipoParte[0][0].SKU;
+            nitCliente = tipoParte[0][0].NitCliente;
+          }
+          if (tipoParte[0][0].TipoParte === "Cabecera") {
+            proyecto = tipoParte[0][0].Nombre;
+            idNodoP = tipoParte[0][0].idNodo;
+            Codi_parteP = tipoParte[0][0].Cod_parte;
+            idPadreP = tipoParte[0][0].idPadre;
+            skuP = tipoParte[0][0].SKU;
+            //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+          }
+          //? Verificar si el proyecto ya existe en el objeto obj_proyecto
+          let proyectoExistente = obj_proyecto.proyectos.find(
+            (p) => p.proyecto === proyecto
+          );
+  
+          if (proyectoExistente) {
+            //? Verificar si el componente ya existe en el proyecto
+            let componenteExistente = proyectoExistente.componentes.find(
+              (c) => c.componente === componente
             );
-            Parte = tipoParte[0][0].idPadre;
-            if (tipoParte[0][0].TipoParte === "PP") {
-              componente = tipoParte[0][0].Nombre;
-              //? saca la fecha exacta del string
-              fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
-              idNodoC = tipoParte[0][0].idNodo;
-              Codi_parteC = tipoParte[0][0].Cod_parte;
-              idPadreC = tipoParte[0][0].idPadre;
-              skuC = tipoParte[0][0].SKU;
-              nitCliente = tipoParte[0][0].NitCliente;
-            }
-            if (tipoParte[0][0].TipoParte === "Cabecera") {
-              proyecto = tipoParte[0][0].Nombre;
-              idNodoP = tipoParte[0][0].idNodo;
-              Codi_parteP = tipoParte[0][0].Cod_parte;
-              idPadreP = tipoParte[0][0].idPadre;
-              skuP = tipoParte[0][0].SKU;
-              //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
-            }
-            //? Verificar si el proyecto ya existe en el objeto obj_proyecto
-            let proyectoExistente = obj_proyecto.proyectos.find(
-              (p) => p.proyecto === proyecto
-            );
-    
-            if (proyectoExistente) {
-              //? Verificar si el componente ya existe en el proyecto
-              let componenteExistente = proyectoExistente.componentes.find(
-                (c) => c.componente === componente
-              );
-    
-              if (componenteExistente) {
-                //? Agregar la actividad al componente existente
-                
-                componenteExistente.actividades.push({
-                  actividad: actividad,
-                  frecuencia,
-                  entregable,
-                  nombre_entregable: nom_entregable,
-                  idNodoA,
-                  Codi_parteA,
-                  idPadreA,
-                  skuA,
-                  terminada
-                });
-              } else {
-                //? Agregar un nuevo componente con la actividad al proyecto existente
-                
-                proyectoExistente.componentes.push({
-                  fecha,
-                  componente: componente,
-                  idNodoC,
-                  Codi_parteC,
-                  idPadreC,
-                  skuC,
-                  actividades: [
-                    {
-                      actividad: actividad,
-                      frecuencia,
-                      entregable,
-                      nombre_entregable: nom_entregable,
-                      idNodoA,
-                      Codi_parteA,
-                      idPadreA,
-                      skuA,
-                      terminada
-                    },
-                  ],
-                });
-              }
+  
+            if (componenteExistente) {
+              //? Agregar la actividad al componente existente
+              
+              componenteExistente.actividades.push({
+                actividad: actividad,
+                frecuencia,
+                entregable,
+                nombre_entregable: nom_entregable,
+                idNodoA,
+                Codi_parteA,
+                idPadreA,
+                skuA,
+                terminada
+              });
             } else {
-              //? Agregar un nuevo proyecto con el componente y actividad
-              if (proyecto !== "") {
-                obj_proyecto.proyectos?.push({
-                  proyecto: proyecto,
-                  idNodoP,
-                  Codi_parteP,
-                  idPadreP,
-                  skuP,
-                  nitCliente,
-                  componentes: [
-                    {
-                      fecha,
-                      componente: componente,
-                      idNodoC,
-                      Codi_parteC,
-                      idPadreC,
-                      skuC,
-                      actividades: [
-                        {
-                          actividad: actividad,
-                          frecuencia,
-                          entregable,
-                          nombre_entregable: nom_entregable,
-                          idNodoA,
-                          Codi_parteA,
-                          idPadreA,
-                          skuA,
-                          terminada
-                        },
-                      ],
-                    },
-                  ],
-                });
-              }
+              //? Agregar un nuevo componente con la actividad al proyecto existente
+              
+              proyectoExistente.componentes.push({
+                fecha,
+                componente: componente,
+                idNodoC,
+                Codi_parteC,
+                idPadreC,
+                skuC,
+                actividades: [
+                  {
+                    actividad: actividad,
+                    frecuencia,
+                    entregable,
+                    nombre_entregable: nom_entregable,
+                    idNodoA,
+                    Codi_parteA,
+                    idPadreA,
+                    skuA,
+                    terminada
+                  },
+                ],
+              });
             }
-          } while (tipoParte[0][0].TipoParte !== "Cabecera");
+          } else {
+            //? Agregar un nuevo proyecto con el componente y actividad
+            if (proyecto !== "") {
+              obj_proyecto.proyectos?.push({
+                proyecto: proyecto,
+                idNodoP,
+                Codi_parteP,
+                idPadreP,
+                skuP,
+                nitCliente,
+                componentes: [
+                  {
+                    fecha,
+                    componente: componente,
+                    idNodoC,
+                    Codi_parteC,
+                    idPadreC,
+                    skuC,
+                    actividades: [
+                      {
+                        actividad: actividad,
+                        frecuencia,
+                        entregable,
+                        nombre_entregable: nom_entregable,
+                        idNodoA,
+                        Codi_parteA,
+                        idPadreA,
+                        skuA,
+                        terminada
+                      },
+                    ],
+                  },
+                ],
+              });
+            }
+          }
+        } while (tipoParte[0][0].TipoParte !== "Cabecera");
         } catch (error) {
           console.log("error",error);
         }
