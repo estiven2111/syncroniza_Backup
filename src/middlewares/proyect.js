@@ -128,6 +128,7 @@ order by SKU_Logistica desc
             `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
             { replacements: { docId: Doc_id } }
           );
+         if (tipoParte[0]) {//todo validar tipoparte cabecera
           Parte = tipoParte[0][0].idPadre;
           if (tipoParte[0][0].TipoParte === "PP") {
             componente = tipoParte[0][0].Nombre;
@@ -233,6 +234,9 @@ order by SKU_Logistica desc
               });
             }
           }
+         }else{
+          break
+         }
         } while (tipoParte[0][0].TipoParte !== "Cabecera");
         } catch (error) {
           console.log("error",error);
