@@ -235,14 +235,14 @@ order by SKU_Logistica desc
             }
           }
          }else{
-          break
+          continue;
          }
         } while (tipoParte[0][0].TipoParte !== "Cabecera");
         } catch (error) {
           console.log("error",error);
         }
        }else{
-        break;
+        continue;
        }
     }else{
      continue;
