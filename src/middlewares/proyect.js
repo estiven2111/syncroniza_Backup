@@ -24,7 +24,7 @@ const LoadProyect = async (Doc_id, email) => {
      
     let proyect;
     let Cod_parte;
-    let idNodo_falta = 0;
+    let idNodo_falta = [];
     let obj_proyecto = {
       proyectos: [],
     };
@@ -55,7 +55,7 @@ order by SKU_Logistica desc
 
        
         // const existe = validateproyect[0].some(SKU => SKU.SKU_Logistica === proyect[0][0].SKU)
-        console.log(proyect[0].length,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+        
         if (proyect[0].length > 0) {
           if (proyect[0]) {
         let ID_parte = parseInt(proyect[0][0].Cod_parte);
@@ -246,7 +246,7 @@ order by SKU_Logistica desc
         continue;
        }
     }else{
-      idNodo_falta++;
+      idNodo_falta.push(i.idNodoProyecto)
      continue;
     }
     }
