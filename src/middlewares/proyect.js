@@ -54,8 +54,8 @@ order by SKU_Logistica desc
 
        
         // const existe = validateproyect[0].some(SKU => SKU.SKU_Logistica === proyect[0][0].SKU)
-        console.log(proyect[0],"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
-        if (proyect[0]) {
+        console.log(proyect[0].length,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+        if (proyect[0].length > 0) {
           if (proyect[0]) {
         let ID_parte = parseInt(proyect[0][0].Cod_parte);
         let idPadre = proyect[0][0].idPadre;
