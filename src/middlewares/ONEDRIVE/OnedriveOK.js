@@ -1,45 +1,23 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const fileupload = require("express-fileupload");
-const bodyParser = require("body-parser");
-const router = require("./routes/index");
-const sequelize = require("sequelize");
-// require("dotenv").config()
-const app = express();
-// app.use(cors());
-const optionCors = {
-    origin: "*",
-    methods: 'GET, POST, OPTIONS, PUT, DELETE',
-    allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
-    credentials: true
-  };
-  
-  app.use(cors(optionCors));
-  
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(fileupload());
-app.use(sequelize);
-app.use(morgan("dev"));
-const path = require("path");
-const fs = require("fs");
-const request = require("request");
-const session = require("express-session");
-const passport = require("passport");
-const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-const crypto = require("crypto");
-// app.use(express.static("uploads"));
-app.use("/", router);
+// const express = require("express");
+// const session = require("express-session");
+// const passport = require("passport");
+// const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
+// const crypto = require("crypto");
+// const path = require("path");
+// const fs = require("fs");
+// const app = express();
+// const fileupload = require("express-fileupload");
+// const request = require("request");
+// // Genera una cadena secreta para la sesión
+// const sessionSecret = crypto.randomBytes(64).toString("hex");
 
-const sessionSecret = crypto.randomBytes(64).toString("hex");
-require("dotenv").config();
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
-const clientID = CLIENT_ID;
-const clientSecret = CLIENT_SECRET;
-const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
-const tenantID = TENANT_ID;
+// // Configura las credenciales de tu aplicación en Azure AD
+// clientID = "e860f65b-a281-411b-9cfa-fa158fa7c2db";
+// clientSecret = "2Jd8Q~CGgIP7XU0p8MwdR87RDh3do7d8EnLs6dcd";
+// callbackURL = "http://localhost:5000/callback";
+// tenantID = "422ce85a-4ac3-4bc8-8429-c79ab5d86930";
 
+// // Configura y utiliza sesiones en Express
 // app.use(
 //   session({
 //     secret: sessionSecret,
@@ -81,23 +59,22 @@ const tenantID = TENANT_ID;
 // });
 
 // // Ruta de inicio de sesión
-// app.get("/user/api/files", passport.authenticate("azuread-openidconnect"));
+// app.get("/login", passport.authenticate("azuread-openidconnect"));
 
 // // Ruta de retorno después de la autenticación
 // app.get(
-//   "/user/api/callback",
-//   passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/files" }),
+//   "/callback",
+//   passport.authenticate("azuread-openidconnect", { failureRedirect: "/login" }),
 //   (req, res) => {
 //     // Redirige o muestra un mensaje de éxito después de la autenticación exitosa
-//     res.redirect("/user/api/dashboard");
+//     res.redirect("/dashboard");
 //   }
 // );
 
 // // Ruta protegida que requiere autenticación
-// app.get("/user/api/dashboard", ensureAuthenticated, (req, res) => {
-//   console.log("entro", __dirname);
+// app.get("/dashboard", ensureAuthenticated, (req, res) => {
 //   const file = path.join(__dirname, "", "routes", "MASCOTAS.jpg");
-
+ 
 //   const onedrive_folder = "SampleFolder";
 //   const onedrive_filename = path.basename(file);
 //   const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
@@ -136,7 +113,10 @@ const tenantID = TENANT_ID;
 //   if (req.isAuthenticated()) {
 //     return next();
 //   }
-//   res.redirect("/user/api/files");
+//   res.redirect("/login");
 // }
 
-module.exports = app;
+// // Inicia el servidor
+// app.listen(4000, () => {
+//   console.log("Servidor iniciado en http://localhost:4000");
+// });

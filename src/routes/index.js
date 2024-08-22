@@ -1,11 +1,14 @@
 const { Router } = require("express");
 const userRouter = require("./userRouter");
 const ProyectRouter = require("./proyectRouter");
+const indicadoresRouter = require("./indicadoresRouter");
 const { handb } = require("../db");
 const router = Router();
 
 router.use("/user", userRouter);
 router.use("/user/api/proyect", ProyectRouter);
+router.use("/user/api/indicadores",indicadoresRouter)
+
 
 
 //! PETICIONES PARA CONFIGURACION

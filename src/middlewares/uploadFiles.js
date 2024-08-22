@@ -12,6 +12,7 @@ const passport = require("../routes/userRouter");
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, TOKEN } =
   process.env;
 const { sequelize } = require("../db");
+const { clearScreenDown } = require("readline");
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
@@ -49,7 +50,7 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable)
   }
-  console.log(obj_ActualizarEntregable)
+  console.log(ActualizarEntregable)
   // if (req.files) {
   //   for (const key in req.files) {
   //     const archivo = req.files[key];
@@ -105,8 +106,6 @@ const dashboard = async (req, res) => {
         if (req.files) {
           for (const key in req.files) {
             const  imagen  = req.files[key];
-            console.log("key",key)
-            console.log( "req.files[key]",req.files[key])
             console.log( "req.files",imagen)
           let imgs;
           let imagePath;
@@ -119,8 +118,8 @@ const dashboard = async (req, res) => {
          
           }
         
-        } else {
-          res.json({ msg: "suba almenos un archivo" });
+        } else {  
+          res.json({ msg: "suba almenos un archivo" }); peticionOcr();
           return
         }
       } catch (error) {
@@ -139,7 +138,7 @@ const dashboard = async (req, res) => {
             let imageBuffer;
             let uploadPath;
             imgs = archivo;
-            uploadPath = `./uploads/${archivo.name}`;
+            uploadPath = `uploads/${archivo.name}`;
             // const token = req.user.accessToken;
             // req.session.accessToken = token;
             // res.cookie(`access_token`, token, { httpOnly: true });
@@ -170,108 +169,141 @@ const dashboard = async (req, res) => {
 const moveupload = (tipo, imgs, uploadPath, user, token,SaveDatos,archivo) => {
   console.log(uploadPath,"imagen ruta")
   
-  console.log(__dirname );
-  let sharedUrl
-  try {
-    imgs.mv(`${uploadPath}`, (err) => {
-      if (err) {
-        console.log("error en mv", err)
-        return err
-      };
-      const file = path.join(__dirname, "../..", "uploads", imgs.name);
-  const nomuser = user.split(" ").join("_")
-    const nomfolder  = nomuser.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      const onedrive_folder = `${tipo}/${nomfolder}`;
-      const onedrive_filename = path.basename(file);
-      // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
   
-      fs.readFile(file, async function(err, data) {
+  let sharedUrl
+  imgs.mv(`${uploadPath}`, (err) => {
+    if (err) {
+      console.log("error en mv", err)
+      return err
+    };
+    const file = path.join(__dirname, "../..", "uploads", imgs.name);
+const nomuser = user.split(" ").join("_")
+  const nomfolder  = nomuser.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  // Obtengo asi la fecha actual
+let fechaActual = new Date();
+
+// Obtengo asi el año actual
+let añoActual = fechaActual.getFullYear();
+
+// Obtengo asi el mes actual (los meses van de 0 a 11, así que sumamos 1)
+let mesActual = fechaActual.getMonth() + 1;
+
+// Formatear el mes para que siempre tenga dos dígitos
+let mesFormateado = mesActual.toString().padStart(2, '0');
+
+    let onedrive_folder = ``;
+    if (tipo === "OCR") {
+      // onedrive_folder = `${tipo}/${nomfolder}`;
+      onedrive_folder = `CONTABILIDAD/Recibos_Caja/${añoActual}/${mesFormateado}/${nomfolder}`;
+    }
+    if (tipo === "entregable") {
+      onedrive_folder = `GESTION PROYECTO/${nomfolder}/${añoActual}/${mesFormateado}`;
+    }
+    const onedrive_filename = path.basename(file);
+    // const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
+
+    fs.readFile(file, async function(err, data) {
+      if (err) {
+        console.error(err); 
+        return;
+      }
+      console.log("aca vamos ");
+      const uploadOptions = {
+        url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        body: data,
+      };
+      // Subir el archivo a OneDrive
+      try {
+      // console.log("aca vamos 2",uploadOptions);
+      await request.put(uploadOptions, async function (err, response, body) {
         if (err) {
           console.error(err);
           return;
         }
-        console.log("aca vamos ");
-        const uploadOptions = {
-          url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+       
+        const accessUrl = JSON.parse(body)["webUrl"];
+        console.log("URL de acceso:", accessUrl);
+        const responseBody = JSON.parse(body);
+        const driveId = responseBody.parentReference.driveId; // Obtener el driveId
+        const itemId = responseBody.id; 
+        console.log("aca vamos 1"); 
+        // Compartir el archivo de OneDrive públicamente
+        const shareOptions = { 
+          url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
           },
-          body: data,
+          body: JSON.stringify({
+            type: "view",
+            scope: "anonymous",
+          }),
         };
-        // Subir el archivo a OneDrive
-        try {
-        console.log("aca vamos 2",uploadOptions);
-        await request.put(uploadOptions, async function (err, response, body) {
+       
+       try {
+       await request.post(shareOptions, function (err, response, shareBody) {
           if (err) {
+            console.log("entro al error: " + err.message)
             console.error(err);
             return;
           }
-         
-          const accessUrl = JSON.parse(body)["webUrl"];
-          console.log("URL de acceso:", accessUrl);
-          const responseBody = JSON.parse(body);
-          const driveId = responseBody.parentReference.driveId; // Obtener el driveId
-          const itemId = responseBody.id;
-          console.log("aca vamos 1");
-          // Compartir el archivo de OneDrive públicamente
-          const shareOptions = {
-            url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              type: "view",
-              scope: "anonymous",
-            }),
-          };
-         
-         try {
-         await request.post(shareOptions, function (err, response, shareBody) {
-            if (err) {
-              console.log("entro al error: " + err.message)
-              console.error(err);
-              return;
+
+          const sharedResponse = JSON.parse(shareBody);
+          console.log("aca vamos 3");
+          if (sharedResponse.link && sharedResponse.link.webUrl) {
+             sharedUrl = sharedResponse.link.webUrl;
+            console.log("URL de acceso compartida:", sharedUrl);
+            console.log(SaveDatos,"antes de guardarrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeeeee",archivo)
+            if (tipo === "entregable") {
+              SaveDatos.NumeroEntregable = archivo.split("-")[0]
+
             }
-  
-            const sharedResponse = JSON.parse(shareBody);
-            console.log("aca vamos 3");
-            if (sharedResponse.link && sharedResponse.link.webUrl) {
-               sharedUrl = sharedResponse.link.webUrl;
-              console.log("URL de acceso compartida:", sharedUrl);
-              if (tipo === "entregable") {
-                SaveDatos.NumeroEntregable = archivo.split("-")[0]
-              }
-              SaveDatos.URLArchivo = sharedUrl
-              console.log(SaveDatos)
-              insertInto(SaveDatos,tipo)
-              eliminar(file);
-             
-            } else {
-              console.log("No se pudo obtener la URL de acceso compartida.");
-            }
-          });
-         } catch (error) {
-          console.log("el error es ",error)
-         }
+            SaveDatos.URLArchivo = sharedUrl
+            console.log(SaveDatos,"despues de guardarrrrrrrrrrrrrrr")
+            insertInto(SaveDatos,tipo)
+            eliminar(file);
+           
+          } else {
+            console.log("No se pudo obtener la URL de acceso compartida.");
+          }
         });
-      } catch (error) {
-        console.log("el error es primer ",error)
-      }
+       } catch (error) {
+        console.log("el error es ",error)
+       }
       });
-  
-    
-      //TODO este
+    } catch (error) {
+      console.log("el error es primer ",error)
+    }
     });
-  } catch (error) {
-    console.log("el error catch es: ",error)
-  }
+
+  
+    //TODO este
+  });
 
 };
 
 const insertInto = async(data,tipo) =>{
-  console.log(data,"data")
+  console.log(data,"data") 
+  if (data) {
+
+    data.SKU_Proyecto = data.SKU_Proyecto?data.SKU_Proyecto:""
+    data.NitCliente = data.NitCliente?data.NitCliente:"";
+    data.idNodoProyecto = data.idNodoProyecto ? data.idNodoProyecto : 0
+    data.idProceso = data.idProceso ? data.idProceso : 0;
+    data.Sub_Total = data.Sub_Total ? data.Sub_Total : 0;
+    data.Descripcion = data.Descripcion ? data.Descripcion : ""
+    data.iva = data.iva ? data.iva : 0
+    data.ipc = data.ipc ? data.ipc : 0
+    data.retefuente = data.retefuente ? data.retefuente : 0,
+    data.ica = data.ica ? data.ica : 0,
+    data.razon_social = data.razon_social ? data.razon_social : ""
+    data.notas =  data.notas ? data.notas : ""
+    data.concepto = data.concepto ? data.concepto : ""
+  }
  switch (tipo) {
   case "OCR":
     
@@ -295,8 +327,15 @@ const insertInto = async(data,tipo) =>{
       ,[DireccionComprobante]
       ,[CCostos]
       ,[idAnticipo]
-      ,[ipc]
+      ,[razon_social]
+      ,[impoconsumo]
+      ,[ica]
+      ,[iva]
+      ,[retefuente]
       ,[Sub_Total]
+      ,[Descripcion]
+      ,[Notas]
+      ,[Concepto]
       )
   VALUES
       ('${data.SKU_Proyecto}',
@@ -316,8 +355,15 @@ const insertInto = async(data,tipo) =>{
         '${data.DireccionComprobante}',
         '${data.CCostos}',
          '${data.idAnticipo}',
+         '${data.razon_social}',
          ${data.ipc},
-       ${data.Sub_Total}
+         ${data.ica},
+         ${data.iva},
+         ${data.reteFuente},
+       ${data.Sub_Total},
+       '${data.Descripcion}',
+       '${data.notas}',
+       '${data.concepto}'
        )
   `
     );

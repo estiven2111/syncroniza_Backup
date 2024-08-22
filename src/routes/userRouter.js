@@ -125,10 +125,11 @@ const fs = require("fs");
 const request = require("request");
 const cors = require("cors");
 require("dotenv").config();
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW } = process.env;
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
+const callbackURLW = REDIRECT_URIW; //"http://localhost:5000/validation";
 const tenantID = TENANT_ID;
 
 const userRouter = Router();
@@ -141,7 +142,7 @@ const optionCors = {
 userRouter.use(cors());
 // const userRouter = express()
 const sessionSecret = crypto.randomBytes(64).toString("hex");
-console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID);
+console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW);
 // Configura y utiliza sesiones en Express
 userRouter.use(
   session({
@@ -155,6 +156,27 @@ userRouter.use(passport.initialize());
 userRouter.use(passport.session());
 
 passport.use(
+  "web-openidconnect",
+  new AzureAdOAuth2Strategy(
+    {
+      clientID: clientID,
+      clientSecret: clientSecret,
+      callbackURL: callbackURLW,
+      tenant: tenantID,
+      resource: "https://graph.microsoft.com/",
+    },
+    (accessToken, refreshToken, params, profile, done) => {
+      console.log("entro en el web");
+     
+      // aca puede realizar acciones para obtener los datos de los usuarios
+      //para enviar ala base datos o lo que desee y se pueda hacer
+
+      return done(null, { accessToken, refreshToken, profile });
+    }
+  )
+);
+
+passport.use(
   "azuread-openidconnect",
   new AzureAdOAuth2Strategy(
     {
@@ -165,7 +187,7 @@ passport.use(
       resource: "https://graph.microsoft.com/",
     },
     (accessToken, refreshToken, params, profile, done) => {
-      console.log("token", accessToken);
+      console.log("params", params);
      
       // aca puede realizar acciones para obtener los datos de los usuarios
       //para enviar ala base datos o lo que desee y se pueda hacer
@@ -202,25 +224,61 @@ userRouter.get("/api/microsoft",(req,res)=>{
 })
 
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
+userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
 userRouter.get(
   "/api/callback",
   passport.authenticate("azuread-openidconnect", {
     failureRedirect: "/user/api/files",
   }),
   (req, res) => {
+    console.log(req.query)
     const auth = req.isAuthenticated()
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-  
-    //res.redirect("/user/api/dashboard");
     res.json(datos)
+
   }
 );
+
+
+userRouter.get(
+  "/api/validation",
+  passport.authenticate("web-openidconnect", {
+    failureRedirect: "/user/api/web",
+  }),
+  (req, res) => {
+    const auth = req.isAuthenticated()
+    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
+    res.send(
+      ` 
+      <!DOCTYPE html>
+      <html lang="en">
+
+      <body>
+
+      </body>
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/actividades') 
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/Gastos') 
+        window.close();
+    </script>
+      </html>
+      `
+   )
+  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/actividades') 
+  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/Gastos') 
+//    setTimeout(function() {
+//     window.close();
+// }, 1000);
+  }
+);
+
+
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
+userRouter.post("/api/creame-dashboard",dashboard);
 // userRouter.post("/api/dashboard", dashboard);
 // ensureAuthenticated
 // userRouter.post("/api/register",registerUser)
 
-//todo usar para cojer el token por get desde la web
+//todo usar para cojer el token por get desde la webs
 // userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 // userRouter.get("/api/callback",passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/files" }),(req,res)=>{
 //   res.redirect("/dashboard");

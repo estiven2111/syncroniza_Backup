@@ -24,6 +24,7 @@ const login = async (req, res) => {
         usuario = existUser[0][0];
 
         if (password !== usuario.clave) {
+          console.log("aca")
           res.status(401).json({ message: "Clave incorrecta" });
           return;
         }
@@ -41,9 +42,8 @@ const login = async (req, res) => {
       const token = jwt.sign({ userEmail: usuario.Email }, secretKey, {
         expiresIn: "8h",
       });
-      localStorage.removeItem(`${usuario.Email}Proyecto`);
       console.log(usuario.Doc_id)
-      LoadProyect(usuario.Doc_id,usuario.Email);
+      await LoadProyect(usuario.Doc_id,usuario.Email);
       res.json({ token, userEmail: usuario.Email, userName: usuario.Nombre, doc_empleado:usuario.Doc_id });
     } catch (error) {
       console.error("Error al autenticar al usuario:", error);
