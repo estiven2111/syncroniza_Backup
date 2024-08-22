@@ -53,10 +53,10 @@ order by SKU_Logistica desc
         //todo Validar que el proyecto este correcto 
 
        
-    const existe = validateproyect[0].some(SKU => SKU.SKU_Logistica === proyect[0][0].SKU)
-
-    if (existe) {
-      if (proyect[0]) {
+        const existe = validateproyect[0].some(SKU => SKU.SKU_Logistica === proyect[0][0].SKU)
+        
+        if (proyect[0]) {
+          if (proyect[0]) {
         let ID_parte = parseInt(proyect[0][0].Cod_parte);
         let idPadre = proyect[0][0].idPadre;
         let componentes = [];
