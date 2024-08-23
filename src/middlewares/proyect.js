@@ -95,11 +95,9 @@ order by SKU_Logistica desc
             `select* from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
             // {replacements:{Codigo:}}
           );
-          // if (Cod_parte[0].length === 0) {
-          //   continue;
-          // }
-        }else{
-          continue;
+          if (Cod_parte[0].length === 0) {
+            continue;
+          }
         }
         
         const entrega = await sequelize.query(
