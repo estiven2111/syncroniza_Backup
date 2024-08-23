@@ -89,6 +89,7 @@ order by SKU_Logistica desc
           `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
           // {replacements:{Codigo:}}
         );
+        let entrega;
         console.log(Cod_parte[0].length,"eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww")
         if (Cod_parte[0].length > 0) {
           console.log(Cod_parte[0].length,"entrooooooooooooooooooooo")
@@ -99,11 +100,11 @@ order by SKU_Logistica desc
           if (Cod_parte[0].length === 0) {
             continue;
           }
+           entrega = await sequelize.query(
+            `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
+          );
         }
         
-        const entrega = await sequelize.query(
-          `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
-        );
         const nomEntregable = entrega[0]?.map((nom) => {
           return {
             id_proceso: nom.id_Proceso,
