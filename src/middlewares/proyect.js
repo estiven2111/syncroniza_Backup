@@ -90,9 +90,9 @@ order by SKU_Logistica desc
           // {replacements:{Codigo:}}
         );
   
-        if (Cod_parte[0].length < 0) {
+        if (Cod_parte[0].length > 0) {
           Cod_parte = await sequelize.query(
-            `select* from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
+            `select * from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
             // {replacements:{Codigo:}}
           );
           if (Cod_parte[0].length === 0) {
