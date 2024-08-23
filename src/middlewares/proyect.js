@@ -89,7 +89,7 @@ order by SKU_Logistica desc
           `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
           // {replacements:{Codigo:}}
         );
-        let entrega;
+       
         console.log(Cod_parte[0].length,"eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww")
         if (Cod_parte[0].length > 0) {
           console.log(Cod_parte[0].length,"entrooooooooooooooooooooo")
@@ -100,30 +100,30 @@ order by SKU_Logistica desc
           if (Cod_parte[0].length === 0) {
             continue;
           }
-           entrega = await sequelize.query(
+           const entrega = await sequelize.query(
             `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
           );
-        }
-        
-        const nomEntregable = entrega[0]?.map((nom) => {
-          return {
-            id_proceso: nom.id_Proceso,
-            Numero: nom.Numero,
-             Nom_Entregable: nom.Nombre,
-            subido: nom.Subido,
-          };
-        });
-  
-        if (proyect[0][0].TipoParte === "Actividad") {
-          actividad = proyect[0][0].Nombre;
-          frecuencia = Cod_parte[0][0].FrecuenciaVeces;
-          entregable = Cod_parte[0][0].AplicaEntregables;
-          nom_entregable = nomEntregable;
-          idNodoA = proyect[0][0].idNodo;
-          Codi_parteA = proyect[0][0].Cod_parte;
-          idPadreA = proyect[0][0].idPadre;
-          skuA = proyect[0][0].SKU;
-           terminada = terminada
+          
+          const nomEntregable = entrega[0]?.map((nom) => {
+            return {
+              id_proceso: nom.id_Proceso,
+              Numero: nom.Numero,
+               Nom_Entregable: nom.Nombre,
+              subido: nom.Subido,
+            };
+          });
+    
+          if (proyect[0][0].TipoParte === "Actividad") {
+            actividad = proyect[0][0].Nombre;
+            frecuencia = Cod_parte[0][0].FrecuenciaVeces;
+            entregable = Cod_parte[0][0].AplicaEntregables;
+            nom_entregable = nomEntregable;
+            idNodoA = proyect[0][0].idNodo;
+            Codi_parteA = proyect[0][0].Cod_parte;
+            idPadreA = proyect[0][0].idPadre;
+            skuA = proyect[0][0].SKU;
+             terminada = terminada
+          }
         }
         try {
           do {
