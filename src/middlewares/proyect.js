@@ -90,15 +90,15 @@ order by SKU_Logistica desc
           // {replacements:{Codigo:}}
         );
   
-        if (Cod_parte[0].length <= 0) {
-          Cod_parte = await sequelize.query(
-            `select* from TBL_ESP_Procesos  where Descripcion =  '${proyect[0][0].Nombre}'`
-            // {replacements:{Codigo:}}
-          );
-          if (Cod_parte[0].length === 0) {
-            continue;
-          }
-        }
+        // if (Cod_parte[0].length <= 0) {
+        //   Cod_parte = await sequelize.query(
+        //     `select* from TBL_ESP_Procesos  where Descripcion =  '${proyect[0][0].Nombre}'`
+        //     // {replacements:{Codigo:}}
+        //   );
+        //   if (Cod_parte[0].length === 0) {
+        //     continue;
+        //   }
+        // }
         
         const entrega = await sequelize.query(
           `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
