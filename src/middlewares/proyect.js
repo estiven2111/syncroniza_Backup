@@ -91,6 +91,7 @@ order by SKU_Logistica desc
         );
        
         console.log(Cod_parte[0].length,"eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww")
+        let nomEntregable;
         if (Cod_parte[0].length > 0) {
           console.log(Cod_parte[0].length,"entrooooooooooooooooooooo")
           Cod_parte = await sequelize.query(
@@ -104,7 +105,7 @@ order by SKU_Logistica desc
             `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
           );
           
-          const nomEntregable = entrega[0]?.map((nom) => {
+           nomEntregable = entrega[0]?.map((nom) => {
             return {
               id_proceso: nom.id_Proceso,
               Numero: nom.Numero,
@@ -113,17 +114,17 @@ order by SKU_Logistica desc
             };
           });
     
-          if (proyect[0][0].TipoParte === "Actividad") {
-            actividad = proyect[0][0].Nombre;
-            frecuencia = Cod_parte[0][0].FrecuenciaVeces;
-            entregable = Cod_parte[0][0].AplicaEntregables;
-            nom_entregable = nomEntregable;
-            idNodoA = proyect[0][0].idNodo;
-            Codi_parteA = proyect[0][0].Cod_parte;
-            idPadreA = proyect[0][0].idPadre;
-            skuA = proyect[0][0].SKU;
-             terminada = terminada
-          }
+        }
+        if (proyect[0][0].TipoParte === "Actividad") {
+          actividad = proyect[0][0].Nombre;
+          frecuencia = Cod_parte[0][0].FrecuenciaVeces;
+          entregable = Cod_parte[0][0].AplicaEntregables;
+          nom_entregable = nomEntregable;
+          idNodoA = proyect[0][0].idNodo;
+          Codi_parteA = proyect[0][0].Cod_parte;
+          idPadreA = proyect[0][0].idPadre;
+          skuA = proyect[0][0].SKU;
+           terminada = terminada
         }
         try {
           do {
