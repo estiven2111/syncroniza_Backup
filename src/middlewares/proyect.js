@@ -25,6 +25,7 @@ const LoadProyect = async (Doc_id, email) => {
     let proyect;
     let Cod_parte;
     let idNodo_falta = [];
+    let codpar_falta = [];
     let obj_proyecto = {
       proyectos: [],
     };
@@ -98,9 +99,7 @@ order by SKU_Logistica desc
             `select * from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
             // {replacements:{Codigo:}}
           );
-          if (Cod_parte[0].length === 0) {
-            continue;
-          }
+      
            const entrega = await sequelize.query(
             `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
           );
@@ -114,17 +113,23 @@ order by SKU_Logistica desc
             };
           });
     
-        }
-        if (proyect[0][0].TipoParte === "Actividad") {
-          actividad = proyect[0][0].Nombre;
-          frecuencia = Cod_parte[0][0].FrecuenciaVeces;
-          entregable = Cod_parte[0][0].AplicaEntregables;
-          nom_entregable = nomEntregable;
-          idNodoA = proyect[0][0].idNodo;
-          Codi_parteA = proyect[0][0].Cod_parte;
-          idPadreA = proyect[0][0].idPadre;
-          skuA = proyect[0][0].SKU;
-           terminada = terminada
+          if (proyect[0][0].TipoParte === "Actividad") {
+            actividad = proyect[0][0].Nombre;
+            frecuencia = Cod_parte[0][0].FrecuenciaVeces;
+            entregable = Cod_parte[0][0].AplicaEntregables;
+            nom_entregable = nomEntregable;
+            idNodoA = proyect[0][0].idNodo;
+            Codi_parteA = proyect[0][0].Cod_parte;
+            idPadreA = proyect[0][0].idPadre;
+            skuA = proyect[0][0].SKU;
+             terminada = terminada
+          }
+          // if (Cod_parte[0].length === 0) {
+          //   continue;
+          // }
+        }else{
+          codpar_falta.push(ID_parte)
+          continue;
         }
         try {
           do {
@@ -256,7 +261,8 @@ order by SKU_Logistica desc
    } catch (error) {
     console.log({"error": error});
    }
-    console.log(idNodo_falta)
+   console.log("codigo parte faltantes",codpar_falta)
+    console.log("idNodo faltantes",idNodo_falta)
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     return
     //! en el deploy validar que el archivo no se sobreescriba
