@@ -89,8 +89,9 @@ order by SKU_Logistica desc
           `select* from TBL_ESP_Procesos  where ID = ${ID_parte}`
           // {replacements:{Codigo:}}
         );
-  
+        console.log(Cod_parte[0].length,"eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww")
         if (Cod_parte[0].length > 0) {
+          console.log(Cod_parte[0].length,"entrooooooooooooooooooooo")
           Cod_parte = await sequelize.query(
             `select * from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
             // {replacements:{Codigo:}}
