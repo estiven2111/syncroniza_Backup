@@ -125,7 +125,7 @@ order by SKU_Logistica desc
             } else {
                //?  ******************* VALIDACION SI EXISTE EL COD PARTE ************************** */
               codpar_falta.push(ID_parte);
-              // continue;
+              continue;
             }
             try {
               do {
