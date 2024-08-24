@@ -83,13 +83,10 @@ order by SKU_Logistica desc
               // {replacements:{Codigo:}}
             );
 
-            console.log(
-              Cod_parte[0].length,
-              "eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww"
-            );
+           
             let nomEntregable;
             if (Cod_parte[0].length > 0) {
-              console.log(Cod_parte[0].length, "entrooooooooooooooooooooo");
+              console.log(Cod_parte[0].length, "entrooooooooooooooooooooo",Cod_parte[0]);
               Cod_parte = await sequelize.query(
                 `select * from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
                 // {replacements:{Codigo:}}
@@ -124,16 +121,21 @@ order by SKU_Logistica desc
               // }
             } else {
               //?  ******************* VALIDACION SI EXISTE EL COD PARTE ************************** */
+              console.log(
+                Cod_parte[0].length,
+                "eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww",Cod_parte[0]
+              );
               codpar_falta.push(ID_parte);
               continue;
             }
             try {
               do {
+                console.log("entro al DOWHILEEEEE  DO WHILE")
                 tipoParte = await sequelize.query(
                   `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
                   { replacements: { docId: Doc_id } }
                 );
-                if (tipoParte[0] && Cod_parte[0].length > 0) {
+                if (tipoParte[0]) {
                   //todo validar tipoparte cabecera
                   Parte = tipoParte[0][0].idPadre;
                   if (tipoParte[0][0].TipoParte === "PP") {
