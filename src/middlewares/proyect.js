@@ -123,7 +123,7 @@ order by SKU_Logistica desc
               //   continue;
               // }
             } else {
-               //?  ******************* VALIDACION SI EXISTE EL COD PARTE ************************** */
+              //?  ******************* VALIDACION SI EXISTE EL COD PARTE ************************** */
               codpar_falta.push(ID_parte);
               continue;
             }
@@ -244,7 +244,7 @@ order by SKU_Logistica desc
                     }
                   }
                 } else {
-                   //?  ******************* VALIDACION DO WHILE ************************** */
+                  //?  ******************* VALIDACION DO WHILE ************************** */
                   continue;
                 }
               } while (tipoParte[0][0].TipoParte !== "Cabecera");
@@ -252,7 +252,7 @@ order by SKU_Logistica desc
               console.log("error", error);
             }
           } else {
-             //?  ******************* VALIDACION SI EXISTE EL PROYECTO 2DA VEZ************************** */
+            //?  ******************* VALIDACION SI EXISTE EL PROYECTO 2DA VEZ************************** */
             continue;
           }
         } else {
