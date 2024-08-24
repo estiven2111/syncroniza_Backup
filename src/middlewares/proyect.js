@@ -282,8 +282,6 @@ const localStorage = new LocalStorage("./local-storage");
 
 
 
-//todo toddddd
-
 const LoadProyect = async (Doc_id, email) => {
   try {
     // Obtener idNodo para saber qué proyectos tiene el usuario
