@@ -86,7 +86,7 @@ order by SKU_Logistica desc
            
             let nomEntregable;
             if (Cod_parte[0].length > 0) {
-              console.log(Cod_parte[0].length, "entrooooooooooooooooooooo",Cod_parte[0]);
+              console.log(Cod_parte[0].length, "entrooooooooooooooooooooo",Cod_parte[0].ID);
               Cod_parte = await sequelize.query(
                 `select * from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
                 // {replacements:{Codigo:}}
@@ -123,7 +123,7 @@ order by SKU_Logistica desc
               //?  ******************* VALIDACION SI EXISTE EL COD PARTE ************************** */
               console.log(
                 Cod_parte[0].length,
-                "eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww",Cod_parte[0]
+                "eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww",Cod_parte[0].ID
               );
               codpar_falta.push(ID_parte);
               continue;
@@ -269,6 +269,7 @@ order by SKU_Logistica desc
     console.log("codigo parte faltantes", codpar_falta);
     console.log("idNodo faltantes", idNodo_falta);
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
+    console.log(JSON.stringify(obj_proyecto))
     return;
     //! en el deploy validar que el archivo no se sobreescriba
   } catch (error) {
