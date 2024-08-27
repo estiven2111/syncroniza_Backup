@@ -256,15 +256,15 @@ userRouter.get(
       <body>
 
       </body>
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/actividades') 
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/Gastos') 
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
         window.close();
     </script>
       </html>
       `
    )
-  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/actividades') 
-  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://creame-web.web.app/Gastos') 
+  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
+  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
 //    setTimeout(function() {
 //     window.close();
 // }, 1000);
