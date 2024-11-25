@@ -272,6 +272,7 @@ async function Ocr(req, res) {
                 ten encuenta que el total no puede ser el mismo que el subtotal ya que el total es con el iva incluido y el subtotal es sin el iba si la factura no tiene 
                 subtotal no lo pongas como si fuera el total o igual si solo tiene subtotal no lo pongas como si fuera el total pon los datos que la factura trae
                 entiente que el total es mas el iva y el subtotal es sin el iva  entonces son valores totalmente diferences y si en la factura esta en iva incluyelo en el iva 
+                entiende que el subtotal es el valor total menos el iba por eso solo pon los valores que trae la factura 
                 ademas en concepto si en la factura es producto lo pones al frente de concepto o servicio necesito saber si el concepto es
                 servicio o producto:
                 - NITdelemisor pero lo dejas como nit 
