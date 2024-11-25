@@ -213,19 +213,15 @@ async function Ocr(req, res) {
             
               objeto.nit =  datos.nit
               objeto.numFact = datos.numFact
-              // doc: "",
-              // total: datos.total,
-              // totalSinIva: datos.total,
-              // nombre: "",
-              // razon_social: datos.razon_social,
-              // fecha: datos.fecha,
-              // iva: datos.iva,
-              // rete: datos.rete,
-              // ipc: datos.ipc,
-              // concepto: datos.Concepto,
-              // ica: dato,
-              // municipio: municipio,
-              // codepostal: codepostal,
+              objeto.total = datos.total
+              objeto.totalSinIva = datos.total
+              objeto.razon_social = datos.razon_social
+              objeto.fecha = datos.fecha
+              objeto.iva = datos.iva
+              objeto.rete = datos.rete
+              objeto.ipc = datos.ipc
+              objeto.concepto = datos.Concepto
+              objeto.ica =  datos.ica
               
             } catch (error) {
               console.log(error);
