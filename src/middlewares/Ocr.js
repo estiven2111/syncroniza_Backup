@@ -8,7 +8,7 @@ const sleep = require("util").promisify(setTimeout);
 const ComputerVisionClient =
   require("@azure/cognitiveservices-computervision").ComputerVisionClient;
 const ApiKeyCredentials = require("@azure/ms-rest-js").ApiKeyCredentials;
-const { key, endpoint} = process.env
+const { key, endpoint,apiKey,apiUrl} = process.env
 const axios = require("axios");
 // const nlp = require('compromise');
 // const { NlpManager } = require("node-nlp");
