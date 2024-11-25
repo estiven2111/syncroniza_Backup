@@ -276,7 +276,7 @@ async function Ocr(req, res) {
                 - NITdeldestinatario
                 - Subtotaldelafactura pero lo dejas como totalSinIva
                 - Totaldelafactura pero lo dejas como total
-                - fechadefactura pero lo dejas como fecha
+                - fechadefactura pero lo dejas como fecha si la fecha viene con texto me lo dejas siempre en formato DD/MM/YYYY
                 - ValorIpoconsumo pero lo dejas como ipc
                 - ValordelreteICA pero lo dejas como ica
                 - valorderetefuente pero lo dejas como rete
