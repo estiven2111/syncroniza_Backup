@@ -208,24 +208,23 @@ async function Ocr(req, res) {
           
 
               const datos = await extraerEntidades(textoEnMinusculas);
-              console.log(datos,"datooooooooooss")
-              // objeto = {
-              //   nit: datos.nit,
-              //   numFact: datos.numFact,
-              //   doc: "",
-              //   total: datos.total,
-              //   totalSinIva: datos.total,
-              //   nombre: "",
-              //   razon_social: datos.razon_social,
-              //   fecha: datos.fecha,
-              //   iva: datos.iva,
-              //   rete: datos.rete,
-              //   ipc: datos.ipc,
-              //   concepto: datos.Concepto,
-              //   ica: dato,
-              //   municipio: municipio,
-              //   codepostal: codepostal,
-              // };
+              objeto = {
+                nit: datos.nit,
+                numFact: datos.numFact,
+                doc: "",
+                total: datos.total,
+                totalSinIva: datos.total,
+                nombre: "",
+                razon_social: datos.razon_social,
+                fecha: datos.fecha,
+                iva: datos.iva,
+                rete: datos.rete,
+                ipc: datos.ipc,
+                concepto: datos.Concepto,
+                ica: dato,
+                municipio: municipio,
+                codepostal: codepostal,
+              };
               
             } catch (error) {
               console.log(error);
