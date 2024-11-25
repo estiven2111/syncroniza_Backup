@@ -281,7 +281,7 @@ async function Ocr(req, res) {
                 - ValordelreteICA pero lo dejas como ica
                 - valorderetefuente pero lo dejas como rete
                 - numerofactura pero lo dejas como numFact
-                - Concepto aca el valor que me vas a poner siempre va ser o producto o servicio nada mas eso depende de la factura 
+                - Concepto aca el valor que me vas a poner siempre va ser o producto o servicio nada mas eso depende de la factura si lo trae o no sino lo dejas vacio si la factura no esta para este concepto
                 Texto: "${texto}"`,
             },
           ],
