@@ -208,7 +208,7 @@ async function Ocr(req, res) {
           
 
               const datos = await extraerEntidades(textoEnMinusculas);
-
+              console.log(datos,"datooooooooooss")
               objeto = {
                 nit: datos.nit,
                 numFact: datos.numFact,
@@ -222,7 +222,7 @@ async function Ocr(req, res) {
                 rete: datos.rete,
                 ipc: datos.ipc,
                 concepto: datos.Concepto,
-                ica: datos.ica,
+                ica: dato,
                 municipio: municipio,
                 codepostal: codepostal,
               };
