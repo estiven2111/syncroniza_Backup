@@ -269,10 +269,11 @@ async function Ocr(req, res) {
               role: "user",
               content: `Extrae la siguiente información de la factura pones dos puntos y el dato al frente separado por 2 puntos y si el dato es vacío
                 entonces dejas el dato con "" o si los valores son dinero no les pongas el signo de $ solo el numero y sin puntos decimales dejalo completo
-                ten encuenta que el total no puede ser el mismo que el subtotal ya que el total es con el iva incluido y el subtotal es sin el iba si la factura no tiene 
+                ten encuenta que el total no puede ser el mismo que el subtotal ya que el total es con el iva incluido y el subtotal es sin el iva si la factura no tiene 
                 subtotal no lo pongas como si fuera el total o igual si solo tiene subtotal no lo pongas como si fuera el total pon los datos que la factura trae
                 entiente que el total es mas el iva y el subtotal es sin el iva  entonces son valores totalmente diferences y si en la factura esta en iva incluyelo en el iva 
-                entiende que el subtotal es el valor total menos el iba por eso solo pon los valores que trae la factura 
+                entiende que el subtotal es el valor total menos el iva por eso solo pon los valores que trae la factura por que no haces caso solo pon los valores 
+                que la factura trae tu entiendes asi que pon los valores esctritamente de la factura
                 ademas en concepto si en la factura es producto lo pones al frente de concepto o servicio necesito saber si el concepto es
                 servicio o producto:
                 - NITdelemisor pero lo dejas como nit 
