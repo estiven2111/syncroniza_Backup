@@ -8,7 +8,7 @@ const sleep = require("util").promisify(setTimeout);
 const ComputerVisionClient =
   require("@azure/cognitiveservices-computervision").ComputerVisionClient;
 const ApiKeyCredentials = require("@azure/ms-rest-js").ApiKeyCredentials;
-const { key, endpoint,apiKey,apiUrl} = process.env
+const { key, endpoint, apiKey, apiUrl } = process.env;
 const axios = require("axios");
 // const nlp = require('compromise');
 // const { NlpManager } = require("node-nlp");
@@ -85,7 +85,6 @@ async function Ocr(req, res) {
 
   const readOcr = (paths) => {
     try {
-      
       let municipio;
       let codepostal;
       imagePath = paths;
@@ -176,7 +175,6 @@ async function Ocr(req, res) {
                   };
                 }
               }
-      
             }
           },
         ],
@@ -205,24 +203,21 @@ async function Ocr(req, res) {
               };
               const textoEnMinusculas = texto.toLowerCase();
               console.log(textoEnMinusculas);
-          
 
               const datos = await extraerEntidades(textoEnMinusculas);
-              console.log(typeof datos,"datooooooooooss", datos)
-             
-            
-              objeto.nit =  datos.nit
-              objeto.numFact = datos.numFact
-              objeto.total = datos.total
-              objeto.totalSinIva = datos.totalSinIva
-              objeto.razon_social = datos.razon_social
-              objeto.fecha = datos.fecha
-              objeto.iva = datos.iva
-              objeto.rete = datos.rete
-              objeto.ipc = datos.ipc
-              objeto.concepto = datos.Concepto
-              objeto.ica =  datos.ica
-              
+              console.log(typeof datos, "datooooooooooss", datos);
+
+              objeto.nit = datos.nit;
+              objeto.numFact = datos.numFact;
+              objeto.total = datos.total;
+              objeto.totalSinIva = datos.totalSinIva;
+              objeto.razon_social = datos.razon_social;
+              objeto.fecha = datos.fecha;
+              objeto.iva = datos.iva;
+              objeto.rete = datos.rete;
+              objeto.ipc = datos.ipc;
+              objeto.concepto = datos.Concepto;
+              objeto.ica = datos.ica;
             } catch (error) {
               console.log(error);
             }
@@ -258,7 +253,6 @@ async function Ocr(req, res) {
     }
   };
 
-
   async function extraerEntidades(texto) {
     try {
       const response = await axios.post(
@@ -267,29 +261,57 @@ async function Ocr(req, res) {
           messages: [
             {
               role: "user",
-              content: `Extrae la siguiente información de la factura pones dos puntos y el dato al frente separado por 2 puntos y si el dato es vacío
-                entonces dejas el dato con "" o si los valores son dinero no les pongas el signo de $ solo el numero y sin puntos decimales dejalo completo
-                ten encuenta que el total no puede ser el mismo que el subtotal ya que el total es con el iva incluido y el subtotal es sin el iva si la factura no tiene 
-                subtotal no lo pongas como si fuera el total o igual si solo tiene subtotal no lo pongas como si fuera el total pon los datos que la factura trae
-                entiente que el total es mas el iva y el subtotal es sin el iva  entonces son valores totalmente diferences y si en la factura esta en iva incluyelo en el iva 
-                entiende que el subtotal es el valor total menos el iva por eso solo pon los valores que trae la factura por que no haces caso solo pon los valores 
-                que la factura trae tu entiendes asi que pon los valores esctritamente de la factura pero dame el valor entero de los totales y subtotales
-                 y el iva ni del ica ni retefuente ningun valor incluyas los centavos solo dame el numero exacto en entero 
-                ademas en concepto si en la factura es producto lo pones al frente de concepto o servicio necesito saber si el concepto es
-                servicio o producto:
-                - NITdelemisor pero lo dejas como nit 
-                - RazonSocial pero lo dejas como razon_social
-                - Destinatarioadquiriente
-                - NITdeldestinatario
-                - Subtotaldelafactura pero lo dejas como totalSinIva
-                - valoriva pero lo dejas como iva
-                - Totaldelafactura pero lo dejas como total
-                - fechadefactura pero lo dejas como fecha si la fecha viene con texto me lo dejas siempre en formato DD/MM/YYYY
-                - ValorIpoconsumo pero lo dejas como ipc
-                - ValordelreteICA pero lo dejas como ica
-                - valorderetefuente pero lo dejas como rete
-                - numerofactura pero lo dejas como numFact
-                - Concepto aca el valor que me vas a poner siempre va ser o producto o servicio nada mas eso depende de la factura si lo trae o no sino lo dejas vacio si la factura no esta para este concepto
+              content: `
+              Instrucciones para extraer información de la factura:
+
+Formato de salida:
+Cada dato debe seguir el formato [campo]: [dato].
+
+Si el dato no está presente en la factura, deja el valor como "".
+Ejemplo: totalSinIva: "".
+Reglas para los valores monetarios:
+
+No incluyas el símbolo $.
+No uses decimales ni puntos. Los valores deben estar en formato entero. Por ejemplo:
+Correcto: 1234.
+Incorrecto: 1,234.56 o 1234.56.
+Diferenciación de Subtotal, IVA y Total:
+
+totalSinIva: Corresponde al valor total sin incluir impuestos (como el IVA).
+total: Corresponde al valor final de la factura, que incluye el IVA y otros impuestos.
+iva: Registra el valor del IVA si está presente en la factura.
+Nota importante:
+Si en la factura solo aparece el total, no lo registres como totalSinIva.
+Si solo aparece el subtotal (sin IVA), no lo registres como total.
+No calcules ni infieras valores. Registra exclusivamente lo que aparece explícitamente en la factura.
+Manejo de fechas:
+
+El campo de la fecha debe estar en formato DD/MM/YYYY.
+Si la fecha incluye texto o tiene un formato diferente, conviértela siempre al formato especificado.
+Ejemplo: 5 de enero de 2025 → 05/01/2025.
+Concepto:
+
+Si el concepto de la factura es un producto, escribe "producto".
+Si el concepto es un servicio, escribe "servicio".
+Si el concepto no está especificado, deja el campo vacío: concepto: "".
+Formato de los campos y nombres específicos:
+Usa los siguientes nombres de campos en el resultado:
+
+nit: Corresponde al NIT del emisor.
+razon_social: Corresponde a la razón social del emisor.
+destinatario: Corresponde al destinatario adquiriente.
+nit_destinatario: Corresponde al NIT del destinatario.
+totalSinIva: Corresponde al subtotal de la factura (sin incluir el IVA).
+iva: Corresponde al valor del IVA en la factura.
+total: Corresponde al total de la factura (incluyendo IVA).
+fecha: Corresponde a la fecha de la factura.
+ipc: Corresponde al valor del impuesto al consumo (ipoconsumo).
+ica: Corresponde al valor del rete ICA.
+rete: Corresponde al valor de la retefuente.
+numFact: Corresponde al número de la factura.
+concepto: Corresponde al tipo de concepto (producto o servicio).
+
+
                 Texto: "${texto}"`,
             },
           ],
@@ -303,7 +325,7 @@ async function Ocr(req, res) {
           },
         }
       );
-  
+
       if (response.data.choices && response.data.choices[0].message.content) {
         const completionText = response.data.choices[0].message.content.trim();
         return convertirTextoAObjeto(completionText);
@@ -318,20 +340,21 @@ async function Ocr(req, res) {
   }
 
   function convertirTextoAObjeto(texto) {
-
-    console.log("inteligencia aaaaaaaaaaaaaaa",texto);
+    console.log("inteligencia aaaaaaaaaaaaaaa", texto);
     const objeto = {};
     const lineas = texto.split("\n"); // Dividir por líneas
-  
+
     lineas.forEach((linea) => {
       const lineaLimpia = linea.replace(/^- /, "").trim();
-      const [clave, valor] = lineaLimpia.split(":").map((parte) => parte.trim()); // Separar clave y valor
-  
+      const [clave, valor] = lineaLimpia
+        .split(":")
+        .map((parte) => parte.trim()); // Separar clave y valor
+
       if (clave && valor !== undefined) {
         objeto[clave] = valor.replace(/^"|"$/g, ""); // Agregar clave y limpiar comillas extra
       }
     });
-  
+
     return objeto;
   }
 
@@ -350,8 +373,6 @@ async function Ocr(req, res) {
       return null;
     }
   };
-
- 
 }
 
 module.exports = Ocr;
