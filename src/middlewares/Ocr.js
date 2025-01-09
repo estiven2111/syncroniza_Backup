@@ -262,7 +262,7 @@ async function Ocr(req, res) {
             {
               role: "user",
               content: `
-              Instrucciones para extraer información de la factura:
+             Instrucciones para extraer información de la factura:
 
 Formato de salida:
 Cada dato debe seguir el formato [campo]: [dato].
@@ -272,9 +272,12 @@ Ejemplo: totalSinIva: "".
 Reglas para los valores monetarios:
 
 No incluyas el símbolo $.
-No uses decimales ni puntos. Los valores deben estar en formato entero. Por ejemplo:
+No incluyas decimales ni puntos. Todos los valores deben ser enteros.
+Por ejemplo:
 Correcto: 1234.
 Incorrecto: 1,234.56 o 1234.56.
+Valores afectados:
+iva, ipc, ica, rete, totalSinIva, y total.
 Diferenciación de Subtotal, IVA y Total:
 
 totalSinIva: Corresponde al valor total sin incluir impuestos (como el IVA).
@@ -306,7 +309,7 @@ iva: Corresponde al valor del IVA en la factura.
 total: Corresponde al total de la factura (incluyendo IVA).
 fecha: Corresponde a la fecha de la factura.
 ipc: Corresponde al valor del impuesto al consumo (ipoconsumo).
-ica: Corresponde al valor del rete ICA.
+ica: Corresponde al valor de la rete ICA.
 rete: Corresponde al valor de la retefuente.
 numFact: Corresponde al número de la factura.
 concepto: Corresponde al tipo de concepto (producto o servicio).
