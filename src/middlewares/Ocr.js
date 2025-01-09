@@ -317,6 +317,8 @@ async function Ocr(req, res) {
   }
 
   function convertirTextoAObjeto(texto) {
+
+    console.log("inteligencia aaaaaaaaaaaaaaa",texto);
     const objeto = {};
     const lineas = texto.split("\n"); // Dividir por líneas
   
