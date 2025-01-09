@@ -265,54 +265,60 @@ async function Ocr(req, res) {
              Instrucciones para extraer información de la factura:
 
 Formato de salida:
-Cada dato debe seguir el formato [campo]: [dato].
 
-Si el dato no está presente en la factura, deja el valor como "".
-Ejemplo: totalSinIva: "".
-Reglas para los valores monetarios:
+Cada dato debe estar en el formato [campo]: [dato].
+Si el dato no está presente en la factura, el valor debe quedar vacío: "".
+Ejemplo: iva: "".
+Reglas para los valores monetarios (importante):
 
-No incluyas el símbolo $.
-No incluyas decimales ni puntos. Todos los valores deben ser enteros.
+Todos los valores monetarios deben ser enteros.
+Elimina cualquier parte decimal.
 Por ejemplo:
-Correcto: 1234.
-Incorrecto: 1,234.56 o 1234.56.
-Valores afectados:
-iva, ipc, ica, rete, totalSinIva, y total.
+Dado: 65430.25.
+Resultado correcto: 65430.
+Incorrecto: 6543025 o 65431.
+No incluyas el símbolo $ ni separadores de miles (como comas o puntos).
+Esta regla aplica a los siguientes campos:
+iva
+totalSinIva
+total
+ipc
+ica
+rete
 Diferenciación de Subtotal, IVA y Total:
 
-totalSinIva: Corresponde al valor total sin incluir impuestos (como el IVA).
-total: Corresponde al valor final de la factura, que incluye el IVA y otros impuestos.
-iva: Registra el valor del IVA si está presente en la factura.
+totalSinIva (Subtotal): Es el valor total sin incluir impuestos como el IVA.
+total: Es el valor final, que incluye el IVA y otros impuestos.
+iva: Es el valor específico del IVA registrado en la factura.
 Nota importante:
-Si en la factura solo aparece el total, no lo registres como totalSinIva.
-Si solo aparece el subtotal (sin IVA), no lo registres como total.
-No calcules ni infieras valores. Registra exclusivamente lo que aparece explícitamente en la factura.
+Si el campo del subtotal no está en la factura, no lo infieras ni lo calcules.
+Si el IVA o el total no están presentes en la factura, déjalos como "".
 Manejo de fechas:
 
-El campo de la fecha debe estar en formato DD/MM/YYYY.
-Si la fecha incluye texto o tiene un formato diferente, conviértela siempre al formato especificado.
+El formato de la fecha debe ser siempre DD/MM/YYYY.
+Si la fecha tiene texto adicional, conviértela al formato especificado.
 Ejemplo: 5 de enero de 2025 → 05/01/2025.
-Concepto:
+Concepto (producto o servicio):
 
-Si el concepto de la factura es un producto, escribe "producto".
-Si el concepto es un servicio, escribe "servicio".
-Si el concepto no está especificado, deja el campo vacío: concepto: "".
+Si la factura describe un producto, escribe "producto".
+Si la factura describe un servicio, escribe "servicio".
+Si no hay información sobre el concepto, deja el campo vacío: concepto: "".
 Formato de los campos y nombres específicos:
-Usa los siguientes nombres de campos en el resultado:
+Usa los siguientes nombres de campos:
 
-nit: Corresponde al NIT del emisor.
-razon_social: Corresponde a la razón social del emisor.
-destinatario: Corresponde al destinatario adquiriente.
-nit_destinatario: Corresponde al NIT del destinatario.
-totalSinIva: Corresponde al subtotal de la factura (sin incluir el IVA).
-iva: Corresponde al valor del IVA en la factura.
-total: Corresponde al total de la factura (incluyendo IVA).
-fecha: Corresponde a la fecha de la factura.
-ipc: Corresponde al valor del impuesto al consumo (ipoconsumo).
-ica: Corresponde al valor de la rete ICA.
-rete: Corresponde al valor de la retefuente.
-numFact: Corresponde al número de la factura.
-concepto: Corresponde al tipo de concepto (producto o servicio).
+nit: NIT del emisor.
+razon_social: Razón social del emisor.
+destinatario: Destinatario adquiriente.
+nit_destinatario: NIT del destinatario.
+totalSinIva: Subtotal de la factura (sin incluir IVA).
+iva: Valor del IVA.
+total: Total de la factura (incluyendo IVA).
+fecha: Fecha de la factura.
+ipc: Valor del impuesto al consumo (ipoconsumo).
+ica: Valor de la rete ICA.
+rete: Valor de la retefuente.
+numFact: Número de la factura.
+concepto: Tipo de concepto (producto o servicio).
 
 
                 Texto: "${texto}"`,
