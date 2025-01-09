@@ -273,7 +273,7 @@ async function Ocr(req, res) {
                 subtotal no lo pongas como si fuera el total o igual si solo tiene subtotal no lo pongas como si fuera el total pon los datos que la factura trae
                 entiente que el total es mas el iva y el subtotal es sin el iva  entonces son valores totalmente diferences y si en la factura esta en iva incluyelo en el iva 
                 entiende que el subtotal es el valor total menos el iva por eso solo pon los valores que trae la factura por que no haces caso solo pon los valores 
-                que la factura trae tu entiendes asi que pon los valores esctritamente de la factura
+                que la factura trae tu entiendes asi que pon los valores esctritamente de la factura pero dame el valor entero no incluyas los centavos 
                 ademas en concepto si en la factura es producto lo pones al frente de concepto o servicio necesito saber si el concepto es
                 servicio o producto:
                 - NITdelemisor pero lo dejas como nit 
