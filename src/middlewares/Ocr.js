@@ -208,13 +208,13 @@ async function Ocr(req, res) {
           
 
               const datos = await extraerEntidades(textoEnMinusculas);
-              console.log(typeof datos,"datooooooooooss", datos.nit)
+              console.log(typeof datos,"datooooooooooss", datos)
              
             
               objeto.nit =  datos.nit
               objeto.numFact = datos.numFact
               objeto.total = datos.total
-              objeto.totalSinIva = datos.total
+              objeto.totalSinIva = datos.totalSinIva
               objeto.razon_social = datos.razon_social
               objeto.fecha = datos.fecha
               objeto.iva = datos.iva
