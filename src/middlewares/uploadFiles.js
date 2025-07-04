@@ -307,146 +307,125 @@ const insertInto = async(data,tipo) =>{
     
   }
  switch (tipo) {
-  case "OCR":
+  // case "OCR":
     
+  // try {
+  //   await sequelize.query(
+  //     `INSERT INTO TBL_SER_ProyectoAnticiposComprobante
+  //     ([SKU_Proyecto]
+  //     ,[NitCliente]
+  //     ,[idNodoProyecto]
+  //     ,[idProceso]
+  //     ,[N_DocumentoEmpleado]
+  //     ,[Nombre_Empleado]
+  //     ,[NumeroComprobante]
+  //     ,[URLArchivo]
+  //     ,[Fecha]
+  //     ,[FechaComprobante]
+  //     ,[ValorComprobante]
+  //     ,[NitComprobante]
+  //     ,[NombreComprobante]
+  //     ,[CiudadComprobante]
+  //     ,[DireccionComprobante]
+  //     ,[CCostos]
+  //     ,[idAnticipo]
+  //     ,[razon_social]
+  //     ,[impoconsumo]
+  //     ,[ica]
+  //     ,[iva]
+  //     ,[retefuente]
+  //     ,[Sub_Total]
+  //     ,[Descripcion]
+  //     ,[Notas]
+  //     ,[Concepto]
+  //     ,[NumeroOrdenCompra]
+  //     )
+  // VALUES
+  //     ('${data.SKU_Proyecto}',
+  //     '${data.NitCliente}',
+  //     ${data.idNodoProyecto},
+  //     ${data.idProceso},
+  //     '${data.N_DocumentoEmpleado}',
+  //     '${data.Nombre_Empleado}',
+  //      '${data.NumeroComprobante}',
+  //      '${data.URLArchivo}',
+  //      '${data.Fecha}',
+  //      '${data.FechaComprobante}',
+  //      ${data.ValorComprobante},
+  //      '${data.NitComprobante}',
+  //       '${data.NombreComprobante}',
+  //       '${data.CiudadComprobante}',
+  //       '${data.DireccionComprobante}',
+  //       '${data.CCostos}',
+  //        '${data.idAnticipo}',
+  //        '${data.razon_social}',
+  //        ${data.ipc},
+  //        ${data.ica},
+  //        ${data.iva},
+  //        ${data.reteFuente},
+  //      ${data.Sub_Total},
+  //      '${data.Descripcion}',
+  //      '${data.notas}',
+  //      '${data.concepto}',
+  //      '${data.NumFactura}'
+  //      )
+  // `
+  //   );
+
+  //  } catch (error) {
+  //   console.log(error)
+  //  }
+
+
+  //   break;
+
+  case "OCR":
   try {
     await sequelize.query(
-      `INSERT INTO TBL_SER_ProyectoAnticiposComprobante
-      ([SKU_Proyecto]
-      ,[NitCliente]
-      ,[idNodoProyecto]
-      ,[idProceso]
-      ,[N_DocumentoEmpleado]
-      ,[Nombre_Empleado]
-      ,[NumeroComprobante]
-      ,[URLArchivo]
-      ,[Fecha]
-      ,[FechaComprobante]
-      ,[ValorComprobante]
-      ,[NitComprobante]
-      ,[NombreComprobante]
-      ,[CiudadComprobante]
-      ,[DireccionComprobante]
-      ,[CCostos]
-      ,[idAnticipo]
-      ,[razon_social]
-      ,[impoconsumo]
-      ,[ica]
-      ,[iva]
-      ,[retefuente]
-      ,[Sub_Total]
-      ,[Descripcion]
-      ,[Notas]
-      ,[Concepto]
-      ,[NumeroOrdenCompra]
-      )
-  VALUES
-      ('${data.SKU_Proyecto}',
-      '${data.NitCliente}',
-      ${data.idNodoProyecto},
-      ${data.idProceso},
-      '${data.N_DocumentoEmpleado}',
-      '${data.Nombre_Empleado}',
-       '${data.NumeroComprobante}',
-       '${data.URLArchivo}',
-       '${data.Fecha}',
-       '${data.FechaComprobante}',
-       ${data.ValorComprobante},
-       '${data.NitComprobante}',
-        '${data.NombreComprobante}',
-        '${data.CiudadComprobante}',
-        '${data.DireccionComprobante}',
-        '${data.CCostos}',
-         '${data.idAnticipo}',
-         '${data.razon_social}',
-         ${data.ipc},
-         ${data.ica},
-         ${data.iva},
-         ${data.reteFuente},
-       ${data.Sub_Total},
-       '${data.Descripcion}',
-       '${data.notas}',
-       '${data.concepto}',
-       '${data.NumFactura}',
-       )
-  `
+      `INSERT INTO TBL_SER_ProyectoAnticiposComprobante (
+        SKU_Proyecto, NitCliente, idNodoProyecto, idProceso, 
+        N_DocumentoEmpleado, Nombre_Empleado, NumeroComprobante,
+        URLArchivo, Fecha, FechaComprobante, ValorComprobante,
+        NitComprobante, NombreComprobante, CiudadComprobante, DireccionComprobante,
+        CCostos, idAnticipo, razon_social, impoconsumo, ica, iva, retefuente,
+        Sub_Total, Descripcion, Notas, Concepto, NumeroOrdenCompra
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      {
+        replacements: [
+          data.SKU_Proyecto || '',
+          data.NitCliente || '',
+          data.idNodoProyecto || 0,
+          data.idProceso || 0,
+          data.N_DocumentoEmpleado || '',
+          data.Nombre_Empleado || '',
+          data.NumeroComprobante || '',
+          data.URLArchivo || '',
+          data.Fecha || null,
+          data.FechaComprobante || null,
+          data.ValorComprobante || 0,
+          data.NitComprobante || '',
+          data.NombreComprobante || '',
+          data.CiudadComprobante || '',
+          data.DireccionComprobante || '',
+          data.CCostos || '',
+          data.idAnticipo || '',
+          data.razon_social || '',
+          data.ipc || 0,
+          data.ica || 0,
+          data.iva || 0,
+          data.reteFuente || 0,
+          data.Sub_Total || 0,
+          data.Descripcion || '',
+          data.notas || '',
+          data.concepto || '',
+          data.NumFactura || ''
+        ]
+      }
     );
-
-  // const datos = await sequelize.query(
-  //   `
-  // INSERT INTO TBL_SER_ProyectoAnticiposComprobante
-  // ([SKU_Proyecto]
-  // ,[NitCliente]
-  // ,[idNodoProyecto]
-  // ,[idProceso]
-  // ,[N_DocumentoEmpleado]
-  // ,[Nombre_Empleado]
-  // ,[NumeroComprobante]
-  // ,[URLArchivo]
-  // ,[Fecha]
-  // ,[FechaComprobante]
-  // ,[ValorComprobante]
-  // ,[NitComprobante]
-  // ,[NombreComprobante]
-  // ,[CiudadComprobante]
-  // ,[DireccionComprobante]
-  // ,[CCostos]
-  // ,[idAnticipo]
-  // ,[ipc]
-  // ,[Sub_Total]
-  // )
-  // VALUES
-  // (
-  //   :SKU_Proyecto,
-  //   :NitCliente,
-  //   :idNodoProyecto,
-  //   :idProceso,
-  //   :N_DocumentoEmpleado,
-  //   :Nombre_Empleado,
-  //   :NumeroComprobante,
-  //   :URLArchivo,
-  //   :Fecha,
-  //   :FechaComprobante,
-  //   :ValorComprobante,
-  //   :NitComprobante,
-  //   :NombreComprobante,
-  //   :CiudadComprobante,
-  //   :DireccionComprobante,
-  //   :CCostos,
-  //   :idAnticipo,
-  //   :ipc,
-  //   :Sub_Total
-  // )`,
-  //   {
-  //     replacements: {
-  //       SKU_Proyecto: data.SKU_Proyecto,
-  //       NitCliente: data.NitCliente,
-  //       idNodoProyecto: data.idNodoProyecto,
-  //       idProceso: data.idProceso,
-  //       N_DocumentoEmpleado: data.N_DocumentoEmpleado,
-  //       Nombre_Empleado: data.Nombre_Empleado,
-  //       NumeroComprobante: data.NumeroComprobante,
-  //       URLArchivo: data.URLArchivo,
-  //       Fecha: data.Fecha,
-  //       FechaComprobante: data.FechaComprobante,
-  //       ValorComprobante: data.ValorComprobante,
-  //       NitComprobante: data.NitComprobante,
-  //       NombreComprobante: data.NombreComprobante,
-  //       CiudadComprobante: data.CiudadComprobante,
-  //       DireccionComprobante: data.DireccionComprobante,
-  //       CCostos: data.CCostos,
-  //       idAnticipo: data.idAnticipo,
-  //       ipc: data.ipc,
-  //       Sub_Total: data.Sub_Total,
-  //     },
-  //   }
-  // );
-   } catch (error) {
-    console.log(error)
-   }
-
-
-    break;
+  } catch (error) {
+    console.error("❌ Error al insertar OCR:", error);
+  }
+  break;
 
     case "entregable":
 
