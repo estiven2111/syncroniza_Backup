@@ -303,6 +303,8 @@ const insertInto = async(data,tipo) =>{
     data.razon_social = data.razon_social ? data.razon_social : ""
     data.notas =  data.notas ? data.notas : ""
     data.concepto = data.concepto ? data.concepto : ""
+    data.NumFactura = data.NumFactura ? data.NumFactura : ""
+    
   }
  switch (tipo) {
   case "OCR":
@@ -336,6 +338,7 @@ const insertInto = async(data,tipo) =>{
       ,[Descripcion]
       ,[Notas]
       ,[Concepto]
+      ,[NumeroComprobante]
       )
   VALUES
       ('${data.SKU_Proyecto}',
@@ -363,7 +366,8 @@ const insertInto = async(data,tipo) =>{
        ${data.Sub_Total},
        '${data.Descripcion}',
        '${data.notas}',
-       '${data.concepto}'
+       '${data.concepto}',
+       '${data.NumFactura}',
        )
   `
     );
