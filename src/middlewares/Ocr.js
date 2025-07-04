@@ -529,7 +529,8 @@ Extrae la información de la siguiente imagen de factura. Devuelve SOLO el sigui
 11. no pongas los centavos solo deja el valor en pesos colombianos sin comas ni puntos,
  por ejemplo: "19000" y no "19.000,00" o "$19.000,00 omite los valores .00 ,00 o otro numero despues si es centavos 
 
-12 pasame el numero de la factura en campo texto no lo omitas si la factura lo trae o la orden de compra si la trae
+12 pasame la orden de compra de la factura en campo texto no lo omitas si la factura lo trae solo la orden de compra y ponlo en el campo 
+que te indique que es el NumFactura ponme ese dato ahi porfavor la orden de compra de la factura 
 
 13 en el campo de porcentaje_rete debes darme el dato del porcentaje que se aplica a la retefuente, 
 por ejemplo: "2.5%" si es un producto, "4%" si es un servicio o "11%" si es un honorario,
