@@ -288,122 +288,118 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
 
 };
 
-const insertInto = async(data,tipo) =>{
-  console.log(data,"data") 
-  if (data) {
+const insertInto = async (data, tipo) => {
+  console.log(data, "data");
+
+  if (!data) return;
+
+  // Declarar values fuera del switch
   const values = {
-  SKU_Proyecto: data.SKU_Proyecto ?? "",                         // [SKU_Proyecto]
-  NitCliente: data.NitCliente ?? "",                             // [NitCliente]
-  idNodoProyecto: data.idNodoProyecto ?? 0,                      // [idNodoProyecto]
-  idProceso: data.idProceso ?? 0,                                // [idProceso]
-  N_DocumentoEmpleado: data.N_DocumentoEmpleado ?? "",           // [N_DocumentoEmpleado]
-  Nombre_Empleado: data.Nombre_Empleado ?? "",                   // [Nombre_Empleado]
-  NumeroComprobante: data.NumFactura ?? "",                      // [NumeroComprobante]
-  URLArchivo: data.URLArchivo ?? "",                             // [URLArchivo]
-  Fecha: data.Fecha ?? null,                                     // [Fecha]
-  FechaComprobante: data.FechaComprobante ?? null,              // [FechaComprobante]
-  ValorComprobante: data.ValorComprobante ?? 0,                 // [ValorComprobante]
-  NitComprobante: data.NitComprobante ?? "",                    // [NitComprobante]
-  NombreComprobante: data.NombreComprobante ?? "",              // [NombreComprobante]
-  CiudadComprobante: data.CiudadComprobante ?? "",              // [CiudadComprobante]
-  DireccionComprobante: data.DireccionComprobante ?? "",        // [DireccionComprobante]
-  CCostos: data.CCostos ?? "",                                  // [CCostos]
-  idAnticipo: data.idAnticipo ?? 0,                             // [idAnticipo]
-  razon_social: data.razon_social ?? "",                        // [razon_social]
-  impoconsumo: data.ipc ?? 0,                                   // [impoconsumo]
-  Ica: data.ica ?? 0,                                           // [Ica]
-  iva: data.iva ?? 0,                                           // [iva]
-  retefuente: data.retefuente ?? 0,                             // [retefuente]
-  Sub_Total: data.Sub_Total ?? 0,                               // [Sub_Total]
-  Descripcion: data.Descripcion ?? "",                          // [Descripcion]
-  Notas: data.notas ?? "",                                      // [Notas]
-  Concepto: data.concepto ?? "",                                // [Concepto]
-  NumeroOrdenCompra: data.OrdenCompra ?? "",                    // [NumeroOrdenCompra]
-  ImpuestoUltraProcesados: data.icui ?? 0,                      // [ImpuestoUltraProcesados]
-  CodigoPostal: data.CodigoPostal ?? ""                         // [CodigoPostal]
-};
+    SKU_Proyecto: data.SKU_Proyecto ?? "",                         // [SKU_Proyecto]
+    NitCliente: data.NitCliente ?? "",                             // [NitCliente]
+    idNodoProyecto: data.idNodoProyecto ?? 0,                      // [idNodoProyecto]
+    idProceso: data.idProceso ?? 0,                                // [idProceso]
+    N_DocumentoEmpleado: data.N_DocumentoEmpleado ?? "",           // [N_DocumentoEmpleado]
+    Nombre_Empleado: data.Nombre_Empleado ?? "",                   // [Nombre_Empleado]
+    NumeroComprobante: data.NumFactura ?? "",                      // [NumeroComprobante]
+    URLArchivo: data.URLArchivo ?? "",                             // [URLArchivo]
+    Fecha: data.Fecha ?? null,                                     // [Fecha]
+    FechaComprobante: data.FechaComprobante ?? null,               // [FechaComprobante]
+    ValorComprobante: parseFloat(data.ValorComprobante) || 0,      // [ValorComprobante]
+    NitComprobante: data.NitComprobante ?? "",                     // [NitComprobante]
+    NombreComprobante: data.NombreComprobante ?? "",               // [NombreComprobante]
+    CiudadComprobante: data.CiudadComprobante ?? "",               // [CiudadComprobante]
+    DireccionComprobante: data.DireccionComprobante ?? "",         // [DireccionComprobante]
+    CCostos: data.CCostos ?? "",                                   // [CCostos]
+    idAnticipo: data.idAnticipo ?? 0,                              // [idAnticipo]
+    razon_social: data.razon_social ?? "",                         // [razon_social]
+    impoconsumo: parseFloat(data.ipc) || 0,                        // [impoconsumo]
+    Ica: parseFloat(data.ica) || 0,                                // [Ica]
+    iva: parseFloat(data.iva) || 0,                                // [iva]
+    retefuente: parseFloat(data.retefuente || data.reteFuente) || 0, // [retefuente]
+    Sub_Total: parseFloat(data.Sub_Total || data.totalSinIva) || 0,  // [Sub_Total]
+    Descripcion: data.Descripcion ?? "",                           // [Descripcion]
+    Notas: data.notas ?? data.textoExplicativo ?? "",              // [Notas]
+    Concepto: data.concepto ?? "",                                 // [Concepto]
+    NumeroOrdenCompra: data.OrdenCompra ?? "",                     // [NumeroOrdenCompra]
+    ImpuestoUltraProcesados: parseFloat(data.icui) || 0,           // [ImpuestoUltraProcesados]
+    CodigoPostal: data.CodigoPostal ?? data.codepostal ?? ""       // [CodigoPostal]
+  };
 
-    
-  }
-      
- switch (tipo) {
- 
-
-  case "OCR":
-  try {
-   
-await sequelize.query(
-  `INSERT INTO TBL_SER_ProyectoAnticiposComprobante (
-    SKU_Proyecto,
-    NitCliente,
-    idNodoProyecto,
-    idProceso,
-    N_DocumentoEmpleado,
-    Nombre_Empleado,
-    NumeroComprobante,
-    URLArchivo,
-    Fecha,
-    FechaComprobante,
-    ValorComprobante,
-    NitComprobante,
-    NombreComprobante,
-    CiudadComprobante,
-    DireccionComprobante,
-    CCostos,
-    idAnticipo,
-    razon_social,
-    impoconsumo,
-    Ica,
-    iva,
-    retefuente,
-    Sub_Total,
-    Descripcion,
-    Notas,
-    Concepto,
-    NumeroOrdenCompra,
-    ImpuestoUltraProcesados,
-    CodigoPostal
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-  {
-    replacements: [
-      values.SKU_Proyecto,
-      values.NitCliente,
-      values.idNodoProyecto,
-      values.idProceso,
-      values.N_DocumentoEmpleado,
-      values.Nombre_Empleado,
-      values.NumeroComprobante,
-      values.URLArchivo,
-      values.Fecha,
-      values.FechaComprobante,
-      values.ValorComprobante,
-      values.NitComprobante,
-      values.NombreComprobante,
-      values.CiudadComprobante,
-      values.DireccionComprobante,
-      values.CCostos,
-      values.idAnticipo,
-      values.razon_social,
-      values.impoconsumo,
-      values.Ica,
-      values.iva,
-      values.retefuente,
-      values.Sub_Total,
-      values.Descripcion,
-      values.Notas,
-      values.Concepto,
-      values.NumeroOrdenCompra,
-      values.ImpuestoUltraProcesados,
-      values.CodigoPostal
-    ]
-  }
-);
-  
-
-  } catch (error) {
-    console.error("❌ Error al insertar OCR:", error);
-  }
-  break;
+  switch (tipo) {
+    case "OCR":
+      try {
+        await sequelize.query(
+          `INSERT INTO TBL_SER_ProyectoAnticiposComprobante (
+            SKU_Proyecto,
+            NitCliente,
+            idNodoProyecto,
+            idProceso,
+            N_DocumentoEmpleado,
+            Nombre_Empleado,
+            NumeroComprobante,
+            URLArchivo,
+            Fecha,
+            FechaComprobante,
+            ValorComprobante,
+            NitComprobante,
+            NombreComprobante,
+            CiudadComprobante,
+            DireccionComprobante,
+            CCostos,
+            idAnticipo,
+            razon_social,
+            impoconsumo,
+            Ica,
+            iva,
+            retefuente,
+            Sub_Total,
+            Descripcion,
+            Notas,
+            Concepto,
+            NumeroOrdenCompra,
+            ImpuestoUltraProcesados,
+            CodigoPostal
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          {
+            replacements: [
+              values.SKU_Proyecto,
+              values.NitCliente,
+              values.idNodoProyecto,
+              values.idProceso,
+              values.N_DocumentoEmpleado,
+              values.Nombre_Empleado,
+              values.NumeroComprobante,
+              values.URLArchivo,
+              values.Fecha,
+              values.FechaComprobante,
+              values.ValorComprobante,
+              values.NitComprobante,
+              values.NombreComprobante,
+              values.CiudadComprobante,
+              values.DireccionComprobante,
+              values.CCostos,
+              values.idAnticipo,
+              values.razon_social,
+              values.impoconsumo,
+              values.Ica,
+              values.iva,
+              values.retefuente,
+              values.Sub_Total,
+              values.Descripcion,
+              values.Notas,
+              values.Concepto,
+              values.NumeroOrdenCompra,
+              values.ImpuestoUltraProcesados,
+              values.CodigoPostal
+            ]
+          }
+        );
+        console.log("✅ OCR insertado correctamente");
+      } catch (error) {
+        console.error("❌ Error al insertar OCR:", error);
+      }
+      break;
 
     case "entregable":
 
