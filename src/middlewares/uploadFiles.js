@@ -107,6 +107,8 @@ const dashboard = async (req, res) => {
           for (const key in req.files) {
             const  imagen  = req.files[key];
             console.log( "req.files",imagen)
+            console.log( "DATOS DESDE MI FRONT",obj_ActualizarEntregable)
+           
           let imgs;
           let imagePath;
           let imageBuffer;
@@ -289,139 +291,115 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
 const insertInto = async(data,tipo) =>{
   console.log(data,"data") 
   if (data) {
+  const values = {
+  SKU_Proyecto: data.SKU_Proyecto ?? "",                         // [SKU_Proyecto]
+  NitCliente: data.NitCliente ?? "",                             // [NitCliente]
+  idNodoProyecto: data.idNodoProyecto ?? 0,                      // [idNodoProyecto]
+  idProceso: data.idProceso ?? 0,                                // [idProceso]
+  N_DocumentoEmpleado: data.N_DocumentoEmpleado ?? "",           // [N_DocumentoEmpleado]
+  Nombre_Empleado: data.Nombre_Empleado ?? "",                   // [Nombre_Empleado]
+  NumeroComprobante: data.NumFactura ?? "",                      // [NumeroComprobante]
+  URLArchivo: data.URLArchivo ?? "",                             // [URLArchivo]
+  Fecha: data.Fecha ?? null,                                     // [Fecha]
+  FechaComprobante: data.FechaComprobante ?? null,              // [FechaComprobante]
+  ValorComprobante: data.ValorComprobante ?? 0,                 // [ValorComprobante]
+  NitComprobante: data.NitComprobante ?? "",                    // [NitComprobante]
+  NombreComprobante: data.NombreComprobante ?? "",              // [NombreComprobante]
+  CiudadComprobante: data.CiudadComprobante ?? "",              // [CiudadComprobante]
+  DireccionComprobante: data.DireccionComprobante ?? "",        // [DireccionComprobante]
+  CCostos: data.CCostos ?? "",                                  // [CCostos]
+  idAnticipo: data.idAnticipo ?? 0,                             // [idAnticipo]
+  razon_social: data.razon_social ?? "",                        // [razon_social]
+  impoconsumo: data.ipc ?? 0,                                   // [impoconsumo]
+  Ica: data.ica ?? 0,                                           // [Ica]
+  iva: data.iva ?? 0,                                           // [iva]
+  retefuente: data.retefuente ?? 0,                             // [retefuente]
+  Sub_Total: data.Sub_Total ?? 0,                               // [Sub_Total]
+  Descripcion: data.Descripcion ?? "",                          // [Descripcion]
+  Notas: data.notas ?? "",                                      // [Notas]
+  Concepto: data.concepto ?? "",                                // [Concepto]
+  NumeroOrdenCompra: data.OrdenCompra ?? "",                    // [NumeroOrdenCompra]
+  ImpuestoUltraProcesados: data.icui ?? 0,                      // [ImpuestoUltraProcesados]
+  CodigoPostal: data.CodigoPostal ?? ""                         // [CodigoPostal]
+};
 
-    data.SKU_Proyecto = data.SKU_Proyecto?data.SKU_Proyecto:""
-    data.NitCliente = data.NitCliente?data.NitCliente:"";
-    data.idNodoProyecto = data.idNodoProyecto ? data.idNodoProyecto : 0
-    data.idProceso = data.idProceso ? data.idProceso : 0;
-    data.Sub_Total = data.Sub_Total ? data.Sub_Total : 0;
-    data.Descripcion = data.Descripcion ? data.Descripcion : ""
-    data.iva = data.iva ? data.iva : 0
-    data.ipc = data.ipc ? data.ipc : 0
-    data.retefuente = data.retefuente ? data.retefuente : 0,
-    data.ica = data.ica ? data.ica : 0,
-    data.razon_social = data.razon_social ? data.razon_social : ""
-    data.notas =  data.notas ? data.notas : ""
-    data.concepto = data.concepto ? data.concepto : ""
-    data.NumFactura = data.NumFactura ? data.NumFactura : ""
     
   }
+      
  switch (tipo) {
-  // case "OCR":
-    
-  // try {
-  //   await sequelize.query(
-  //     `INSERT INTO TBL_SER_ProyectoAnticiposComprobante
-  //     ([SKU_Proyecto]
-  //     ,[NitCliente]
-  //     ,[idNodoProyecto]
-  //     ,[idProceso]
-  //     ,[N_DocumentoEmpleado]
-  //     ,[Nombre_Empleado]
-  //     ,[NumeroComprobante]
-  //     ,[URLArchivo]
-  //     ,[Fecha]
-  //     ,[FechaComprobante]
-  //     ,[ValorComprobante]
-  //     ,[NitComprobante]
-  //     ,[NombreComprobante]
-  //     ,[CiudadComprobante]
-  //     ,[DireccionComprobante]
-  //     ,[CCostos]
-  //     ,[idAnticipo]
-  //     ,[razon_social]
-  //     ,[impoconsumo]
-  //     ,[ica]
-  //     ,[iva]
-  //     ,[retefuente]
-  //     ,[Sub_Total]
-  //     ,[Descripcion]
-  //     ,[Notas]
-  //     ,[Concepto]
-  //     ,[NumeroOrdenCompra]
-  //     )
-  // VALUES
-  //     ('${data.SKU_Proyecto}',
-  //     '${data.NitCliente}',
-  //     ${data.idNodoProyecto},
-  //     ${data.idProceso},
-  //     '${data.N_DocumentoEmpleado}',
-  //     '${data.Nombre_Empleado}',
-  //      '${data.NumeroComprobante}',
-  //      '${data.URLArchivo}',
-  //      '${data.Fecha}',
-  //      '${data.FechaComprobante}',
-  //      ${data.ValorComprobante},
-  //      '${data.NitComprobante}',
-  //       '${data.NombreComprobante}',
-  //       '${data.CiudadComprobante}',
-  //       '${data.DireccionComprobante}',
-  //       '${data.CCostos}',
-  //        '${data.idAnticipo}',
-  //        '${data.razon_social}',
-  //        ${data.ipc},
-  //        ${data.ica},
-  //        ${data.iva},
-  //        ${data.reteFuente},
-  //      ${data.Sub_Total},
-  //      '${data.Descripcion}',
-  //      '${data.notas}',
-  //      '${data.concepto}',
-  //      '${data.NumFactura}'
-  //      )
-  // `
-  //   );
-
-  //  } catch (error) {
-  //   console.log(error)
-  //  }
-
-
-  //   break;
+ 
 
   case "OCR":
   try {
-    await sequelize.query(
-      `INSERT INTO TBL_SER_ProyectoAnticiposComprobante (
-        SKU_Proyecto, NitCliente, idNodoProyecto, idProceso, 
-        N_DocumentoEmpleado, Nombre_Empleado, NumeroComprobante,
-        URLArchivo, Fecha, FechaComprobante, ValorComprobante,
-        NitComprobante, NombreComprobante, CiudadComprobante, DireccionComprobante,
-        CCostos, idAnticipo, razon_social, impoconsumo, ica, iva, retefuente,
-        Sub_Total, Descripcion, Notas, Concepto, NumeroOrdenCompra
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      {
-        replacements: [
-          data.SKU_Proyecto || '',
-          data.NitCliente || '',
-          data.idNodoProyecto || 0,
-          data.idProceso || 0,
-          data.N_DocumentoEmpleado || '',
-          data.Nombre_Empleado || '',
-          data.NumeroComprobante || '',
-          data.URLArchivo || '',
-          data.Fecha || null,
-          data.FechaComprobante || null,
-          data.ValorComprobante || 0,
-          data.NitComprobante || '',
-          data.NombreComprobante || '',
-          data.CiudadComprobante || '',
-          data.DireccionComprobante || '',
-          data.CCostos || '',
-          data.idAnticipo || '',
-          data.razon_social || '',
-          data.ipc || 0,
-          data.ica || 0,
-          data.iva || 0,
-          data.reteFuente || 0,
-          data.Sub_Total || 0,
-          data.Descripcion || '',
-          data.notas || '',
-          data.concepto || '',
-          data.NumFactura || ''
-        ]
-      }
-    );
+   
+await sequelize.query(
+  `INSERT INTO TBL_SER_ProyectoAnticiposComprobante (
+    SKU_Proyecto,
+    NitCliente,
+    idNodoProyecto,
+    idProceso,
+    N_DocumentoEmpleado,
+    Nombre_Empleado,
+    NumeroComprobante,
+    URLArchivo,
+    Fecha,
+    FechaComprobante,
+    ValorComprobante,
+    NitComprobante,
+    NombreComprobante,
+    CiudadComprobante,
+    DireccionComprobante,
+    CCostos,
+    idAnticipo,
+    razon_social,
+    impoconsumo,
+    Ica,
+    iva,
+    retefuente,
+    Sub_Total,
+    Descripcion,
+    Notas,
+    Concepto,
+    NumeroOrdenCompra,
+    ImpuestoUltraProcesados,
+    CodigoPostal
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  {
+    replacements: [
+      values.SKU_Proyecto,
+      values.NitCliente,
+      values.idNodoProyecto,
+      values.idProceso,
+      values.N_DocumentoEmpleado,
+      values.Nombre_Empleado,
+      values.NumeroComprobante,
+      values.URLArchivo,
+      values.Fecha,
+      values.FechaComprobante,
+      values.ValorComprobante,
+      values.NitComprobante,
+      values.NombreComprobante,
+      values.CiudadComprobante,
+      values.DireccionComprobante,
+      values.CCostos,
+      values.idAnticipo,
+      values.razon_social,
+      values.impoconsumo,
+      values.Ica,
+      values.iva,
+      values.retefuente,
+      values.Sub_Total,
+      values.Descripcion,
+      values.Notas,
+      values.Concepto,
+      values.NumeroOrdenCompra,
+      values.ImpuestoUltraProcesados,
+      values.CodigoPostal
+    ]
+  }
+);
+  
+
   } catch (error) {
     console.error("❌ Error al insertar OCR:", error);
   }
