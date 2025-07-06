@@ -290,8 +290,11 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
 
 const insertInto = async (data, tipo) => {
   console.log(data, "data");
-
+  console.log(data.Direccion, typeof data.Direccion, "Direccion");
+return
   if (!data) return;
+
+  
 
   // Declarar values fuera del switch
   const values = {
