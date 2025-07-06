@@ -18,15 +18,6 @@ const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
 const tenantID = TENANT_ID;
 
-// // Configura la serialización de usuarios
-// passport.serializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// passport.deserializeUser((user, done) => {
-//   done(null, user);
-// });
-
 const authUpload = (req, res) => {
   console.log("login inicial ");
   return passport.authenticate("azuread-openidconnect");
@@ -50,48 +41,7 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable)
   }
-  console.log(ActualizarEntregable)
-  // if (req.files) {
-  //   for (const key in req.files) {
-  //     const archivo = req.files[key];
-  //   console.log(archivo.name.split("-")[0])
-  //   console.log(archivo.name.split("-")[1])
-  //   }
-  // }
-  // let obj = {};
-  // if (ActualizarEntregable) {
-  //   const {
-  //     SKU_Proyecto,
-  //     NitCliente,
-  //     idNodoProyecto,
-  //     idProceso,
-  //     N_DocumentoEmpleado,
-  //     NumeroEntregable,
-  //     Fecha,
-  //   } = ActualizarEntregable;
-
-  //   obj = {
-  //     SKU_Proyecto,
-  //     NitCliente,
-  //     idNodoProyecto,
-  //     idProceso,
-  //     N_DocumentoEmpleado,
-  //     NumeroEntregable,
-  //     Fecha,
-  //   };
-  // }
-
-  //   const {
-  //     SKU_Proyecto,
-  //     NitCliente,
-  //     idNodoProyecto,
-  //     idProceso,
-  //     N_DocumentoEmpleado,
-  //     NumeroEntregable,
-  //     URLArchivo,
-  //     Fecha,
-  //   } = req.params
-  // //ActualizarProyecto
+  
   //TODO creo un objeto con los valores que me llegan por el body
   
   console.log("tipooo", tipo);
@@ -289,8 +239,7 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
 };
 
 const insertInto = async (data, tipo) => {
-  console.log(data, "data");
-  console.log(data.Direccion, typeof data.Direccion, "Direccion");
+ 
 
   if (!data) return;
 
