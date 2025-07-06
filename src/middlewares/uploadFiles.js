@@ -309,7 +309,7 @@ const insertInto = async (data, tipo) => {
     NitComprobante: data.NitComprobante ?? "",                     // [NitComprobante]
     NombreComprobante: data.NombreComprobante ?? "",               // [NombreComprobante]
     CiudadComprobante: data.CiudadComprobante ?? "",               // [CiudadComprobante]
-    DireccionComprobante: data.DireccionComprobante ?? "",         // [DireccionComprobante]
+    DireccionComprobante: data.Direccion ?? "",         // [DireccionComprobante]
     CCostos: data.CCostos ?? "",                                   // [CCostos]
     idAnticipo: data.idAnticipo ?? 0,                              // [idAnticipo]
     razon_social: data.razon_social ?? "",                         // [razon_social]
