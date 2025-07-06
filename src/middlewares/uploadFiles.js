@@ -291,7 +291,7 @@ let mesFormateado = mesActual.toString().padStart(2, '0');
 const insertInto = async (data, tipo) => {
   console.log(data, "data");
   console.log(data.Direccion, typeof data.Direccion, "Direccion");
-return
+
   if (!data) return;
 
   
@@ -306,13 +306,13 @@ return
     Nombre_Empleado: data.Nombre_Empleado ?? "",                   // [Nombre_Empleado]
     NumeroComprobante: data.NumFactura ?? "",                      // [NumeroComprobante]
     URLArchivo: data.URLArchivo ?? "",                             // [URLArchivo]
-    Fecha: data.Fecha ?? null,                                     // [Fecha]
+    Fecha: data.Fecha ?? "null",                                     // [Fecha]
     FechaComprobante: data.FechaComprobante ?? null,               // [FechaComprobante]
     ValorComprobante: parseFloat(data.ValorComprobante) || 0,      // [ValorComprobante]
     NitComprobante: data.NitComprobante ?? "",                     // [NitComprobante]
     NombreComprobante: data.NombreComprobante ?? "",               // [NombreComprobante]
     CiudadComprobante: data.CiudadComprobante ?? "",               // [CiudadComprobante]
-    DireccionComprobante: data.Direccion ?? "",                    // [DireccionComprobante]
+    Direccion: data.Direccion ?? "",                    // [DireccionComprobante]
     CCostos: data.CCostos ?? "",                                   // [CCostos]
     idAnticipo: data.idAnticipo ?? 0,                              // [idAnticipo]
     razon_social: data.razon_social ?? "",                         // [razon_social]
