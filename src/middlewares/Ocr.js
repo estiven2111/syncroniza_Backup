@@ -1414,6 +1414,7 @@ Si sí aparece, extrae el valor exacto como "subtotal".
 
 En el campo "detalles_compra" (o el campo equivalente según tu estructura), coloca el texto del concepto o descripción exactamente como aparece en el documento.
 porfavor no inventes informacion y pasame lo que hay pagado a razonsocial ombe concepto ponlo en detalles_compra
+la cedula que poongan o numero  o n it ponlo en el campo NIT eres inteligente hagalo bien 
 
 NOTA
 si algun dato no lo encuentras ponlo como "" no me devuelvas undefinido o null.
