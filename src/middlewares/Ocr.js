@@ -1392,28 +1392,28 @@ Devuelve únicamente el siguiente formato JSON:
 agragalo a el resto de datos como detalles_compra:
 que pasa pues agrega el campo detalles_compra al objeto JSON final: 
 
-27. Cuando el documento sea un recibo de caja, una factura a mano, o una factura no formal, analiza únicamente los datos que estén explícitamente visibles en el documento o imagen.
+27. Si el documento es un recibo de caja, una factura escrita a mano o una factura no formal (como facturas sin formato legal o sin encabezado oficial):
 
-Por lo general, estos documentos incluyen los siguientes elementos:
+Extrae solo los campos que realmente estén escritos en el documento. No infieras ni inventes datos.
 
-Total
+Los campos más comunes en este tipo de documentos son:
 
-Fecha
+"total": valor final pagado
 
-Concepto (descripción del servicio o producto)
+"fecha": cuando se emitió el recibo o factura
 
-Pagado a (que corresponde a la razón social o nombre y la cédula/NIT del receptor)
+"concepto" o "detalle": descripción del producto o servicio
 
-Instrucciones clave:
-No inventes ni asumas información. Extrae solo los datos que el documento realmente muestre.
+"pagado a": nombre o razón social de la persona o empresa que recibe el pago, y su número de cédula o NIT
 
-El campo subtotal casi nunca aparece en este tipo de documentos:
+El campo "subtotal" muchas veces no aparece en estos documentos:
 
-Si no está visible, déjalo vacío.
+Si el subtotal no está presente en el documento, deja el campo "subtotal" vacío.
 
-Si sí aparece, inclúyelo tal como está.
+Si sí aparece, extrae el valor exacto como "subtotal".
 
-En el campo "Detalles de la compra", transcribe fielmente el concepto descrito en el documento. Esta información es muy importante y debe coincidir con lo escrito por el emisor.
+En el campo "detallesCompra" (o el campo equivalente según tu estructura), coloca el texto del concepto o descripción exactamente como aparece en el documento.
+porfavor no inventes informacion y pasame lo que hay
 
 NOTA
 si algun dato no lo encuentras ponlo como "" no me devuelvas undefinido o null.
