@@ -281,16 +281,18 @@ const dashboard = async (req, res) => {
       return res.status(400).json({ msg: "Debe subir al menos un archivo" });
     }
 
-    // Clonamos datos base
-    const SaveDatos = obj_ActualizarEntregable ;
-    // const SaveDatos = { ...obj_ActualizarEntregable };
+    const SaveDatos = { ...obj_ActualizarEntregable };
 
-    // Mapeo campo del form → nombre de propiedad en objeto final
     const campos = {
       imagenOCR: "URLArchivo",
       imagenRUT: "URLRUT",
       imagenOTRO: "URLOTRO",
     };
+
+    // 👉 Inicializar todos los campos en blanco
+    for (const key in campos) {
+      SaveDatos[campos[key]] = "";
+    }
 
     for (const key in campos) {
       if (req.files[key]) {
@@ -309,10 +311,10 @@ const dashboard = async (req, res) => {
             archivoIndividual.name
           );
 
-          // Guardar la URL en su propiedad correspondiente
+          // ✅ Guardar la URL
           SaveDatos[campos[key]] = url;
 
-          // Si es tipo entregable y es el OCR, extrae número de entregable
+          // ✅ Número de entregable si aplica
           if (tipo === "entregable" && key === "imagenOCR") {
             SaveDatos.NumeroEntregable = archivoIndividual.name.split("-")[0];
           }
@@ -320,15 +322,15 @@ const dashboard = async (req, res) => {
       }
     }
 
-    // ✅ Inserta en la base de datos una sola vez al final
     await insertInto(SaveDatos, tipo);
 
-    res.send("archivos enviados correctamente");
+    res.send("Archivos subidos y datos guardados correctamente.");
   } catch (error) {
     console.error("Error en dashboard:", error);
     res.status(500).json({ error });
   }
 };
+
 
 
 const moveupload = (
