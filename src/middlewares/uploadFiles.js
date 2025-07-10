@@ -324,7 +324,7 @@ const dashboard = async (req, res) => {
 
     await insertInto(SaveDatos, tipo);
 
-    res.send("Archivos subidos y datos guardados correctamente.");
+    res.send("archivos enviados correctamente");
   } catch (error) {
     console.error("Error en dashboard:", error);
     res.status(500).json({ error });
