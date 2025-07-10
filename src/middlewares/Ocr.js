@@ -1391,11 +1391,15 @@ Devuelve únicamente el siguiente formato JSON:
 
 agragalo a el resto de datos como detalles_compra:
 que pasa pues agrega el campo detalles_compra al objeto JSON final: 
+
+27. cuando es un recibo de caja apegate solo a los datos que este trae por lo general siempre trae
+total, fecha, concepto, pagado a esto seria la razon social y la cedula analiza el documento o la foto 
+eres un experto pon los valores que son 
+
 NOTA
 si algun dato no lo encuentras ponlo como "" no me devuelvas undefinido o null.
 Recuerda, eres un contador experto, extrae solo lo que esté en la factura y realiza los cálculos si es necesario, con precisión contable.
-no adivines valores si son recibos de caja verifica por lo general no traen subtotal si lo traen ponlo pero casi siempre solo es el total 
-pon los datos encontrados no calcules no asumas pon los datos que se te piden y ya 
+
 `;
     const messages = [
       {
