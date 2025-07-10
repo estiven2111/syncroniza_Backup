@@ -1392,10 +1392,28 @@ Devuelve únicamente el siguiente formato JSON:
 agragalo a el resto de datos como detalles_compra:
 que pasa pues agrega el campo detalles_compra al objeto JSON final: 
 
-27. cuando es un recibo de caja apegate solo a los datos que este trae por lo general siempre trae
-total, fecha, concepto, pagado a esto seria la razon social y la cedula analiza el documento o la foto 
-eres un experto pon los valores que son el concepto esta ahi plasmalo en detalles de la compra para que me des
-esa informacion que es muy importante lee lee lee bien porfavor pasame los datos que son 
+27. Cuando el documento sea un recibo de caja, una factura a mano, o una factura no formal, analiza únicamente los datos que estén explícitamente visibles en el documento o imagen.
+
+Por lo general, estos documentos incluyen los siguientes elementos:
+
+Total
+
+Fecha
+
+Concepto (descripción del servicio o producto)
+
+Pagado a (que corresponde a la razón social o nombre y la cédula/NIT del receptor)
+
+Instrucciones clave:
+No inventes ni asumas información. Extrae solo los datos que el documento realmente muestre.
+
+El campo subtotal casi nunca aparece en este tipo de documentos:
+
+Si no está visible, déjalo vacío.
+
+Si sí aparece, inclúyelo tal como está.
+
+En el campo "Detalles de la compra", transcribe fielmente el concepto descrito en el documento. Esta información es muy importante y debe coincidir con lo escrito por el emisor.
 
 NOTA
 si algun dato no lo encuentras ponlo como "" no me devuelvas undefinido o null.
