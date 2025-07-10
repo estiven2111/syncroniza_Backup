@@ -322,7 +322,7 @@ const dashboard = async (req, res) => {
     // ✅ Inserta en la base de datos una sola vez al final
     await insertInto(SaveDatos, tipo);
 
-    res.send("Archivos subidos y datos guardados correctamente.");
+    res.send("archivos enviados correctamente");
   } catch (error) {
     console.error("Error en dashboard:", error);
     res.status(500).json({ error });
@@ -450,6 +450,8 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
     Descripcion: data.Descripcion ?? "", // [Descripcion]
     Notas: data.notas ?? data.textoExplicativo ?? "", // [Notas]
     Concepto: data.concepto ?? "", // [Concepto]
+    URLArchivoRUT: data.URLRUT ?? "", // [URLArchivoRUT]
+    URLArchivoOTROS: data.URLOTRO ?? "", // [URLArchivoOTROS]
     NumeroOrdenCompra: data.OrdenCompra ?? "", // [NumeroOrdenCompra]
     ImpuestoUltraProcesados: parseFloat(data.icui) || 0, // [ImpuestoUltraProcesados]
     CodigoPostal: data.CodigoPostal ?? data.codepostal ?? "", // [CodigoPostal]
@@ -486,6 +488,8 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
             Descripcion,
             Notas,
             Concepto,
+            URLArchivoRUT,
+            URLArchivoOTROS,
             NumeroOrdenCompra,
             ImpuestoUltraProcesados,
             CodigoPostal
@@ -518,6 +522,8 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
               values.Descripcion,
               values.Notas,
               values.Concepto,
+              values.URLArchivoRUT,
+              values.URLArchivoOTROS,
               values.NumeroOrdenCompra,
               values.ImpuestoUltraProcesados,
               values.CodigoPostal,
