@@ -282,7 +282,8 @@ const dashboard = async (req, res) => {
     }
 
     // Clonamos datos base
-    const SaveDatos = { ...obj_ActualizarEntregable };
+    const SaveDatos = obj_ActualizarEntregable ;
+    // const SaveDatos = { ...obj_ActualizarEntregable };
 
     // Mapeo campo del form → nombre de propiedad en objeto final
     const campos = {
