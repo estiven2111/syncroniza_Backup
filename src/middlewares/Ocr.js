@@ -1412,8 +1412,8 @@ Si el subtotal no está presente en el documento, deja el campo "subtotal" vací
 
 Si sí aparece, extrae el valor exacto como "subtotal".
 
-En el campo "detallesCompra" (o el campo equivalente según tu estructura), coloca el texto del concepto o descripción exactamente como aparece en el documento.
-porfavor no inventes informacion y pasame lo que hay
+En el campo "detalles_compra" (o el campo equivalente según tu estructura), coloca el texto del concepto o descripción exactamente como aparece en el documento.
+porfavor no inventes informacion y pasame lo que hay pagado a razonsocial ombe concepto ponlo en detalles_compra
 
 NOTA
 si algun dato no lo encuentras ponlo como "" no me devuelvas undefinido o null.
