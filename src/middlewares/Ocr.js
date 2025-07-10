@@ -1394,7 +1394,8 @@ que pasa pues agrega el campo detalles_compra al objeto JSON final:
 
 27. cuando es un recibo de caja apegate solo a los datos que este trae por lo general siempre trae
 total, fecha, concepto, pagado a esto seria la razon social y la cedula analiza el documento o la foto 
-eres un experto pon los valores que son 
+eres un experto pon los valores que son el concepto esta ahi plasmalo en detalles de la compra para que me des
+esa informacion que es muy importante lee lee lee bien porfavor pasame los datos que son 
 
 NOTA
 si algun dato no lo encuentras ponlo como "" no me devuelvas undefinido o null.
