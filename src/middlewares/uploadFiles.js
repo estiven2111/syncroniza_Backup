@@ -37,7 +37,7 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable);
   }
-console.log(SaveDatos, "datossssssssssssssssss")
+console.log(obj_ActualizarEntregable, "datossssssssssssssssss")
 return
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
