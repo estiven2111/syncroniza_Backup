@@ -37,14 +37,16 @@ const dashboard = async (req, res) => {
   if (ActualizarEntregable) {
     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable);
   }
-
+console.log(SaveDatos, "datossssssssssssssssss")
+return
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).json({ msg: "Debe subir al menos un archivo" });
     }
 
     const SaveDatos = { ...obj_ActualizarEntregable };
-  
+   
+   
     const campos = {
       imagenOCR: "URLArchivo",
       imagenRUT: "URLRUT",
