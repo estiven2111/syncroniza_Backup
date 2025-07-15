@@ -105,3 +105,8 @@ dist
 
 # package-lock.json
 package-lock.json
+
+local-storage
+local-storage/
+uploads
+uploads/

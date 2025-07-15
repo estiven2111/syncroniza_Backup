@@ -519,11 +519,12 @@ const LoadProyect = async (Doc_id, email) => {
 
 const getProyectName = async (req, res) => {
   const { search, email } = req.query;
+  console.log("eeeeeeeeeee")
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     // localStorage.removeItem(`Proyecto`)
     let NomProyect;
-
+   
     if (proyects) {
       NomProyect = proyects.proyectos
         .filter((obj) => obj.proyecto.includes(search.toUpperCase()))
@@ -536,6 +537,7 @@ const getProyectName = async (req, res) => {
     // const proyect = proyects.proyectos.filter((obj) => {
     //   return obj.proyecto.includes(search);
     // });
+ console.log(NomProyect,"qqqqqqqqqqqqqqqqqqqqqqqqqqq")
     res.json(NomProyect);
   } catch (error) {
     res.json({ error: error });
@@ -559,6 +561,7 @@ const NameProyects = (req, res) => {
 //todo hacer consulta para enviar el proyectos
 const getProyect = async (req, res) => {
   const { search, email } = req.query;
+  console.log("holaaaaa",email)
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
 
@@ -572,6 +575,7 @@ const getProyect = async (req, res) => {
     const nombres = proyects.proyectos.map((obj) => {
       return obj.proyecto;
     });
+    console.log(proyect)
     res.json(proyect);
   } catch (error) {
     res.json({ error: error });
@@ -690,28 +694,28 @@ const UpdatProyect = async (req, res) => {
 const AnticipoGastos = async (req, res) => {
   try {
     const { doc, sku } = req.body;
+  
 
-    const datos = await sequelize.query(
+     const datos = await sequelize.query(
       `
-    SELECT * FROM TBL_CON_TES_ListaComprobantesCajaMenor WHERE N_Documento = :doc AND SKU = :sku`,
+    select C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
+    WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
       {
         replacements: { doc: doc, sku: sku },
         type: sequelize.QueryTypes.SELECT,
       }
     );
-
     let objDatos = [];
     datos.map((datos) => {
       objDatos.push({
-        NumeroComprobante: datos.NumeroComprobante,
-        IdResponsable: datos.IdResponsable,
+        NumeroComprobante: datos.NumeroDocumento,
+        IdResponsable: datos.Id,
         Valor: datos.Valor,
-        DetalleConcepto: datos.DetalleConcepto,
+        DetalleConcepto: datos.OP,
         IdCentroCostos: datos.IdCentroCostos,
         sku: datos.SKU,
       });
     });
-
     res.send(objDatos);
   } catch (error) {
     res.json({ error: error });
