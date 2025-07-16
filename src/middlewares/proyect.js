@@ -698,7 +698,7 @@ const AnticipoGastos = async (req, res) => {
 console.log(doc, sku,"anticipooooooooooo")
      const datos = await sequelize.query(
       `
-    select C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
+    select A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
     WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
       {
         replacements: { doc: doc, sku: sku },
@@ -712,7 +712,7 @@ console.log(doc, sku,"anticipooooooooooo")
         IdResponsable: datos.Id,
         Valor: datos.Valor,
         DetalleConcepto: datos.OP,
-        IdCentroCostos: datos.IdCentroCostos,
+        IdCentroCostos: datos.Consecutivo,
         sku: datos.SKU,
       });
     });
