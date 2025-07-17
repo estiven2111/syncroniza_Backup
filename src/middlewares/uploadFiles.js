@@ -30,6 +30,155 @@ const uploadFiles = async (req, res) => {
 };
 
 
+// const dashboard = async (req, res) => {
+//   let { user, tipo, token, ActualizarEntregable } = req.body;
+//   let obj_ActualizarEntregable = {};
+
+//   if (ActualizarEntregable) {
+//     obj_ActualizarEntregable = JSON.parse(ActualizarEntregable);
+//   }
+
+//   try {
+//     if (!req.files || Object.keys(req.files).length === 0) {
+//       return res.status(400).json({ msg: "Debe subir al menos un archivo" });
+//     }
+
+//     const SaveDatos = { ...obj_ActualizarEntregable };
+   
+   
+//     const campos = {
+//       imagenOCR: "URLArchivo",
+//       imagenRUT: "URLRUT",
+//       imagenOTRO: "URLOTRO",
+//     };
+
+//     // 👉 Inicializar todos los campos en blanco
+//     for (const key in campos) {
+//       SaveDatos[campos[key]] = "";
+//     }
+
+//     for (const key in campos) {
+//       if (req.files[key]) {
+//         const archivo = req.files[key];
+//         const archivos = Array.isArray(archivo) ? archivo : [archivo];
+
+//         for (const archivoIndividual of archivos) {
+//           const uploadPath = `uploads/${archivoIndividual.name}`;
+
+//           const url = await moveupload(
+//             tipo,
+//             archivoIndividual,
+//             uploadPath,
+//             user,
+//             token,
+//             archivoIndividual.name
+//           );
+
+//           // ✅ Guardar la URL
+//           SaveDatos[campos[key]] = url;
+
+//           // ✅ Número de entregable si aplica
+//           if (tipo === "entregable" && key === "imagenOCR") {
+//             SaveDatos.NumeroEntregable = archivoIndividual.name.split("-")[0];
+//           }
+//         }
+//       }
+//     }
+
+//     await insertInto(SaveDatos, tipo);
+
+//     res.send("archivos enviados correctamente");
+//   } catch (error) {
+//     console.error("Error en dashboard:", error);
+//     res.status(500).json({ error });
+//   }
+// };
+
+
+
+// const moveupload = (
+//   tipo,
+//   imgs,
+//   uploadPath,
+//   user,
+//   token,
+//   archivo
+// ) => {
+//   return new Promise((resolve, reject) => {
+//     imgs.mv(uploadPath, (err) => {
+//       if (err) {
+//         console.error("Error al mover archivo:", err);
+//         return reject(err);
+//       }
+
+//       const file = path.join(__dirname, "../..", "uploads", imgs.name);
+//       const nomuser = user.split(" ").join("_").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+//       const fechaActual = new Date();
+//       const añoActual = fechaActual.getFullYear();
+//       const mesFormateado = (fechaActual.getMonth() + 1).toString().padStart(2, "0");
+
+//       const onedrive_folder = tipo === "OCR"
+//         ? `CONTABILIDAD/Recibos_Caja/${añoActual}/${mesFormateado}/${nomuser}`
+//         : `GESTION PROYECTO/${nomuser}/${añoActual}/${mesFormateado}`;
+
+//       const onedrive_filename = path.basename(file);
+
+//       fs.readFile(file, (err, data) => {
+//         if (err) {
+//           console.error("Error al leer archivo:", err);
+//           return reject(err);
+//         }
+
+//         const uploadOptions = {
+//           url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
+//           headers: {
+//             Authorization: "Bearer " + token,
+//             "Content-Type": "application/json",
+//           },
+//           body: data,
+//         };
+
+//         request.put(uploadOptions, (err, response, body) => {
+//           if (err) {
+//             console.error("Error en subida a OneDrive:", err);
+//             return reject(err);
+//           }
+
+//           const responseBody = JSON.parse(body);
+//           const driveId = responseBody.parentReference.driveId;
+//           const itemId = responseBody.id;
+
+//           const shareOptions = {
+//             url: `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/createLink`,
+//             headers: {
+//               Authorization: "Bearer " + token,
+//               "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ type: "view", scope: "anonymous" }),
+//           };
+
+//           request.post(shareOptions, (err, response, shareBody) => {
+//             if (err) {
+//               console.error("Error al crear enlace público:", err);
+//               return reject(err);
+//             }
+
+//             const sharedResponse = JSON.parse(shareBody);
+//             if (sharedResponse.link && sharedResponse.link.webUrl) {
+//               const sharedUrl = sharedResponse.link.webUrl;
+//               eliminar(file); // Limpieza local
+//               resolve(sharedUrl);
+//             } else {
+//               reject("No se pudo obtener la URL compartida.");
+//             }
+//           });
+//         });
+//       });
+//     });
+//   });
+// };
+
+
 const dashboard = async (req, res) => {
   let { user, tipo, token, ActualizarEntregable } = req.body;
   let obj_ActualizarEntregable = {};
@@ -44,21 +193,44 @@ const dashboard = async (req, res) => {
     }
 
     const SaveDatos = { ...obj_ActualizarEntregable };
-   
-   
-    const campos = {
-      imagenOCR: "URLArchivo",
-      imagenRUT: "URLRUT",
-      imagenOTRO: "URLOTRO",
-    };
 
-    // 👉 Inicializar todos los campos en blanco
-    for (const key in campos) {
-      SaveDatos[campos[key]] = "";
-    }
+    if (tipo === "OCR") {
+      // 👉 Procesamiento especial para OCR (campos específicos)
+      const campos = {
+        imagenOCR: "URLArchivo",
+        imagenRUT: "URLRUT",
+        imagenOTRO: "URLOTRO",
+      };
 
-    for (const key in campos) {
-      if (req.files[key]) {
+      // Inicializar campos
+      for (const key in campos) {
+        SaveDatos[campos[key]] = "";
+      }
+
+      for (const key in campos) {
+        if (req.files[key]) {
+          const archivo = req.files[key];
+          const archivos = Array.isArray(archivo) ? archivo : [archivo];
+
+          for (const archivoIndividual of archivos) {
+            const uploadPath = `uploads/${archivoIndividual.name}`;
+
+            const url = await moveupload(
+              tipo,
+              archivoIndividual,
+              uploadPath,
+              user,
+              token,
+              archivoIndividual.name
+            );
+
+            SaveDatos[campos[key]] = url;
+          }
+        }
+      }
+    } else if (tipo === "entregable") {
+      // 👉 Procesamiento para entregables (archivos generales)
+      for (const key in req.files) {
         const archivo = req.files[key];
         const archivos = Array.isArray(archivo) ? archivo : [archivo];
 
@@ -74,19 +246,14 @@ const dashboard = async (req, res) => {
             archivoIndividual.name
           );
 
-          // ✅ Guardar la URL
-          SaveDatos[campos[key]] = url;
-
-          // ✅ Número de entregable si aplica
-          if (tipo === "entregable" && key === "imagenOCR") {
-            SaveDatos.NumeroEntregable = archivoIndividual.name.split("-")[0];
-          }
+          // Extraer NúmeroEntregable del nombre del archivo
+          SaveDatos.NumeroEntregable = archivoIndividual.name.split("-")[0];
+          SaveDatos.URLArchivo = url;
         }
       }
     }
 
     await insertInto(SaveDatos, tipo);
-
     res.send("archivos enviados correctamente");
   } catch (error) {
     console.error("Error en dashboard:", error);
@@ -94,8 +261,7 @@ const dashboard = async (req, res) => {
   }
 };
 
-
-
+// Función auxiliar para subir archivo a OneDrive
 const moveupload = (
   tipo,
   imgs,
