@@ -256,8 +256,6 @@ userRouter.get(
       <body>
 
       </body>
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/actividades') 
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/Gastos') 
       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
         window.close();
@@ -265,6 +263,8 @@ userRouter.get(
       </html>
       `
    )
+  //    <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/actividades') 
+  //     <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/Gastos') 
   //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
   //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
 //    setTimeout(function() {
