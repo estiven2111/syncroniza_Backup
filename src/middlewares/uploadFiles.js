@@ -228,6 +228,7 @@ const dashboard = async (req, res) => {
           }
         }
       }
+      await insertInto(SaveDatos, tipo);
     } else if (tipo === "entregable") {
       // 👉 Procesamiento para entregables (archivos generales)
       for (const key in req.files) {
@@ -249,11 +250,12 @@ const dashboard = async (req, res) => {
           // Extraer NúmeroEntregable del nombre del archivo
           SaveDatos.NumeroEntregable = archivoIndividual.name.split("-")[0];
           SaveDatos.URLArchivo = url;
+          await insertInto(SaveDatos, tipo);
         }
       }
     }
 
-    await insertInto(SaveDatos, tipo);
+    
     res.send("archivos enviados correctamente");
   } catch (error) {
     console.error("Error en dashboard:", error);
