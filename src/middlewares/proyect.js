@@ -695,10 +695,10 @@ const AnticipoGastos = async (req, res) => {
   try {
     const { doc, sku } = req.body;
   
-console.log(doc, sku,"anticipooooooooooo")
+console.log(doc, sku,"anticipo")
      const datos = await sequelize.query(
       `
-    select A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
+    select A.Observaciones, A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
     WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
       {
         replacements: { doc: doc, sku: sku },
@@ -713,10 +713,11 @@ console.log(doc, sku,"anticipooooooooooo")
         Valor: datos.Valor,
         DetalleConcepto: datos.OP,
         IdCentroCostos: datos.Consecutivo,
+        Observaciones: datos.Observaciones,
         sku: datos.SKU,
       });
     });
-    console.log(objDatos,"anticipooooooooooo")
+    console.log(objDatos,"antici55555555555555555555555555555555555555555")
     res.send(objDatos);
   } catch (error) {
     res.json({ error: error });

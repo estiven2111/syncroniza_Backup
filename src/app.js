@@ -8,14 +8,31 @@ const sequelize = require("sequelize");
 // require("dotenv").config()
 const app = express();
 // app.use(cors());
-const optionCors = {
-    origin: "*",
-    methods: 'GET, POST, OPTIONS, PUT, DELETE',
-    allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
-    credentials: true
-  };
+// const optionCors = {
+//     origin: "*",
+//     methods: 'GET, POST, OPTIONS, PUT, DELETE',
+//     allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
+//     credentials: true
+//   };
   
-  app.use(cors(optionCors));
+//   app.use(cors(optionCors));
+
+const allowedOrigins = ["*",'http://localhost:3000', 'https://app.creame.com.co', 'http://localhost:4180','http://localhost:5000/user/api/proyect/ocr','https://app.creame.com.co/user/api/proyect/ocr'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Permite la solicitud
+    } else {
+      callback(new Error('Not allowed by CORS')); // Bloquea el origen
+    }
+  },
+  methods: 'GET, POST, OPTIONS, PUT, DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
   
 app.use(express.json());
 app.use(bodyParser.json());

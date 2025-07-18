@@ -1239,6 +1239,17 @@ Extrae la información de la siguiente imagen de factura. Devuelve SOLO el sigui
 
 ⚠️ REGLAS ESTRICTAS:
 
+1. !IMPORTANTE¡
+
+  Extrae el NIT del documento y verifica su existencia en registros públicos colombianos como la DIAN o RUES BUSCA EN LA RED BUSCA EN INTERNET EN LAS BASES DE DATOS.  
+- Si el NIT existe y está asociado a una razón social registrada, utiliza ese nombre como razón_social PERO UTILIZA EL NOMBRE QUE SALE EN LA RED EN EL CAMPO razon_social no lo pongas en el campo nombre o ponlo en las dos partes.  
+- Si el NIT no se encuentra en registros públicos, asigna como razón_social el nombre del emisor (persona natural) SOLO LA PERSONA NATURAL o el EMISOR que aparece en el documento.  
+  Devuélvelo como un campo llamado "razón_social".
+- en el campo razon_social no pongas corporacion incubadora de empresas esa no es razon social por que es a quien le estoy haciendo el desarrollo
+- en el campo razon_social siempre pon el que encuentres en la red si sale PERSONA NATURAL o el EMISOR pon esa pero no lo asocies a el nombre comercial 
+- si encuentras el nit y es PERSONA NATURAL pon el nombre de la persona natural que sale en la factura en el campo razon_social y nombre estos datos son el mismo
+- BUSCA SOLO CON EL NIT EN LA RED NO CON EL NOMBRE DEL COMERCIO SI LO ENCUETRAS SOLO CON EL NIT pones el nombre que sale si es persona natural o el emisor de la factura pones ese
+
 1. Todos los campos deben estar presentes. Si algún dato no está visible en la factura, deja el campo con comillas vacías: "".
 
 2. Usa exactamente los nombres de los campos indicados arriba, sin alterarlos.
@@ -1254,15 +1265,8 @@ debe ser el del emisor de la cuenta de cobro en el caso de debe a o pagar a o po
 
 6. El campo "doc" puede ser el mismo valor que el NIT o una cédula (también sin puntos ni letras).
 
-7. El campo "nombre" corresponde al nombre de la persona que emite o firma la factura o cuenta de cobro.
 
-8. El campo "razon_social":
-   - En facturas formales o electrónicas es la empresa que genera la factura  pero si tiene nombre legal del emisor pon este dandole prioridad.
-   - En cuentas de cobro, es quien aparece como “DEBE A PAGADO A TU SAVES COMO SALDRIA”.
-   - si sale corporacion incubadora de empresas no es la razon social por lo general si sale en cuentas de cobro se pone debe a o pagar a etc..
-   - primero evalua si sale el nombre legal del emisor de la factura ponlo dale prioridad
-   - no pongas corporacion incubadora de empresas esa no es razon social por que es a quien le estoy haciendo el desarrollo 
-   - si sale ARTESANOS DEL DULCE pon el nombre legal daniel martinez ceron no pongas ARTESANOS DEL DULCE
+   
 
 9. El campo "total" es el valor final pagado según la factura. No lo recalcules 
 
@@ -1335,14 +1339,18 @@ No lo supongas ni lo calcules.
    - Qué campos se encontraron correctamente.
    - Cuáles se dejaron vacíos y por qué.
    - Que el valor de "totalSinIva" es usado como subtotal únicamente si se detectó explícitamente en el documento.
-
+   - si buscaste el nit en las bases de datos de la DIAN o RUES y si lo encontraste o no pero buscalo en la red para determinar si es persona natural quien emite la factura.
+  - DIME SI BUSCASTE EL NIT EN LA RED EN LAS BASES DE DATOS DE LA DIAN O RUES Y SI LO ENCONTRASTE O NO Y DAME LA URL DE DONDE LO ENCONTRASTE  
+   - explicame por que me estas poniendo TEXTILES Y RETAZOS LOS PAISAS en razon_social
 27. NO INVENTES INFORMACIÓN. No supongas, no infieras, no completes campos vacíos con estimaciones. Extrae solo lo que esté presente en el documento.
 
 28. si es cuenta de cobro la razon social es debe a, pagado a el nit si no trae explicitamente el nit puede ser el RUT o la cedula y lo pones 
     en el campo nit de esa cuenta de cobro SOLO SI ES CUENTA DE COBRO SI ES OTRO TIPO FACTURA PONLO NORMAL 
 
-29. ACLARACIÓN FINAL DE CAMPOS:
+30. ACLARACIÓN FINAL DE CAMPOS:
  TODOS LOS VALORES DE PESOS DINERO ENTREGAMELOS SOLO CON LOS DECIMALES  "43000.00, 1000000.00" ES DECIR EL INC IPC ICUI ICA TOTAL TOTALSINIVA RETE 
+ pero no los pongas con , coma solo si trae decimales ponlos con decimales y puntos si trae decimales y puntos las , como ejemplo 130,335.55 asi no 
+ los pongas le quitas la , y pones solo 130335.55 NO ME PONGAS COMAS (,) SOLO .00 SI HAY DECIMALES LOS DE LA FACTURA 
  ADEMAS VALIDA BIEN LOS DATOS QUE SEAN CORRECTOS DEACUERDO A LO QUE ESTAS LEYENDO QUE SEAN LOS MISMOS DE LA FACTURAS 
  si la factura no trae decimales no los pongas si los trae si pero dame el numero exacto de los valores y todo el texto en general entiendela bien  
 - "nit": es el número de identificación tambien puede ser rut o cedula  del emisor, empresa o persona. Solo números.
@@ -1351,7 +1359,6 @@ No lo supongas ni lo calcules.
 - "doc": es la cédula o RUT del emisor. Solo números.
 - "total": es el valor final pagado en la factura. Nunca lo recalcules.
 - "totalSinIva": representa el SUBTOTAL. Solo se llena si aparece el valor explícitamente. No se calcula ni se infiere.
-- "nombre": nombre del emisor, firma o persona que factura.
 - "razon_social": empresa o persona que emite la factura si al lado aparece el nombre legal del emisor de la persona ponlo en vez de la empresa. En cuentas de cobro es quien aparece como "DEBE A, PAGADO A:" no incluyas corporacion incubadora de empresas no es razon_social.
 - "fecha": debe ir en formato DD/MM/YYYY el que trae la factura de cuando se genero dicha factura.
 - "iva": solo si aparece en el documento. Nunca lo supongas.
