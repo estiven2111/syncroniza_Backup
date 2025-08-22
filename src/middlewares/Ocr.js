@@ -320,7 +320,6 @@
 // numFact: Número de la factura.
 // concepto: Tipo de concepto (producto o servicio).
 
-
 //                 Texto: "${texto}"`,
 //             },
 //           ],
@@ -386,9 +385,7 @@
 
 // module.exports = Ocr;
 
-
-//todo 
-
+//todo
 
 // const fs = require("fs");
 // const fs_extra = require("fs-extra");
@@ -470,7 +467,6 @@
 //     base64Image = optimizedImageBuffer.toString("base64");
 //   }
 
-
 //      const prompt = `
 // Extrae la información de la siguiente imagen de factura. Devuelve SOLO el siguiente objeto JSON, sin explicaciones ni texto adicional:
 
@@ -527,21 +523,21 @@
 // 10. Devuelve solo el JSON. Sin texto fuera del objeto.
 
 // 11. no pongas los centavos solo deja el valor en pesos colombianos sin comas ni puntos,
-//  por ejemplo: "19000" y no "19.000,00" o "$19.000,00 omite los valores .00 ,00 o otro numero despues si es centavos 
+//  por ejemplo: "19000" y no "19.000,00" o "$19.000,00 omite los valores .00 ,00 o otro numero despues si es centavos
 
-// 12 pasame la orden de compra de la factura en campo texto no lo omitas si la factura lo trae solo la orden de compra y ponlo en el campo 
-// que te indique que es el NumFactura ponme ese dato ahi porfavor la orden de compra de la factura 
+// 12 pasame la orden de compra de la factura en campo texto no lo omitas si la factura lo trae solo la orden de compra y ponlo en el campo
+// que te indique que es el NumFactura ponme ese dato ahi porfavor la orden de compra de la factura
 
-// 13 en el campo de porcentaje_rete debes darme el dato del porcentaje que se aplica a la retefuente, 
+// 13 en el campo de porcentaje_rete debes darme el dato del porcentaje que se aplica a la retefuente,
 // por ejemplo: "2.5%" si es un producto, "4%" si es un servicio o "11%" si es un honorario,
 //  si no lo trae la factura dejalo vacio con comillas: "".
- 
+
 //  14.si la factura no trae el porcentaje y tu sabes cual es el porcentaje que se aplico por lo que la factura lo trae o no lo traiga y tu lo apliques
 //  deacuerdo al concepto agregamelo en el campo dl json en el campo de iva siempre necesito ese valor ahi si la factura no trae el concepto
-//  pero trae el iva deduce cual es el porcentaje que se aplico y ponlo en el campo porcentaje_rete pero si trae el concepto y el iva pon el 
-//  porcentaje que se aplico en cualquier caso sea que traiga el concepto o no o la retencion o no siempre ponlos sea calculado o sea que lo 
+//  pero trae el iva deduce cual es el porcentaje que se aplico y ponlo en el campo porcentaje_rete pero si trae el concepto y el iva pon el
+//  porcentaje que se aplico en cualquier caso sea que traiga el concepto o no o la retencion o no siempre ponlos sea calculado o sea que lo
 //  traiga eso si dale prioridad ala factura que si se ve el dato priorices ese dato sino lo tra calculalo eres un contador experto y
-//   sabes que hacer dejalo sin el simbolo % solo dame el valor no pongas el simbolo de porcentaje, recuerda no se te olvide el 
+//   sabes que hacer dejalo sin el simbolo % solo dame el valor no pongas el simbolo de porcentaje, recuerda no se te olvide el
 //   valor de la retefuente si la factura no lo trae aplicalo tu eres un contador experto y sabes que hacer si no lo trae la factura
 
 // 15. dame un campo porcentaje_iva dentro del json y pon el porcentaje que se aplico al iva de la factura,
@@ -550,16 +546,16 @@
 // 16. valida la factura si trae el valor del ica debes ponerlo en el campo ica es muy importante valida bien la facutra para
 // que no me falte este dato ya si no lo trae la factura ponlo vacio con comillas: "".
 
-// 17. valida la factura si trae el valor del ipc debes ponerlo en el campo ipc revisa bien la factura ya que 
-// no solo puede llegar como ipc sino tambien como inc o INC tu sabes como puede llegar valida bien toda la factura y ponme este 
+// 17. valida la factura si trae el valor del ipc debes ponerlo en el campo ipc revisa bien la factura ya que
+// no solo puede llegar como ipc sino tambien como inc o INC tu sabes como puede llegar valida bien toda la factura y ponme este
 // valor que es muy importante y si no lo trae la factura ponlo vacio con comillas: "".
 
-// 18. la razon social no es la empresa a la que le facturas es la empresa que te factura a ti, eres contador experto sabes 
-// cual es la razon social de una empresa y cual es el nit de la empresa que te factura a ti ese es el valor que debes poner 
+// 18. la razon social no es la empresa a la que le facturas es la empresa que te factura a ti, eres contador experto sabes
+// cual es la razon social de una empresa y cual es el nit de la empresa que te factura a ti ese es el valor que debes poner
 
-//  19. explicame que hiciste , en el campo explicativo textoExplicativo ingresalo dentro del json y explicame lo que haces como sacas los datos 
-//  explicamelo cortamente pero siempre explicame que hiciste y como lo hiciste, el porcentaje por que es el 19% que es el iva es por la norma colombiana 
-//  o por que dice la factura tambien dime por que sacaste el 19% en el campo del iva 
+//  19. explicame que hiciste , en el campo explicativo textoExplicativo ingresalo dentro del json y explicame lo que haces como sacas los datos
+//  explicamelo cortamente pero siempre explicame que hiciste y como lo hiciste, el porcentaje por que es el 19% que es el iva es por la norma colombiana
+//  o por que dice la factura tambien dime por que sacaste el 19% en el campo del iva
 // `;
 
 //   // 🎯 Llamar a Azure OpenAI
@@ -665,9 +661,6 @@
 // }
 
 // module.exports = Ocr;
-
-
-
 
 //todo ////////////////////////////////////
 
@@ -857,8 +850,6 @@
 // Recuerda, eres un contador experto, extrae solo lo que esté en la factura y realiza los cálculos si es necesario, con precisión contable.
 // `;
 
-
-
 //     const messages = [
 //       {
 //         role: "system",
@@ -952,7 +943,6 @@
 // //   address?.county
 // // ].find((val) => val && val.trim() !== "") || "";
 
-
 // //       codepostal = address?.postcode || "";
 
 // //       console.log("✅ MUNICIPIO DETECTADO:", municipio);
@@ -960,7 +950,6 @@
 // //     } catch (err) {
 // //       console.warn("⚠️ Error al obtener municipio y código postal:", err.message);
 // //     }
-
 
 // let municipio = "";
 // let codepostal = "";
@@ -1035,19 +1024,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //     // 📍 Obtener municipio y código postal usando SOLO el municipio (sin direccion_detectada)
 // // let municipio = "";
 // // let codepostal = "";
@@ -1086,7 +1062,6 @@
 // // } catch (err) {
 // //   console.warn("⚠️ Error al obtener municipio y código postal:", err.message);
 // // }
-
 
 //     const cleanNumber = (val) =>
 //       val && typeof val === "string" ? val.replace(/[^\d]/g, "") : val;
@@ -1136,13 +1111,7 @@
 
 // module.exports = Ocr;
 
-
-
-
 //todo ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
 
 // OCR.js
 const fs = require("fs");
@@ -1150,7 +1119,9 @@ const fs_extra = require("fs-extra");
 const path = require("path");
 const axios = require("axios");
 const sharp = require("sharp");
-const { ComputerVisionClient } = require("@azure/cognitiveservices-computervision");
+const {
+  ComputerVisionClient,
+} = require("@azure/cognitiveservices-computervision");
 const { ApiKeyCredentials } = require("@azure/ms-rest-js");
 
 const { apiKey, apiUrl, key, endpoint } = process.env;
@@ -1197,41 +1168,41 @@ async function Ocr(req, res) {
       //   .toBuffer();
       const metadata = await sharp(uploadPath).metadata();
 
-const optimizedImageBuffer = await sharp(uploadPath)
-  .resize(metadata.width > 3000 ? { width: 3000 } : null) // Solo redimensiona si es mayor
-  .normalize()
-  .sharpen()
-  .jpeg({ quality: 100 })
-  .toBuffer();
+      const optimizedImageBuffer = await sharp(uploadPath)
+        .resize(metadata.width > 3000 ? { width: 3000 } : null) // Solo redimensiona si es mayor
+        .normalize()
+        .sharpen()
+        .jpeg({ quality: 100 })
+        .toBuffer();
 
       base64Image = optimizedImageBuffer.toString("base64");
     }
-// todo verificar este prompt para mejorar los tokens y la extraccion de datos
+    // todo verificar este prompt para mejorar los tokens y la extraccion de datos
 
-//     Extrae solo los datos solicitados, sin escribir etiquetas. Si no hay datos, responde "No encontrado". Usa lógica OCR para deducir variaciones. Los campos a extraer son:
+    //     Extrae solo los datos solicitados, sin escribir etiquetas. Si no hay datos, responde "No encontrado". Usa lógica OCR para deducir variaciones. Los campos a extraer son:
 
-// - NIT o Cédula
-// - Número de factura
-// - Subtotal
-// - Total
-// - Valor del impuesto al consumo
-// - Valor del rete ICA
-// - Concepto del servicio o producto
-// - Razón social del emisor
-// - Receptor o destinatario de la factura
+    // - NIT o Cédula
+    // - Número de factura
+    // - Subtotal
+    // - Total
+    // - Valor del impuesto al consumo
+    // - Valor del rete ICA
+    // - Concepto del servicio o producto
+    // - Razón social del emisor
+    // - Receptor o destinatario de la factura
 
-// Instrucciones:
-// - No incluyas palabras como “valor”, “COP”, “$”, “IVA”, etc.
-// - Extrae solo números puros (sin puntos, comas o símbolos).
-// - Si un campo tiene varias coincidencias, elige la más clara y completa.
-// - En caso de subtotal y total, prioriza líneas que contengan explícitamente esas palabras (incluso si están mal escritas como “subttal” o “totl”).
-// - Para NIT/Cédula, busca formatos tipo 10, 11, 13 dígitos seguidos o con guiones.
-// - Si hay más de un número similar a NIT, elige el que esté junto a palabras como “empresa”, “emisor”, “proveedor”, “cliente”.
-// - El concepto del servicio debe ser una frase que explique el producto o servicio cobrado. Si no está claro, responde “No encontrado”.
+    // Instrucciones:
+    // - No incluyas palabras como “valor”, “COP”, “$”, “IVA”, etc.
+    // - Extrae solo números puros (sin puntos, comas o símbolos).
+    // - Si un campo tiene varias coincidencias, elige la más clara y completa.
+    // - En caso de subtotal y total, prioriza líneas que contengan explícitamente esas palabras (incluso si están mal escritas como “subttal” o “totl”).
+    // - Para NIT/Cédula, busca formatos tipo 10, 11, 13 dígitos seguidos o con guiones.
+    // - Si hay más de un número similar a NIT, elige el que esté junto a palabras como “empresa”, “emisor”, “proveedor”, “cliente”.
+    // - El concepto del servicio debe ser una frase que explique el producto o servicio cobrado. Si no está claro, responde “No encontrado”.
 
-// Responde en formato JSON limpio, sin explicación ni título.
+    // Responde en formato JSON limpio, sin explicación ni título.
 
-const prompt = `
+    const prompt = `
 Extract all relevant information from the provided invoice image. Return only the following JSON object, with no extra explanations or text:
 
 {
@@ -1359,186 +1330,179 @@ No commas (",") for thousands. E.g., "130335.55" not "130,335.55"
 No decimals if the value doesn’t include them on the invoice
 
 Validate and understand the document carefully. Use correct values, formats, and interpretations.
-`
+`;
 
-// const prompt = `
-// Extrae la información de la siguiente imagen de factura. Devuelve SOLO el siguiente objeto JSON, sin explicaciones ni texto adicional:
+    // const prompt = `
+    // Extrae la información de la siguiente imagen de factura. Devuelve SOLO el siguiente objeto JSON, sin explicaciones ni texto adicional:
 
-// {
-//   "nit": "",
-//   "NumFactura": "",
-//   "OrdenCompra": "",
-//   "doc": "",
-//   "total": "",
-//   "totalSinIva": "",
-//   "nombre": "",
-//   "razon_social": "",
-//   "fecha": "",
-//   "iva": "",
-//   "rete": "",
-//   "porcentaje_rete": "",
-//   "ipc": "",
-//   "concepto": "",
-//   "ica": "",
-//   "municipio": "",
-//   "codepostal": "",
-//   "porcentaje_iva": "",
-//   "textoExplicativo": "",
-//   "tipo_factura": "",
-//   "direccion_detectada": "",
-//   "ciudad_detectada": "",
-//   "detalles_compra": "",
-//   "icui": "",
-//   "porcentaje_icui": ""
-// }
+    // {
+    //   "nit": "",
+    //   "NumFactura": "",
+    //   "OrdenCompra": "",
+    //   "doc": "",
+    //   "total": "",
+    //   "totalSinIva": "",
+    //   "nombre": "",
+    //   "razon_social": "",
+    //   "fecha": "",
+    //   "iva": "",
+    //   "rete": "",
+    //   "porcentaje_rete": "",
+    //   "ipc": "",
+    //   "concepto": "",
+    //   "ica": "",
+    //   "municipio": "",
+    //   "codepostal": "",
+    //   "porcentaje_iva": "",
+    //   "textoExplicativo": "",
+    //   "tipo_factura": "",
+    //   "direccion_detectada": "",
+    //   "ciudad_detectada": "",
+    //   "detalles_compra": "",
+    //   "icui": "",
+    //   "porcentaje_icui": ""
+    // }
 
-// ⚠️ REGLAS ESTRICTAS:
+    // ⚠️ REGLAS ESTRICTAS:
 
-// 1. !IMPORTANTE¡
+    // 1. !IMPORTANTE¡
 
-//   Extrae el NIT del documento y verifica su existencia en registros públicos colombianos como la DIAN o RUES BUSCA EN LA RED BUSCA EN INTERNET EN LAS BASES DE DATOS.  
-// - Si el NIT existe y está asociado a una razón social registrada, utiliza ese nombre como razón_social PERO UTILIZA EL NOMBRE QUE SALE EN LA RED EN EL CAMPO razon_social no lo pongas en el campo nombre o ponlo en las dos partes.  
-// - Si el NIT no se encuentra en registros públicos, asigna como razón_social el nombre del emisor (persona natural) SOLO LA PERSONA NATURAL o el EMISOR que aparece en el documento.  
-//   Devuélvelo como un campo llamado "razón_social".
-// - en el campo razon_social no pongas corporacion incubadora de empresas esa no es razon social por que es a quien le estoy haciendo el desarrollo
-// - en el campo razon_social siempre pon el que encuentres en la red si sale PERSONA NATURAL o el EMISOR pon esa pero no lo asocies a el nombre comercial 
-// - si encuentras el nit y es PERSONA NATURAL pon el nombre de la persona natural que sale en la factura en el campo razon_social y nombre estos datos son el mismo
-// - BUSCA SOLO CON EL NIT EN LA RED NO CON EL NOMBRE DEL COMERCIO SI LO ENCUETRAS SOLO CON EL NIT pones el nombre que sale si es persona natural o el emisor de la factura pones ese
+    //   Extrae el NIT del documento y verifica su existencia en registros públicos colombianos como la DIAN o RUES BUSCA EN LA RED BUSCA EN INTERNET EN LAS BASES DE DATOS.
+    // - Si el NIT existe y está asociado a una razón social registrada, utiliza ese nombre como razón_social PERO UTILIZA EL NOMBRE QUE SALE EN LA RED EN EL CAMPO razon_social no lo pongas en el campo nombre o ponlo en las dos partes.
+    // - Si el NIT no se encuentra en registros públicos, asigna como razón_social el nombre del emisor (persona natural) SOLO LA PERSONA NATURAL o el EMISOR que aparece en el documento.
+    //   Devuélvelo como un campo llamado "razón_social".
+    // - en el campo razon_social no pongas corporacion incubadora de empresas esa no es razon social por que es a quien le estoy haciendo el desarrollo
+    // - en el campo razon_social siempre pon el que encuentres en la red si sale PERSONA NATURAL o el EMISOR pon esa pero no lo asocies a el nombre comercial
+    // - si encuentras el nit y es PERSONA NATURAL pon el nombre de la persona natural que sale en la factura en el campo razon_social y nombre estos datos son el mismo
+    // - BUSCA SOLO CON EL NIT EN LA RED NO CON EL NOMBRE DEL COMERCIO SI LO ENCUETRAS SOLO CON EL NIT pones el nombre que sale si es persona natural o el emisor de la factura pones ese
 
-// 1. Todos los campos deben estar presentes. Si algún dato no está visible en la factura, deja el campo con comillas vacías: "".
+    // 1. Todos los campos deben estar presentes. Si algún dato no está visible en la factura, deja el campo con comillas vacías: "".
 
-// 2. Usa exactamente los nombres de los campos indicados arriba, sin alterarlos.
+    // 2. Usa exactamente los nombres de los campos indicados arriba, sin alterarlos.
 
-// 3. Para los valores numéricos:
-//    - entregamelos como vienen en la factura sin el signo de pesos pero si con , y o puntos ademas de sus decimales
-   
+    // 3. Para los valores numéricos:
+    //    - entregamelos como vienen en la factura sin el signo de pesos pero si con , y o puntos ademas de sus decimales
 
-// 4. El campo "fecha" debe ir en formato DD/MM/YYYY. Si está visible, siempre debes ponerlo.
+    // 4. El campo "fecha" debe ir en formato DD/MM/YYYY. Si está visible, siempre debes ponerlo.
 
-// 5. El campo "nit" debe contener solo números (sin guiones ni dígito de verificación) seria el de la razon social si es una cuenta de cobro 
-// debe ser el del emisor de la cuenta de cobro en el caso de debe a o pagar a o por defecto ademas puede ser el nit o puede ser el rut o la cedula.
+    // 5. El campo "nit" debe contener solo números (sin guiones ni dígito de verificación) seria el de la razon social si es una cuenta de cobro
+    // debe ser el del emisor de la cuenta de cobro en el caso de debe a o pagar a o por defecto ademas puede ser el nit o puede ser el rut o la cedula.
 
-// 6. El campo "doc" puede ser el mismo valor que el NIT o una cédula (también sin puntos ni letras).
+    // 6. El campo "doc" puede ser el mismo valor que el NIT o una cédula (también sin puntos ni letras).
 
+    // 9. El campo "total" es el valor final pagado según la factura. No lo recalcules
 
-   
+    // 10. El campo "totalSinIva" representa el SUBTOTAL O TOTAL BRUTO O TU SABES CUAL SERIA EL SUBTOTAL EN UNA FACTURA si y
+    //  solo si aparece explícitamente con nombres como: “Subtotal”, “Total sin IVA”, “Valor antes de IVA” ,“TOTAL BRUTO”.
+    //    - Si no aparece, deja el campo como "".
+    //    - Nunca lo calcules ni lo infieras.
+    //    - Este campo es importante verifica bien si esta sino dejalo vacio "".
 
-// 9. El campo "total" es el valor final pagado según la factura. No lo recalcules 
+    // 11. El campo "iva" debe extraerse únicamente si aparece explícito en la factura. Nunca lo calcules ni lo estimes.
+    //   - si hay varios items que lo traen solo pon el del final de la factura si trae varios y no se especifica cual es el
+    //     iva total no lo pongas lo dejas vacio por lo general viene siempre
 
-// 10. El campo "totalSinIva" representa el SUBTOTAL O TOTAL BRUTO O TU SABES CUAL SERIA EL SUBTOTAL EN UNA FACTURA si y
-//  solo si aparece explícitamente con nombres como: “Subtotal”, “Total sin IVA”, “Valor antes de IVA” ,“TOTAL BRUTO”.
-//    - Si no aparece, deja el campo como "".
-//    - Nunca lo calcules ni lo infieras. 
-//    - Este campo es importante verifica bien si esta sino dejalo vacio "".
-   
+    // 12. El campo "porcentaje_iva" debe tener siempre el valor oficial vigente en Colombia:
+    //    - En el año 2025, debe ser "19".
+    //    - si cambiamos de año siempre pon el vigente segun la ley colombiana
 
-// 11. El campo "iva" debe extraerse únicamente si aparece explícito en la factura. Nunca lo calcules ni lo estimes.
-//   - si hay varios items que lo traen solo pon el del final de la factura si trae varios y no se especifica cual es el 
-//     iva total no lo pongas lo dejas vacio por lo general viene siempre 
+    // 13. El campo "rete":
+    //    - Si aparece explícitamente en la factura (por ejemplo: “RETE FUENTE: 37.065,88”), usa ese valor limpio con decimales y puntos si trae.
+    //    - Si no aparece deja el campo vacio
 
-// 12. El campo "porcentaje_iva" debe tener siempre el valor oficial vigente en Colombia:
-//    - En el año 2025, debe ser "19".
-//    - si cambiamos de año siempre pon el vigente segun la ley colombiana
+    // 14. El campo "porcentaje_rete" se refiere al porcentaje de la retefuente solo si aparece ponlo sino dejalo vacio
 
-// 13. El campo "rete":
-//    - Si aparece explícitamente en la factura (por ejemplo: “RETE FUENTE: 37.065,88”), usa ese valor limpio con decimales y puntos si trae.
-//    - Si no aparece deja el campo vacio
+    // 15. El campo "ipc" (o INC u otros similares pero no es el ICUI) debe incluirse solo si aparece explícitamente.
+    // No lo supongas ni lo calcules.
 
-// 14. El campo "porcentaje_rete" se refiere al porcentaje de la retefuente solo si aparece ponlo sino dejalo vacio
+    // 16. El campo "concepto" debe contener uno de los siguientes valores: "producto", "servicio", "honorario" o "".
+    //    - Determínalo a partir de la descripción o tipo de ítems facturados.
 
-// 15. El campo "ipc" (o INC u otros similares pero no es el ICUI) debe incluirse solo si aparece explícitamente. 
-// No lo supongas ni lo calcules. 
+    // 17. El campo "ica" se debe extraer solo si aparece explícitamente. No lo calcules ni lo asumas.
 
-// 16. El campo "concepto" debe contener uno de los siguientes valores: "producto", "servicio", "honorario" o "".
-//    - Determínalo a partir de la descripción o tipo de ítems facturados.
+    // 18. El campo "OrdenCompra" debe contener únicamente el número de la orden de compra (si aparece con nombres como: "Orden de compra", "OC", "PO", "Purchase Order", "Orden #").
+    //    - Nunca lo confundas con el número de factura.
+    //    - Si no aparece, deja su valor como "".
 
-// 17. El campo "ica" se debe extraer solo si aparece explícitamente. No lo calcules ni lo asumas.
-    
+    // 19. El campo "NumFactura" debe contener el número de la factura únicamente. Puede aparecer como: "Factura No.", "Factura #", etc.
+    //    - Nunca lo confundas con órdenes de compra, remisiones o guías ADEMAS PON SI TRAE UN PREFIJO LO PONES COMO POR EJEMPLO (FT).
 
-// 18. El campo "OrdenCompra" debe contener únicamente el número de la orden de compra (si aparece con nombres como: "Orden de compra", "OC", "PO", "Purchase Order", "Orden #").
-//    - Nunca lo confundas con el número de factura.
-//    - Si no aparece, deja su valor como "".
+    // 20. El campo "tipo_factura":
+    //    - "electronica": si hay CUFE, QR, validación DIAN, etc.
+    //    - "formal": si es física, con logo, resolución DIAN y estructura clara.
+    //    - "comprobante": si es un recibo simple, escrito a mano o sin estructura oficial o cuenta de cobro.
 
-// 19. El campo "NumFactura" debe contener el número de la factura únicamente. Puede aparecer como: "Factura No.", "Factura #", etc.
-//    - Nunca lo confundas con órdenes de compra, remisiones o guías ADEMAS PON SI TRAE UN PREFIJO LO PONES COMO POR EJEMPLO (FT).
+    // 21. El campo "direccion_detectada":
+    //    - Debe ser la dirección estructurada del emisor, priorizando formatos urbanos como: KR, CL, AV, CRA, con # y números.
+    //    - Si no hay dirección estructurada, puedes usar: "CC", "Edificio", "Zona empresarial", etc.
+    //    - Si no se detecta nada válido, deja el campo como "".
 
-// 20. El campo "tipo_factura":
-//    - "electronica": si hay CUFE, QR, validación DIAN, etc.
-//    - "formal": si es física, con logo, resolución DIAN y estructura clara.
-//    - "comprobante": si es un recibo simple, escrito a mano o sin estructura oficial o cuenta de cobro.
+    // 22. El campo "municipio" debe ser el nombre de la ciudad o municipio del emisor. Ej: "Medellín", "Bogotá". No pongas zonas ni barrios.
 
-// 21. El campo "direccion_detectada":
-//    - Debe ser la dirección estructurada del emisor, priorizando formatos urbanos como: KR, CL, AV, CRA, con # y números.
-//    - Si no hay dirección estructurada, puedes usar: "CC", "Edificio", "Zona empresarial", etc.
-//    - Si no se detecta nada válido, deja el campo como "".
+    // 23. El campo "codepostal" debe ser el código postal del municipio detectado. Si no puedes determinarlo, deja vacío.
 
-// 22. El campo "municipio" debe ser el nombre de la ciudad o municipio del emisor. Ej: "Medellín", "Bogotá". No pongas zonas ni barrios.
+    // 24. El campo "icui" es el impuesto a productos ultraprocesados. Solo inclúyelo si:
+    //    - Aparece explícitamente en la factura sino aparece dejalo vacio ""
+    //    - ICUI NO ES EL IPC
 
-// 23. El campo "codepostal" debe ser el código postal del municipio detectado. Si no puedes determinarlo, deja vacío.
+    // 25. El campo "detalles_compra" debe contener los ítems comprados como texto separado por comas:
+    //    - Ejemplo: "impresora, mouse, monitor".
+    //    - Extrae los ítems desde los campos de descripción, concepto o productos.
+    //    - No incluyas precios, cantidades, totales ni formas de pago.
+    //    - Si no se detectan ítems válidos, deja el campo como "".
+    //    - tambien puede aparecer como concepto  , descripcion en facturas formales electronicas o no formales pero trata de
+    //      determinar que fue lo que se compro o que se esta pagando
+    //    - en cuentas de cobro puede aparecer como por concepto de: o observaciones o determina que es lo qque se explica
 
-// 24. El campo "icui" es el impuesto a productos ultraprocesados. Solo inclúyelo si:
-//    - Aparece explícitamente en la factura sino aparece dejalo vacio ""
-//    - ICUI NO ES EL IPC 
-   
+    // 26. El campo "textoExplicativo" debe explicar:
+    //    - Qué campos se encontraron correctamente.
+    //    - Cuáles se dejaron vacíos y por qué.
+    //    - Que el valor de "totalSinIva" es usado como subtotal únicamente si se detectó explícitamente en el documento.
+    //    - si buscaste el nit en las bases de datos de la DIAN o RUES y si lo encontraste o no pero buscalo en la red para determinar si es persona natural quien emite la factura.
+    //   - DIME SI BUSCASTE EL NIT EN LA RED EN LAS BASES DE DATOS DE LA DIAN O RUES Y SI LO ENCONTRASTE O NO Y DAME LA URL DE DONDE LO ENCONTRASTE
+    //    - explicame por que me estas poniendo TEXTILES Y RETAZOS LOS PAISAS en razon_social
+    // 27. NO INVENTES INFORMACIÓN. No supongas, no infieras, no completes campos vacíos con estimaciones. Extrae solo lo que esté presente en el documento.
 
-// 25. El campo "detalles_compra" debe contener los ítems comprados como texto separado por comas:
-//    - Ejemplo: "impresora, mouse, monitor".
-//    - Extrae los ítems desde los campos de descripción, concepto o productos.
-//    - No incluyas precios, cantidades, totales ni formas de pago.
-//    - Si no se detectan ítems válidos, deja el campo como "".
-//    - tambien puede aparecer como concepto  , descripcion en facturas formales electronicas o no formales pero trata de 
-//      determinar que fue lo que se compro o que se esta pagando 
-//    - en cuentas de cobro puede aparecer como por concepto de: o observaciones o determina que es lo qque se explica
+    // 28. si es cuenta de cobro la razon social es debe a, pagado a el nit si no trae explicitamente el nit puede ser el RUT o la cedula y lo pones
+    //     en el campo nit de esa cuenta de cobro SOLO SI ES CUENTA DE COBRO SI ES OTRO TIPO FACTURA PONLO NORMAL
 
-// 26. El campo "textoExplicativo" debe explicar:
-//    - Qué campos se encontraron correctamente.
-//    - Cuáles se dejaron vacíos y por qué.
-//    - Que el valor de "totalSinIva" es usado como subtotal únicamente si se detectó explícitamente en el documento.
-//    - si buscaste el nit en las bases de datos de la DIAN o RUES y si lo encontraste o no pero buscalo en la red para determinar si es persona natural quien emite la factura.
-//   - DIME SI BUSCASTE EL NIT EN LA RED EN LAS BASES DE DATOS DE LA DIAN O RUES Y SI LO ENCONTRASTE O NO Y DAME LA URL DE DONDE LO ENCONTRASTE  
-//    - explicame por que me estas poniendo TEXTILES Y RETAZOS LOS PAISAS en razon_social
-// 27. NO INVENTES INFORMACIÓN. No supongas, no infieras, no completes campos vacíos con estimaciones. Extrae solo lo que esté presente en el documento.
+    // 30. ACLARACIÓN FINAL DE CAMPOS:
+    //  TODOS LOS VALORES DE PESOS DINERO ENTREGAMELOS SOLO CON LOS DECIMALES  "43000.00, 1000000.00" ES DECIR EL INC IPC ICUI ICA TOTAL TOTALSINIVA RETE
+    //  pero no los pongas con , coma solo si trae decimales ponlos con decimales y puntos si trae decimales y puntos las , como ejemplo 130,335.55 asi no
+    //  los pongas le quitas la , y pones solo 130335.55 NO ME PONGAS COMAS (,) SOLO .00 SI HAY DECIMALES LOS DE LA FACTURA
+    //  ADEMAS VALIDA BIEN LOS DATOS QUE SEAN CORRECTOS DEACUERDO A LO QUE ESTAS LEYENDO QUE SEAN LOS MISMOS DE LA FACTURAS
+    //  si la factura no trae decimales no los pongas si los trae si pero dame el numero exacto de los valores y todo el texto en general entiendela bien
+    // - "nit": es el número de identificación tambien puede ser rut o cedula  del emisor, empresa o persona. Solo números.
+    // - "NumFactura": es el número oficial de la factura (no la OC).
+    // - "OrdenCompra": si aparece, se pone. Si no, se deja vacío.
+    // - "doc": es la cédula o RUT del emisor. Solo números.
+    // - "total": es el valor final pagado en la factura. Nunca lo recalcules.
+    // - "totalSinIva": representa el SUBTOTAL. Solo se llena si aparece el valor explícitamente. No se calcula ni se infiere.
+    // - "razon_social": empresa o persona que emite la factura si al lado aparece el nombre legal del emisor de la persona ponlo en vez de la empresa. En cuentas de cobro es quien aparece como "DEBE A, PAGADO A:" no incluyas corporacion incubadora de empresas no es razon_social.
+    // - "fecha": debe ir en formato DD/MM/YYYY el que trae la factura de cuando se genero dicha factura.
+    // - "iva": solo si aparece en el documento. Nunca lo supongas.
+    // - "rete": la retefuente solo si aparece lo pones sino dejalo vacio.
+    // - "porcentaje_rete": si aparece el porcentaje de la retefuente en la factura
+    // - "ipc": si aparece INC o similar, lo colocas. Si no, lo dejas vacío.
+    // - "concepto": "producto", "servicio", "honorario", o demas lo que traiga la factura sino lo puedes determinar dejalo vacio "".
+    // - "ica": solo si aparece, no lo calcules.
+    // - "municipio": ciudad del emisor. Ej: "Medellín".
+    // - "codepostal": código postal correspondiente. Si no se puede determinar, deja vacío.
+    // - "porcentaje_iva": "19" para el año 2025 o si se cambia segun la ley colombiana del año que este valida.
+    // - "textoExplicativo": explica lo que encontraste, lo que no, y qué hiciste.
+    // - "tipo_factura": "electronica", "formal" o "comprobante".
+    // - "direccion_detectada": dirección estructurada o establecimiento del emisor.
+    // - "ciudad_detectada": municipio o ciudad del emisor.
+    // - "detalles_compra": lista separada por comas de los ítems comprados.
+    // - "icui": impuesto saludable si aplica. Solo si es explícito o calculable según lo comprado y año.
+    // - "porcentaje_icui": "20%" si aplica en 2025. Si no, deja vacío.
 
-// 28. si es cuenta de cobro la razon social es debe a, pagado a el nit si no trae explicitamente el nit puede ser el RUT o la cedula y lo pones 
-//     en el campo nit de esa cuenta de cobro SOLO SI ES CUENTA DE COBRO SI ES OTRO TIPO FACTURA PONLO NORMAL 
-
-// 30. ACLARACIÓN FINAL DE CAMPOS:
-//  TODOS LOS VALORES DE PESOS DINERO ENTREGAMELOS SOLO CON LOS DECIMALES  "43000.00, 1000000.00" ES DECIR EL INC IPC ICUI ICA TOTAL TOTALSINIVA RETE 
-//  pero no los pongas con , coma solo si trae decimales ponlos con decimales y puntos si trae decimales y puntos las , como ejemplo 130,335.55 asi no 
-//  los pongas le quitas la , y pones solo 130335.55 NO ME PONGAS COMAS (,) SOLO .00 SI HAY DECIMALES LOS DE LA FACTURA 
-//  ADEMAS VALIDA BIEN LOS DATOS QUE SEAN CORRECTOS DEACUERDO A LO QUE ESTAS LEYENDO QUE SEAN LOS MISMOS DE LA FACTURAS 
-//  si la factura no trae decimales no los pongas si los trae si pero dame el numero exacto de los valores y todo el texto en general entiendela bien  
-// - "nit": es el número de identificación tambien puede ser rut o cedula  del emisor, empresa o persona. Solo números.
-// - "NumFactura": es el número oficial de la factura (no la OC).
-// - "OrdenCompra": si aparece, se pone. Si no, se deja vacío.
-// - "doc": es la cédula o RUT del emisor. Solo números.
-// - "total": es el valor final pagado en la factura. Nunca lo recalcules.
-// - "totalSinIva": representa el SUBTOTAL. Solo se llena si aparece el valor explícitamente. No se calcula ni se infiere.
-// - "razon_social": empresa o persona que emite la factura si al lado aparece el nombre legal del emisor de la persona ponlo en vez de la empresa. En cuentas de cobro es quien aparece como "DEBE A, PAGADO A:" no incluyas corporacion incubadora de empresas no es razon_social.
-// - "fecha": debe ir en formato DD/MM/YYYY el que trae la factura de cuando se genero dicha factura.
-// - "iva": solo si aparece en el documento. Nunca lo supongas.
-// - "rete": la retefuente solo si aparece lo pones sino dejalo vacio.
-// - "porcentaje_rete": si aparece el porcentaje de la retefuente en la factura
-// - "ipc": si aparece INC o similar, lo colocas. Si no, lo dejas vacío.
-// - "concepto": "producto", "servicio", "honorario", o demas lo que traiga la factura sino lo puedes determinar dejalo vacio "".
-// - "ica": solo si aparece, no lo calcules.
-// - "municipio": ciudad del emisor. Ej: "Medellín".
-// - "codepostal": código postal correspondiente. Si no se puede determinar, deja vacío.
-// - "porcentaje_iva": "19" para el año 2025 o si se cambia segun la ley colombiana del año que este valida.
-// - "textoExplicativo": explica lo que encontraste, lo que no, y qué hiciste.
-// - "tipo_factura": "electronica", "formal" o "comprobante".
-// - "direccion_detectada": dirección estructurada o establecimiento del emisor.
-// - "ciudad_detectada": municipio o ciudad del emisor.
-// - "detalles_compra": lista separada por comas de los ítems comprados.
-// - "icui": impuesto saludable si aplica. Solo si es explícito o calculable según lo comprado y año.
-// - "porcentaje_icui": "20%" si aplica en 2025. Si no, deja vacío.
-
-
-// // `
+    // // `
     const messages = [
       {
         role: "system",
-        content: "Eres un experto en contabilidad que extrae datos de facturas de manera excepcional sin fallas.",
+        content:
+          "Eres un experto en contabilidad que extrae datos de facturas de manera excepcional sin fallas.",
       },
       { role: "user", content: prompt },
     ];
@@ -1567,7 +1531,7 @@ Validate and understand the document carefully. Use correct values, formats, and
 
     const content = response.data.choices[0].message.content.trim();
     let datos = {};
-  console.log(content,"contenido de la IA");
+    console.log(content, "contenido de la IA");
     try {
       const jsonClean = content
         .replace(/^```json/i, "")
@@ -1588,29 +1552,32 @@ Validate and understand the document carefully. Use correct values, formats, and
 
     const direccion = datos?.direccion_detectada || "";
     const ciudad = datos?.ciudad_detectada || "";
-    const direccionCompleta = direccion && ciudad
-      ? `${direccion}, ${ciudad}`
-      : direccion
+    const direccionCompleta =
+      direccion && ciudad
+        ? `${direccion}, ${ciudad}`
+        : direccion
         ? `${direccion}`
         : "";
 
     if (direccionCompleta) {
       try {
-        const geoUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccionCompleta)}&format=json&addressdetails=1&limit=1`;
+        const geoUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          direccionCompleta
+        )}&format=json&addressdetails=1&limit=1`;
 
         const geoResponse = await axios.get(geoUrl, {
           headers: { "User-Agent": "TuAplicacion/1.0 (tu_email@ejemplo.com)" },
         });
 
-        const geoData = Array.isArray(geoResponse.data) ? geoResponse.data[0] : geoResponse.data;
+        const geoData = Array.isArray(geoResponse.data)
+          ? geoResponse.data[0]
+          : geoResponse.data;
         const address = geoData?.address;
 
-        municipio = [
-          ciudad,
-          address?.city,
-          address?.town,
-          address?.county
-        ].find(val => val && val.trim() !== "") || "";
+        municipio =
+          [ciudad, address?.city, address?.town, address?.county].find(
+            (val) => val && val.trim() !== ""
+          ) || "";
 
         codepostal = address?.postcode || "";
       } catch (err) {
@@ -1626,15 +1593,17 @@ Validate and understand the document carefully. Use correct values, formats, and
         const geoData = geoResponse.data;
         const address = geoData?.address;
 
-        municipio = [
-          address?.city,
-          address?.town,
-          address?.county
-        ].find(val => val && val.trim() !== "") || "";
+        municipio =
+          [address?.city, address?.town, address?.county].find(
+            (val) => val && val.trim() !== ""
+          ) || "";
 
         codepostal = address?.postcode || "";
       } catch (err) {
-        console.warn("⚠️ Error con geolocalización por latitud/longitud:", err.message);
+        console.warn(
+          "⚠️ Error con geolocalización por latitud/longitud:",
+          err.message
+        );
       }
     }
 
@@ -1642,7 +1611,7 @@ Validate and understand the document carefully. Use correct values, formats, and
       val && typeof val === "string" ? val.replace(/[^\d]/g, "") : val;
 
     const nitLimpio = datos.nit ? datos.nit.split("-")[0] : "";
-console.log(datos,"datos de la IA");
+    console.log(datos, "datos de la IA");
     const resultadoFinal = {
       nit: nitLimpio || "",
       NumFactura: datos.NumFactura || "",
@@ -1668,14 +1637,17 @@ console.log(datos,"datos de la IA");
       ciudad_detectada: datos.ciudad_detectada || "",
       icui: datos.icui || "",
       porcentaje_icui: datos.porcentaje_icui || "",
-      concepto: datos.detalles_compra || ""
+      concepto: datos.detalles_compra || "",
     };
 
     console.log(resultadoFinal);
     await eliminar(uploadPath);
     return res.json(resultadoFinal);
   } catch (error) {
-    console.error("❌ Error en Azure OpenAI:", error?.response?.data || error.message);
+    console.error(
+      "❌ Error en Azure OpenAI:",
+      error?.response?.data || error.message
+    );
     await eliminar(uploadPath);
     return res.status(500).json({ error: "Error al procesar con IA" });
   }
