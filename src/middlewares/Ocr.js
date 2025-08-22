@@ -1293,7 +1293,7 @@ Date format: DD/MM/YYYY.
 "iva": only if explicitly mentioned as VAT. Never calculate or infer. Use the final value, not per item.
 If a field such as “Total Imp.” appears, it must be understood as IPC (consumption tax) and not as VAT.
 
-"porcentaje_iva": Always "19" for 2025 unless Colombian law changes.
+"porcentaje_iva": Always "19" for 2025 unless Colombian law changes. 
 
 "rete": include only if explicitly shown (e.g., "RETE FUENTE: 37.065,88"). Format properly.
 
