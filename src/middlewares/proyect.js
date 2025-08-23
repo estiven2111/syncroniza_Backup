@@ -696,25 +696,41 @@ const AnticipoGastos = async (req, res) => {
     const { doc, sku } = req.body;
   
 console.log(doc, sku,"anticipo")
+    //  const datos = await sequelize.query(
+    //   `
+    // select A.Observaciones, A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
+    // WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
+    //   {
+    //     replacements: { doc: doc, sku: sku },
+    //     type: sequelize.QueryTypes.SELECT,
+    //   }
+    // );
      const datos = await sequelize.query(
       `
-    select A.Observaciones, A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
-    WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
+    select A.Id,A.NumeroDocumento
+from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
+where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1`,
       {
         replacements: { doc: doc, sku: sku },
         type: sequelize.QueryTypes.SELECT,
       }
     );
     let objDatos = [];
-    datos.map((datos) => {
+    // datos.map((datos) => {
+    //   objDatos.push({
+    //     NumeroComprobante: datos.NumeroDocumento,
+    //     IdResponsable: datos.Id,
+    //     Valor: datos.Valor,
+    //     DetalleConcepto: datos.OP,
+    //     IdCentroCostos: datos.Consecutivo,
+    //     Observaciones: datos.Observaciones,
+    //     sku: datos.SKU,
+    //   });
+    // });
+     datos.map((datos) => {
       objDatos.push({
-        NumeroComprobante: datos.NumeroDocumento,
         IdResponsable: datos.Id,
-        Valor: datos.Valor,
-        DetalleConcepto: datos.OP,
-        IdCentroCostos: datos.Consecutivo,
-        Observaciones: datos.Observaciones,
-        sku: datos.SKU,
+        Observaciones: datos.NumeroDocumento,
       });
     });
     console.log(objDatos,"antici55555555555555555555555555555555555555555")
