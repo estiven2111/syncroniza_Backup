@@ -707,7 +707,7 @@ console.log(doc, sku,"anticipo")
     // );
      const datos = await sequelize.query(
       `
-    select A.Id,A.NumeroDocumento
+    select A.Id,A.NumeroDocumento,A.Valor
 from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
 where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1`,
       {
@@ -731,6 +731,7 @@ where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplid
       objDatos.push({
         IdResponsable: datos.Id,
         Observaciones: datos.NumeroDocumento,
+        Valor: datos.Valor
       });
     });
     console.log(objDatos,"antici55555555555555555555555555555555555555555")
