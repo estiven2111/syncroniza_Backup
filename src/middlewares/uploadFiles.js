@@ -389,7 +389,7 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
     NumeroOrdenCompra: data.OrdenCompra ?? "", // [NumeroOrdenCompra]
     ImpuestoUltraProcesados: parseFloat(data.icui) || 0, // [ImpuestoUltraProcesados]
     CodigoPostal: data.CodigoPostal ?? data.codepostal ?? "", // [CodigoPostal]
-    idtarjeta: data?.tarjeta === 1 ? data.tarjeta : ""// [tarjeta]
+    idtarjeta: data?.tarjeta === 1 ? data.idAnticipo : ""// [tarjeta]
    
   };
 
