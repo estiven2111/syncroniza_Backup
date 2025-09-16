@@ -429,7 +429,7 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
             NumeroOrdenCompra,
             ImpuestoUltraProcesados,
             CodigoPostal,
-            IdTaejetaPrepago
+            IdTarjetaPrepago
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           {
             replacements: [
