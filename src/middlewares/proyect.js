@@ -698,6 +698,12 @@ const AnticipoGastos = async (req, res) => {
 console.log(doc, sku,"anticipo")
     //  const datos = await sequelize.query(
     //   `
+    //todo
+//     select A.Id,A.NumeroDocumento,A.Valor
+// from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
+// where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1
+//todo
+
     // select A.Observaciones, A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
     // WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
     //   {
@@ -705,11 +711,17 @@ console.log(doc, sku,"anticipo")
     //     type: sequelize.QueryTypes.SELECT,
     //   }
     // );
+
+   
      const datos = await sequelize.query(
       `
-    select A.Id,A.NumeroDocumento,A.Valor
+       select A.Id,A.NumeroDocumento,A.Valor, 0 EsTarjeta
 from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
-where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1`,
+where A.N_documento=:doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1
+union all
+select Id,Nombre NombreTarjeta,saldoActual, 1 EsTarjeta
+from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
+      `,
       {
         replacements: { doc: doc, sku: sku },
         type: sequelize.QueryTypes.SELECT,
@@ -731,7 +743,8 @@ where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplid
       objDatos.push({
         IdResponsable: datos.Id,
         Observaciones: datos.NumeroDocumento,
-        Valor: datos.Valor
+        Valor: datos.Valor,
+        tarjeta: datos.EsTarjeta
       });
     });
     console.log(objDatos,"antici55555555555555555555555555555555555555555")

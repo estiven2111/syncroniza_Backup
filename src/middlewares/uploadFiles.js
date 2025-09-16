@@ -374,7 +374,7 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
     CiudadComprobante: data.CiudadComprobante ?? "", // [CiudadComprobante]
     Direccion: data.Direccion ?? "", // [DireccionComprobante]
     CCostos: data.CCostos ?? "", // [CCostos]
-    idAnticipo: data.idAnticipo ?? 0, // [idAnticipo]
+    idAnticipo: data?.tarjeta == 0 ? data.idAnticipo:"", // [idAnticipo]
     razon_social: data.razon_social ?? "", // [razon_social]
     impoconsumo: parseFloat(data.ipc) || 0, // [impoconsumo]
     Ica: parseFloat(data.ica) || 0, // [Ica]
@@ -389,6 +389,8 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
     NumeroOrdenCompra: data.OrdenCompra ?? "", // [NumeroOrdenCompra]
     ImpuestoUltraProcesados: parseFloat(data.icui) || 0, // [ImpuestoUltraProcesados]
     CodigoPostal: data.CodigoPostal ?? data.codepostal ?? "", // [CodigoPostal]
+    idtarjeta: data?.tarjeta === 1 ? data.tarjeta : ""// [tarjeta]
+   
   };
 
   switch (tipo) {
@@ -426,8 +428,9 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
             URLArchivoOTROS,
             NumeroOrdenCompra,
             ImpuestoUltraProcesados,
-            CodigoPostal
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            CodigoPostal,
+            IdTaejetaPrepago
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           {
             replacements: [
               values.SKU_Proyecto,
@@ -461,6 +464,7 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
               values.NumeroOrdenCompra,
               values.ImpuestoUltraProcesados,
               values.CodigoPostal,
+              values.idtarjeta
             ],
           }
         );

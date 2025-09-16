@@ -5,6 +5,7 @@ const fileupload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const router = require("./routes/index");
 const sequelize = require("sequelize");
+
 // require("dotenv").config()
 const app = express();
 // app.use(cors());
@@ -16,7 +17,6 @@ const app = express();
 //   };
   
 //   app.use(cors(optionCors));
-
 const allowedOrigins = ["*",'http://localhost:3000', 'https://app.creame.com.co', 'http://localhost:4180','http://localhost:5000/user/api/proyect/ocr','https://app.creame.com.co/user/api/proyect/ocr'];
 
 const corsOptions = {
@@ -56,6 +56,8 @@ const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
 const tenantID = TENANT_ID;
+
+module.exports = app;
 
 // app.use(
 //   session({
@@ -156,4 +158,3 @@ const tenantID = TENANT_ID;
 //   res.redirect("/user/api/files");
 // }
 
-module.exports = app;
