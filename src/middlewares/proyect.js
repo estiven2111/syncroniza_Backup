@@ -715,7 +715,7 @@ console.log(doc, sku,"anticipo")
    
      const datos = await sequelize.query(
       `
-       select A.Id,A.NumeroDocumento,A.Valor, 1 EsTarjeta
+       select A.Id,A.NumeroDocumento,A.Valor, 0 EsTarjeta
 from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
 where A.N_documento=:doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1
 union all
