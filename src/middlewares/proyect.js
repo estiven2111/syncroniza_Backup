@@ -752,7 +752,6 @@ const datos = await sequelize.query(
       //   TipoTransaccion: datos.TipoTransaccion
       // });
     });
-    console.log(datos.TipoTransaccion,"tipo transacionn")
     res.json(objDatos);
 }
 
