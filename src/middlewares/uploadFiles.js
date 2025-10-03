@@ -389,7 +389,8 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
     NumeroOrdenCompra: data.OrdenCompra ?? "", // [NumeroOrdenCompra]
     ImpuestoUltraProcesados: parseFloat(data.icui) || 0, // [ImpuestoUltraProcesados]
     CodigoPostal: data.CodigoPostal ?? data.codepostal ?? "", // [CodigoPostal]
-    idtarjeta: data?.tarjeta === 1 ? data.idAnticipo : ""// [tarjeta]
+    idtarjeta: data?.tarjeta === 1 ? data.idAnticipo : "" ,// [tarjeta]
+    idTipoTransaccion: data.idAnticipo ? data.idAnticipo : "" // [idTipoTransaccion]
    
   };
 
@@ -429,8 +430,9 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
             NumeroOrdenCompra,
             ImpuestoUltraProcesados,
             CodigoPostal,
-            IdTarjetaPrepago
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            IdTarjetaPrepago,
+            idTipoTransaccion
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           {
             replacements: [
               values.SKU_Proyecto,
@@ -464,7 +466,8 @@ console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
               values.NumeroOrdenCompra,
               values.ImpuestoUltraProcesados,
               values.CodigoPostal,
-              values.idtarjeta
+              values.idtarjeta,
+              values.idTipoTransaccion,
             ],
           }
         );
