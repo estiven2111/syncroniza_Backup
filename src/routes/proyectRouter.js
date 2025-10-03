@@ -11,7 +11,8 @@ const {
   logout,
   Ocr,
   Entregables,
-  NameProyects
+  NameProyects,
+  tipoTransaccion
 } = require("../middlewares/index");
 
 
@@ -26,6 +27,7 @@ ProyectRouter.put("/update",updateProyecto)
 ProyectRouter.post("/ocr",Ocr)
 ProyectRouter.put("/updateProyect",UpdatProyect)
 ProyectRouter.post("/anticipo",AnticipoGastos)
+ProyectRouter.get("/tipoTransaccion",tipoTransaccion)
 ProyectRouter.get("/entregables",Entregables)
 ProyectRouter.get("/nomProyect",NameProyects)
 

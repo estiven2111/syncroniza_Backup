@@ -696,23 +696,6 @@ const AnticipoGastos = async (req, res) => {
     const { doc, sku } = req.body;
   
 console.log(doc, sku,"anticipo")
-    //  const datos = await sequelize.query(
-    //   `
-    //todo
-//     select A.Id,A.NumeroDocumento,A.Valor
-// from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
-// where A.N_documento= :doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1
-//todo
-
-    // select A.Observaciones, A.Consecutivo, C.SKU,B.OP,A.Valor,A.NumeroDocumento,A.Id from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B ON A.Id = B.IdRegistrosTesorero inner join TBL_SER_ValoracionEncabezado C ON B.OP = C.OP 
-    // WHERE B.Anticipo = 1 and N_documento = :doc AND C.SKU = sku`,
-    //   {
-    //     replacements: { doc: doc, sku: sku },
-    //     type: sequelize.QueryTypes.SELECT,
-    //   }
-    // );
-
-   
      const datos = await sequelize.query(
       `
        select A.Id,A.NumeroDocumento,A.Valor, 0 EsTarjeta
@@ -753,6 +736,25 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
     res.json({ error: error });
   }
 };
+
+const tipoTransaccion = async (req, res) => {
+const datos = await sequelize.query(
+      `SELECT * FROM TBL_CON_TipoTransaccion
+      `
+    );
+    let objDatos = [];
+    datos.map((datos) => {
+      // datos.map((transaccion)=>{
+
+      // })
+      console.log(datos[1],"tipo transacionn")
+      // objDatos.push({
+      //   TipoTransaccion: datos.TipoTransaccion
+      // });
+    });
+    console.log(datos.TipoTransaccion,"tipo transacionn")
+    res.json(objDatos);
+}
 
 const Entregables = async (req, res) => {
   const {
@@ -826,4 +828,5 @@ module.exports = {
   logout,
   Entregables,
   NameProyects,
+  tipoTransaccion
 };
