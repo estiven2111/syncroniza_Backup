@@ -737,23 +737,43 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
   }
 };
 
-const tipoTransaccion = async (req, res) => {
-const datos = await sequelize.query(
-      `SELECT * FROM TBL_CON_TipoTransaccion
-      `
-    );
-    let objDatos = [];
-    datos.map((datos) => {
-      // datos.map((transaccion)=>{
+// const tipoTransaccion = async (req, res) => {
+//   try {
+//     const [resultados] = await sequelize.query(`
+//       SELECT * 
+//       FROM TBL_CON_TipoTransaccion
+//     `);
 
-      // })
-      console.log(datos[1],"tipo transacionn")
-      // objDatos.push({
-      //   TipoTransaccion: datos.TipoTransaccion
-      // });
-    });
+//     // Solo devolver el campo como array de strings
+//     const objDatos = resultados.map((transaccion) => transaccion.TipoTransaccion);
+
+//     res.json(objDatos);
+//   } catch (error) {
+//     console.error("Error obteniendo tipos de transacción:", error);
+//     res.status(500).json({ error: "Error en el servidor" });
+//   }
+// };
+const tipoTransaccion = async (req, res) => {
+  try {
+    const [resultados] = await sequelize.query(`
+      SELECT * 
+      FROM TBL_CON_TipoTransaccion
+    `);
+
+    // Devuelve un objeto con la propiedad "transacciones"
+    const objDatos = {
+  transacciones: resultados.map(t => ({
+    id: t.id,
+    tipo: t.TipoTransaccion
+  }))
+};
+
     res.json(objDatos);
-}
+  } catch (error) {
+    console.error("Error obteniendo tipos de transacción:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
 
 const Entregables = async (req, res) => {
   const {
