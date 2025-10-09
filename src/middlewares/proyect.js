@@ -28,10 +28,10 @@ const localStorage = new LocalStorage("./local-storage");
 //     const validateproyect = await sequelize.query(
 //       `
 //       select A.SKU_Logistica
-// from TBL_INV_UNIDAD_ALMACENAMIENTO A inner join TBL_INV_ITEM B on A.Referencia=B.Referencia 
-// inner join TBL_INV_TipoEstructuraITEM C on B.Referencia=C.Referencia left join TBL_SER_ValoracionEncabezado V on A.SKU_Logistica=V.SKU 
+// from TBL_INV_UNIDAD_ALMACENAMIENTO A inner join TBL_INV_ITEM B on A.Referencia=B.Referencia
+// inner join TBL_INV_TipoEstructuraITEM C on B.Referencia=C.Referencia left join TBL_SER_ValoracionEncabezado V on A.SKU_Logistica=V.SKU
 // left join TBL_CON_TERCEROS Ter on V.NitCliente=Ter.N_Documento left join TBL_PRO_OrdenesPlan OP on A.SKU_Logistica=OP.RefDistr and V.OP=op.OP
-// where c.TipoItem=9 
+// where c.TipoItem=9
 // order by SKU_Logistica desc
 //       `
 //     );
@@ -39,8 +39,8 @@ const localStorage = new LocalStorage("./local-storage");
 //     try {
 //       for (const i of idnodo[0]) {
 //         proyect = await sequelize.query(
-//           `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) 
-//       FROM TBL_SER_ProyectoActividadesEmpleados WHERE 
+//           `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto)
+//       FROM TBL_SER_ProyectoActividadesEmpleados WHERE
 //       N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
 //           { replacements: { docId: Doc_id } }
 //         );
@@ -83,7 +83,6 @@ const localStorage = new LocalStorage("./local-storage");
 //               // {replacements:{Codigo:}}
 //             );
 
-           
 //             let nomEntregable;
 //             if (Cod_parte[0].length > 0) {
 //               console.log(Cod_parte[0].length, "entrooooooooooooooooooooo",Cod_parte[0].ID);
@@ -280,7 +279,11 @@ const localStorage = new LocalStorage("./local-storage");
 
 //todo hacer consulta para proyectos enviando respuesta automatica
 
-
+//TODO HACER ESTA CONSULTA PARA SABER LOS PROYECTOS QUE TIENE EL USUARIO
+// SELECT        dbo.TBL_SER_ValoracionEncabezado.OP, dbo.TBL_SER_ValoracionEncabezado.SKU, dbo.TBL_SER_PROYECTOS.Nombre, dbo.TBL_SER_ValoracionEncabezado.Etapa
+// FROM            dbo.TBL_SER_ValoracionEncabezado LEFT OUTER JOIN
+//                          dbo.TBL_SER_PROYECTOS ON dbo.TBL_SER_ValoracionEncabezado.SKU = dbo.TBL_SER_PROYECTOS.SKU
+// WHERE        (dbo.TBL_SER_PROYECTOS.TipoParte = N'cabecera') AND (dbo.TBL_SER_ValoracionEncabezado.Etapa = N'Activación')
 
 const LoadProyect = async (Doc_id, email) => {
   try {
@@ -326,7 +329,12 @@ const LoadProyect = async (Doc_id, email) => {
           if (Cod_parte[0].length > 0) {
             Cod_parte = await sequelize.query(
               `SELECT * FROM TBL_ESP_Procesos WHERE ID = :id AND Descripcion = :descripcion`,
-              { replacements: { id: ID_parte, descripcion: proyect[0][0].Nombre } }
+              {
+                replacements: {
+                  id: ID_parte,
+                  descripcion: proyect[0][0].Nombre,
+                },
+              }
             );
 
             const entrega = await sequelize.query(
@@ -362,7 +370,9 @@ const LoadProyect = async (Doc_id, email) => {
 
             let tipoParte;
             let Parte = proyect[0][0].idPadre;
-            let fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
+            let fecha = new Date(proyect[0][0].Fecha)
+              .toISOString()
+              .split("T")[0];
             let componente = "";
             let proyecto = "";
             let nitCliente = "";
@@ -485,8 +495,10 @@ const LoadProyect = async (Doc_id, email) => {
                   }
                 }
               }
-            } while (tipoParte[0].length > 0 && tipoParte[0][0].TipoParte !== "Cabecera");
-
+            } while (
+              tipoParte[0].length > 0 &&
+              tipoParte[0][0].TipoParte !== "Cabecera"
+            );
           } else {
             // Validación si existe el código de parte
             codpar_falta.push(ID_parte);
@@ -505,26 +517,19 @@ const LoadProyect = async (Doc_id, email) => {
     // Guardar resultado en localStorage
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
     console.log("Proyecto cargado:", JSON.stringify(obj_proyecto));
-    
   } catch (error) {
     console.error("Error en LoadProyect:", error);
   }
 };
 
-
-
-
-
-
-
 const getProyectName = async (req, res) => {
   const { search, email } = req.query;
-  console.log("eeeeeeeeeee")
+  console.log("eeeeeeeeeee");
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
     // localStorage.removeItem(`Proyecto`)
     let NomProyect;
-   
+
     if (proyects) {
       NomProyect = proyects.proyectos
         .filter((obj) => obj.proyecto.includes(search.toUpperCase()))
@@ -537,7 +542,7 @@ const getProyectName = async (req, res) => {
     // const proyect = proyects.proyectos.filter((obj) => {
     //   return obj.proyecto.includes(search);
     // });
- console.log(NomProyect,"qqqqqqqqqqqqqqqqqqqqqqqqqqq")
+    console.log(NomProyect, "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
     res.json(NomProyect);
   } catch (error) {
     res.json({ error: error });
@@ -561,7 +566,7 @@ const NameProyects = (req, res) => {
 //todo hacer consulta para enviar el proyectos
 const getProyect = async (req, res) => {
   const { search, email } = req.query;
-  console.log("holaaaaa",email)
+  console.log("holaaaaa", email);
   try {
     const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
 
@@ -575,7 +580,7 @@ const getProyect = async (req, res) => {
     const nombres = proyects.proyectos.map((obj) => {
       return obj.proyecto;
     });
-    console.log(proyect)
+    console.log(proyect);
     res.json(proyect);
   } catch (error) {
     res.json({ error: error });
@@ -694,9 +699,9 @@ const UpdatProyect = async (req, res) => {
 const AnticipoGastos = async (req, res) => {
   try {
     const { doc, sku } = req.body;
-  
-console.log(doc, sku,"anticipo")
-     const datos = await sequelize.query(
+
+    console.log(doc, sku, "anticipo");
+    const datos = await sequelize.query(
       `
        select A.Id,A.NumeroDocumento,A.Valor, 0 EsTarjeta
 from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
@@ -722,58 +727,74 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
     //     sku: datos.SKU,
     //   });
     // });
-     datos.map((datos) => {
+    datos.map((datos) => {
       objDatos.push({
         IdResponsable: datos.Id,
         Observaciones: datos.NumeroDocumento,
         Valor: datos.Valor,
-        tarjeta: datos.EsTarjeta
+        tarjeta: datos.EsTarjeta,
       });
     });
-    console.log(objDatos,"antici55555555555555555555555555555555555555555")
+    console.log(objDatos, "antici55555555555555555555555555555555555555555");
     res.send(objDatos);
   } catch (error) {
     res.json({ error: error });
   }
 };
 
-// const tipoTransaccion = async (req, res) => {
-//   try {
-//     const [resultados] = await sequelize.query(`
-//       SELECT * 
-//       FROM TBL_CON_TipoTransaccion
-//     `);
-
-//     // Solo devolver el campo como array de strings
-//     const objDatos = resultados.map((transaccion) => transaccion.TipoTransaccion);
-
-//     res.json(objDatos);
-//   } catch (error) {
-//     console.error("Error obteniendo tipos de transacción:", error);
-//     res.status(500).json({ error: "Error en el servidor" });
-//   }
-// };
 const tipoTransaccion = async (req, res) => {
-  try {
-    const [resultados] = await sequelize.query(`
-      SELECT * 
-      FROM TBL_CON_TipoTransaccion
-    `);
+    try {
+      const [resultados] = await sequelize.query(`
+        SELECT *
+        FROM TBL_CON_TipoTransaccion
+      `);
 
-    // Devuelve un objeto con la propiedad "transacciones"
-    const objDatos = {
-  transacciones: resultados.map(t => ({
-    id: t.id,
-    tipo: t.TipoTransaccion
-  }))
+      // Devuelve un objeto con la propiedad "transacciones"
+      const objDatos = {
+    transacciones: resultados.map(t => ({
+      id: t.id,
+      tipo: t.TipoTransaccion
+    }))
+  };
+
+      res.json(objDatos);
+    } catch (error) {
+      console.error("Error obteniendo tipos de transacción:", error);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
 };
 
-    res.json(objDatos);
+const ProyectosGastos = async (req, res) => {
+   try {
+    const [resultados] = await sequelize.query(`
+       SELECT dbo.TBL_SER_ValoracionEncabezado.OP, dbo.TBL_SER_ValoracionEncabezado.SKU, dbo.TBL_SER_PROYECTOS.Nombre,
+       dbo.TBL_SER_PROYECTOS.idPadre,dbo.TBL_SER_PROYECTOS.idNodo,dbo.TBL_SER_PROYECTOS.NitCliente,
+       dbo.TBL_SER_ValoracionEncabezado.Etapa FROM dbo.TBL_SER_ValoracionEncabezado LEFT OUTER JOIN
+       dbo.TBL_SER_PROYECTOS ON dbo.TBL_SER_ValoracionEncabezado.SKU = dbo.TBL_SER_PROYECTOS.SKU
+       WHERE (dbo.TBL_SER_PROYECTOS.TipoParte = N'cabecera') AND (dbo.TBL_SER_ValoracionEncabezado.Etapa = N'Activación')
+    `);
+
+    // Devuelve un objeto con los proyectos solo activos para la pestaña de gastos
+    const Proyectos = {
+      ProyectosGastos: resultados.map((t) => ({
+        OP: t.OP,
+        SKU: t.SKU,
+        idPadre: t.idPadre,
+        idNodo: t.idNodo,
+        NitCliente: t.NitCliente,
+        Nombre: t.Nombre,
+        Etapa: t.Etapa,
+      })),
+    };
+
+    res.json(Proyectos);
+    // TODO POR SI PIDEN QUE SE ENVIE EL IDNODO Y PADRE 
+    //select * from TBL_SER_PROYECTOS where SKU = 50138 AND TipoParte = N'cabecera'
   } catch (error) {
     console.error("Error obteniendo tipos de transacción:", error);
     res.status(500).json({ error: "Error en el servidor" });
   }
-};
+}
 
 const Entregables = async (req, res) => {
   const {
@@ -847,5 +868,6 @@ module.exports = {
   logout,
   Entregables,
   NameProyects,
-  tipoTransaccion
+  tipoTransaccion,
+  ProyectosGastos
 };

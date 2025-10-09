@@ -12,7 +12,8 @@ const {
   Ocr,
   Entregables,
   NameProyects,
-  tipoTransaccion
+  tipoTransaccion,
+  ProyectosGastos
 } = require("../middlewares/index");
 
 
@@ -30,6 +31,7 @@ ProyectRouter.post("/anticipo",AnticipoGastos)
 ProyectRouter.get("/tipoTransaccion",tipoTransaccion)
 ProyectRouter.get("/entregables",Entregables)
 ProyectRouter.get("/nomProyect",NameProyects)
+ProyectRouter.get("/ProyectGastos",ProyectosGastos)
 
 //,fileupload({ useTempFiles: true, tempFileDir: "./uploads" })
 module.exports = ProyectRouter;
