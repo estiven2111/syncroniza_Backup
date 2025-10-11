@@ -3,288 +3,6 @@ const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./local-storage");
 
-// const LoadProyect = async (Doc_id, email) => {
-//   //? se piden los datos del usuario en el localStorage
-//   // const user = JSON.parse(localStorage.getItem("user"));
-//   //? se selecciona los idNodo para saber que proyectos tiene el usuario
-//   try {
-//     const idnodo = await sequelize.query(
-//       `SELECT idNodoProyecto,Terminada FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id}`
-//     );
-
-//     const idnodo1 = await sequelize.query(
-//       `SELECT idNodoProyecto FROM TBL_SER_ProyectoActividadesEmpleados where N_DocumentoEmpleado = ${Doc_id}`
-//     );
-//     // select* from TBL_ESP_Procesos  where ID = 324
-
-//     let proyect;
-//     let Cod_parte;
-//     let idNodo_falta = [];
-//     let codpar_falta = [];
-//     let obj_proyecto = {
-//       proyectos: [],
-//     };
-//     let con = 0;
-//     const validateproyect = await sequelize.query(
-//       `
-//       select A.SKU_Logistica
-// from TBL_INV_UNIDAD_ALMACENAMIENTO A inner join TBL_INV_ITEM B on A.Referencia=B.Referencia
-// inner join TBL_INV_TipoEstructuraITEM C on B.Referencia=C.Referencia left join TBL_SER_ValoracionEncabezado V on A.SKU_Logistica=V.SKU
-// left join TBL_CON_TERCEROS Ter on V.NitCliente=Ter.N_Documento left join TBL_PRO_OrdenesPlan OP on A.SKU_Logistica=OP.RefDistr and V.OP=op.OP
-// where c.TipoItem=9
-// order by SKU_Logistica desc
-//       `
-//     );
-
-//     try {
-//       for (const i of idnodo[0]) {
-//         proyect = await sequelize.query(
-//           `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto)
-//       FROM TBL_SER_ProyectoActividadesEmpleados WHERE
-//       N_DocumentoEmpleado = :docId AND idNodo = ${i.idNodoProyecto}) ORDER BY sku, idNodo`,
-//           { replacements: { docId: Doc_id } }
-//         );
-
-//         //todo Validar que el proyecto este correcto
-
-//         // const existe = validateproyect[0].some(SKU => SKU.SKU_Logistica === proyect[0][0].SKU)
-
-//         if (proyect[0].length > 0) {
-//           if (proyect[0]) {
-//             let ID_parte = parseInt(proyect[0][0].Cod_parte);
-//             let idPadre = proyect[0][0].idPadre;
-//             let componentes = [];
-//             let actividades = [];
-//             let tipoParte;
-//             let Parte = idPadre;
-//             let actividad = "";
-//             let componente = "";
-//             let proyecto = "";
-//             let fecha = "";
-//             let frecuencia = 0;
-//             let entregable = false;
-//             let nitCliente = "";
-//             let Codi_parteP = "";
-//             let idNodoP = "";
-//             let idPadreP = "";
-//             let Codi_parteC = "";
-//             let idNodoC = "";
-//             let idPadreC = "";
-//             let Codi_parteA = "";
-//             let idNodoA = "";
-//             let idPadreA = "";
-//             let skuP = "";
-//             let skuC = "";
-//             let skuA = "";
-//             let terminada = i.Terminada;
-
-//             Cod_parte = await sequelize.query(
-//               `select * from TBL_ESP_Procesos  where ID = ${ID_parte}`
-//               // {replacements:{Codigo:}}
-//             );
-
-//             let nomEntregable;
-//             if (Cod_parte[0].length > 0) {
-//               console.log(Cod_parte[0].length, "entrooooooooooooooooooooo",Cod_parte[0].ID);
-//               Cod_parte = await sequelize.query(
-//                 `select * from TBL_ESP_Procesos  where ID = ${ID_parte} and Descripcion =  '${proyect[0][0].Nombre}'`
-//                 // {replacements:{Codigo:}}
-//               );
-
-//               const entrega = await sequelize.query(
-//                 `select * from TBL_SER_EntregablesActividad where id_Proceso = ${Cod_parte[0][0].ID}`
-//               );
-
-//               nomEntregable = entrega[0]?.map((nom) => {
-//                 return {
-//                   id_proceso: nom.id_Proceso,
-//                   Numero: nom.Numero,
-//                   Nom_Entregable: nom.Nombre,
-//                   subido: nom.Subido,
-//                 };
-//               });
-
-//               if (proyect[0][0].TipoParte === "Actividad") {
-//                 actividad = proyect[0][0].Nombre;
-//                 frecuencia = Cod_parte[0][0].FrecuenciaVeces;
-//                 entregable = Cod_parte[0][0].AplicaEntregables;
-//                 nom_entregable = nomEntregable;
-//                 idNodoA = proyect[0][0].idNodo;
-//                 Codi_parteA = proyect[0][0].Cod_parte;
-//                 idPadreA = proyect[0][0].idPadre;
-//                 skuA = proyect[0][0].SKU;
-//                 terminada = terminada;
-//               }
-//               // if (Cod_parte[0].length === 0) {
-//               //   continue;
-//               // }
-//             } else {
-//               //?  ******************* VALIDACION SI EXISTE EL COD PARTE ************************** */
-//               console.log(
-//                 Cod_parte[0].length,
-//                 "eeeeeeeeeeeeeeeeeeeeeeeeeeewwwwwwww",Cod_parte[0].ID
-//               );
-//               codpar_falta.push(ID_parte);
-//               continue;
-//             }
-//             try {
-//               do {
-//                 console.log("entro al DOWHILEEEEE  DO WHILE")
-//                 tipoParte = await sequelize.query(
-//                   `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = ${Parte}) ORDER BY sku, idNodo`,
-//                   { replacements: { docId: Doc_id } }
-//                 );
-//                 if (tipoParte[0]) {
-//                   //todo validar tipoparte cabecera
-//                   Parte = tipoParte[0][0].idPadre;
-//                   if (tipoParte[0][0].TipoParte === "PP") {
-//                     componente = tipoParte[0][0].Nombre;
-//                     //? saca la fecha exacta del string
-//                     fecha = new Date(proyect[0][0].Fecha)
-//                       .toISOString()
-//                       .split("T")[0];
-//                     idNodoC = tipoParte[0][0].idNodo;
-//                     Codi_parteC = tipoParte[0][0].Cod_parte;
-//                     idPadreC = tipoParte[0][0].idPadre;
-//                     skuC = tipoParte[0][0].SKU;
-//                     nitCliente = tipoParte[0][0].NitCliente;
-//                   }
-//                   if (tipoParte[0][0].TipoParte === "Cabecera") {
-//                     proyecto = tipoParte[0][0].Nombre;
-//                     idNodoP = tipoParte[0][0].idNodo;
-//                     Codi_parteP = tipoParte[0][0].Cod_parte;
-//                     idPadreP = tipoParte[0][0].idPadre;
-//                     skuP = tipoParte[0][0].SKU;
-//                     //fecha = new Date(proyect[0][0].Fecha).toISOString().split("T")[0];
-//                   }
-//                   //? Verificar si el proyecto ya existe en el objeto obj_proyecto
-//                   let proyectoExistente = obj_proyecto.proyectos.find(
-//                     (p) => p.proyecto === proyecto
-//                   );
-
-//                   if (proyectoExistente) {
-//                     //? Verificar si el componente ya existe en el proyecto
-//                     let componenteExistente =
-//                       proyectoExistente.componentes.find(
-//                         (c) => c.componente === componente
-//                       );
-
-//                     if (componenteExistente) {
-//                       //? Agregar la actividad al componente existente
-
-//                       componenteExistente.actividades.push({
-//                         actividad: actividad,
-//                         frecuencia,
-//                         entregable,
-//                         nombre_entregable: nom_entregable,
-//                         idNodoA,
-//                         Codi_parteA,
-//                         idPadreA,
-//                         skuA,
-//                         terminada,
-//                       });
-//                     } else {
-//                       //? Agregar un nuevo componente con la actividad al proyecto existente
-
-//                       proyectoExistente.componentes.push({
-//                         fecha,
-//                         componente: componente,
-//                         idNodoC,
-//                         Codi_parteC,
-//                         idPadreC,
-//                         skuC,
-//                         actividades: [
-//                           {
-//                             actividad: actividad,
-//                             frecuencia,
-//                             entregable,
-//                             nombre_entregable: nom_entregable,
-//                             idNodoA,
-//                             Codi_parteA,
-//                             idPadreA,
-//                             skuA,
-//                             terminada,
-//                           },
-//                         ],
-//                       });
-//                     }
-//                   } else {
-//                     //? Agregar un nuevo proyecto con el componente y actividad
-//                     if (proyecto !== "") {
-//                       obj_proyecto.proyectos?.push({
-//                         proyecto: proyecto,
-//                         idNodoP,
-//                         Codi_parteP,
-//                         idPadreP,
-//                         skuP,
-//                         nitCliente,
-//                         componentes: [
-//                           {
-//                             fecha,
-//                             componente: componente,
-//                             idNodoC,
-//                             Codi_parteC,
-//                             idPadreC,
-//                             skuC,
-//                             actividades: [
-//                               {
-//                                 actividad: actividad,
-//                                 frecuencia,
-//                                 entregable,
-//                                 nombre_entregable: nom_entregable,
-//                                 idNodoA,
-//                                 Codi_parteA,
-//                                 idPadreA,
-//                                 skuA,
-//                                 terminada,
-//                               },
-//                             ],
-//                           },
-//                         ],
-//                       });
-//                     }
-//                   }
-//                 } else {
-//                   //?  ******************* VALIDACION DO WHILE ************************** */
-//                   continue;
-//                 }
-//               } while (tipoParte[0][0].TipoParte !== "Cabecera");
-//             } catch (error) {
-//               console.log("error", error);
-//             }
-//           } else {
-//             //?  ******************* VALIDACION SI EXISTE EL PROYECTO 2DA VEZ************************** */
-//             continue;
-//           }
-//         } else {
-//           //?  ******************* VALIDACION SI EXISTE EL PROYECTO 1ERA VEZ************************** */
-//           idNodo_falta.push(i.idNodoProyecto);
-//           continue;
-//         }
-//       } //?  *******************  FINALIZA EL FOR PRINCIPAL ************************** */
-//     } catch (error) {
-//       console.log({ error: error });
-//     }
-//     console.log("codigo parte faltantes", codpar_falta);
-//     console.log("idNodo faltantes", idNodo_falta);
-//     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
-//     console.log(JSON.stringify(obj_proyecto))
-//     return;
-//     //! en el deploy validar que el archivo no se sobreescriba
-//   } catch (error) {
-//     console.log({ error: error });
-//     // res.json({ error: error });
-//   }
-// };
-
-//todo hacer consulta para proyectos enviando respuesta automatica
-
-//TODO HACER ESTA CONSULTA PARA SABER LOS PROYECTOS QUE TIENE EL USUARIO
-// SELECT        dbo.TBL_SER_ValoracionEncabezado.OP, dbo.TBL_SER_ValoracionEncabezado.SKU, dbo.TBL_SER_PROYECTOS.Nombre, dbo.TBL_SER_ValoracionEncabezado.Etapa
-// FROM            dbo.TBL_SER_ValoracionEncabezado LEFT OUTER JOIN
-//                          dbo.TBL_SER_PROYECTOS ON dbo.TBL_SER_ValoracionEncabezado.SKU = dbo.TBL_SER_PROYECTOS.SKU
-// WHERE        (dbo.TBL_SER_PROYECTOS.TipoParte = N'cabecera') AND (dbo.TBL_SER_ValoracionEncabezado.Etapa = N'Activación')
-
 const LoadProyect = async (Doc_id, email) => {
   try {
     // Obtener idNodo para saber qué proyectos tiene el usuario
@@ -516,11 +234,222 @@ const LoadProyect = async (Doc_id, email) => {
 
     // Guardar resultado en localStorage
     localStorage.setItem(`${email}Proyecto`, JSON.stringify(obj_proyecto));
+
+    // Validar y filtrar proyectos con actividades no terminadas
+    ValidacionProyectos(email);
     console.log("Proyecto cargado:", JSON.stringify(obj_proyecto));
   } catch (error) {
     console.error("Error en LoadProyect:", error);
   }
 };
+
+const ValidacionProyectos = (email) => {
+  try {
+    // Leer los proyectos desde localStorage y filtrar los que tienen actividades no terminadas
+    const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+
+    if (!proyects || !Array.isArray(proyects.proyectos)) {
+      return res
+        .status(400)
+        .json({ error: "Estructura de proyectos inválida o vacía." });
+    }
+
+    const proyectosFiltrados = proyects.proyectos
+      .map((proyecto) => {
+        // Filtramos las actividades no terminadas en cada componente
+        const componentesFiltrados = proyecto.componentes
+          .map((componente) => {
+            const actividadesPendientes = componente.actividades.filter(
+              (a) => !a.terminada
+            );
+
+            // Solo conservamos componentes que aún tengan actividades sin terminar
+            if (actividadesPendientes.length > 0) {
+              return {
+                ...componente,
+                actividades: actividadesPendientes,
+              };
+            }
+            return null;
+          })
+          .filter((c) => c !== null);
+
+        // Solo conservamos proyectos que aún tengan componentes con actividades pendientes
+        if (componentesFiltrados.length > 0) {
+          return {
+            ...proyecto,
+            componentes: componentesFiltrados,
+          };
+        }
+        return null;
+      })
+      .filter((p) => p !== null);
+
+    const resultadoFinal = {
+      totalProyectosPendientes: proyectosFiltrados.length,
+      proyectos: proyectosFiltrados,
+    };
+
+    localStorage.setItem(`${email}Proyecto`, JSON.stringify(resultadoFinal));
+    // res.json(resultadoFinal);
+  } catch (error) {
+    console.error("❌ Error al procesar proyectos:", error);
+    res.status(500).json({ error: "Error interno procesando los proyectos" });
+  }
+};
+
+
+// TODO ENDPOINT PARA VALIDAR SI EL PROYECTO ESTA COMPLETO O NO
+//? ESTE ENDPONIT NO ESTA EN USO
+const ValidarTotalProyectos = (req, res) => {
+
+
+   //todo valida si el proyecto esta completo o no devuelve un objeto con el total de proyectos y su estado
+    //todo si el proyecto tiene todas las actividades terminadas completado true si no false
+    //todo si el proyecto tiene todas las actividades terminadas en todos sus componentes completado true si no false
+
+    // try {
+    //   const { email } = req.query;
+    //   console.log(email);
+    //   const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+
+    //   if (!proyects || !Array.isArray(proyects.proyectos)) {
+    //     return res
+    //       .status(400)
+    //       .json({ error: "Estructura de proyectos inválida o vacía." });
+    //   }
+
+    //   const proyectosArray = proyects.proyectos;
+
+    //   const resumenProyectos = proyectosArray.map((proyecto) => {
+    //     let totalActividadesProyecto = 0;
+    //     let actividadesTerminadas = 0;
+
+    //     const componentesData = proyecto.componentes.map((componente) => {
+    //       const totalActividades = componente.actividades.length;
+    //       const terminadas = componente.actividades.filter(
+    //         (a) => a.terminada
+    //       ).length;
+
+    //       totalActividadesProyecto += totalActividades;
+    //       actividadesTerminadas += terminadas;
+
+    //       return {
+    //         componente: componente.componente,
+    //         totalActividades,
+    //         terminadas,
+    //         faltantes: totalActividades - terminadas,
+    //         completado: terminadas === totalActividades,
+    //       };
+    //     });
+
+    //     const faltantes = totalActividadesProyecto - actividadesTerminadas;
+    //     const completado = faltantes === 0;
+
+    //     return {
+    //       proyecto: proyecto.proyecto,
+    //       totalComponentes: proyecto.componentes.length,
+    //       totalActividades: totalActividadesProyecto,
+    //       terminadas: actividadesTerminadas,
+    //       faltantes,
+    //       completado,
+    //       componentes: componentesData,
+    //     };
+    //   });
+
+    //   const resultadoFinal = {
+    //     totalProyectos: proyectosArray.length,
+    //     proyectos: resumenProyectos,
+    //   };
+
+    //   res.json(resultadoFinal);
+    // } catch (error) {
+    //   console.error("❌ Error al procesar proyectos:", error);
+    //   res.status(500).json({ error: "Error interno procesando los proyectos" });
+    // }
+
+
+    //todo valida si el proyecto esta completo o no devuelve un objeto con el total de proyectos y su estado
+    //todo este me devuelve mas informacion ya que devuelve el idnodo del componente y el idnodo de la actividad
+    try {
+  const { email } = req.query;
+  console.log("📧 Email recibido:", email);
+
+  // ⚙️ Cargar proyectos desde el localStorage (según tu estructura actual)
+  const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+
+  if (!proyects || !Array.isArray(proyects.proyectos)) {
+    return res
+      .status(400)
+      .json({ error: "Estructura de proyectos inválida o vacía." });
+  }
+
+  // 🔍 Procesar todos los proyectos
+  const proyectosProcesados = proyects.proyectos.map((proyecto) => {
+    let totalActividadesProyecto = 0;
+    let actividadesTerminadasProyecto = 0;
+    let actividadesFaltantesProyecto = 0;
+
+    // 📦 Procesar componentes del proyecto
+    const componentesProcesados = proyecto.componentes.map((componente) => {
+      const totalActividades = componente.actividades.length;
+
+      // Dividir las actividades entre terminadas y pendientes
+      const actividadesTerminadas = componente.actividades.filter((a) => a.terminada);
+      const actividadesFaltantes = componente.actividades.filter((a) => !a.terminada);
+
+      totalActividadesProyecto += totalActividades;
+      actividadesTerminadasProyecto += actividadesTerminadas.length;
+      actividadesFaltantesProyecto += actividadesFaltantes.length;
+
+      return {
+        componente: componente.componente,
+        idNodoC: componente.idNodoC,
+        totalActividades,
+        totalTerminadas: actividadesTerminadas.length,
+        totalFaltantes: actividadesFaltantes.length,
+        completado: actividadesFaltantes.length === 0,
+        actividadesTerminadas: actividadesTerminadas.map((a) => ({
+          idNodoA: a.idNodoA,
+          actividad: a.actividad,
+          terminada: a.terminada,
+        })),
+        actividadesFaltantes: actividadesFaltantes.map((a) => ({
+          idNodoA: a.idNodoA,
+          actividad: a.actividad,
+          terminada: a.terminada,
+        })),
+      };
+    });
+
+    const completado = actividadesFaltantesProyecto === 0;
+
+    return {
+      proyecto: proyecto.proyecto,
+      idNodoP: proyecto.idNodoP,
+      totalComponentes: proyecto.componentes.length,
+      totalActividades: totalActividadesProyecto,
+      totalTerminadas: actividadesTerminadasProyecto,
+      totalFaltantes: actividadesFaltantesProyecto,
+      completado,
+      componentes: componentesProcesados,
+    };
+  });
+
+  // 📊 Resultado general
+  const resultadoFinal = {
+    totalProyectos: proyectosProcesados.length,
+    proyectos: proyectosProcesados,
+  };
+
+  res.json(resultadoFinal);
+
+} catch (error) {
+  console.error("❌ Error al procesar proyectos:", error);
+  res.status(500).json({ error: "Error interno procesando los proyectos" });
+}
+
+}
 
 const getProyectName = async (req, res) => {
   const { search, email } = req.query;
@@ -743,29 +672,30 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
 };
 
 const tipoTransaccion = async (req, res) => {
-    try {
-      const [resultados] = await sequelize.query(`
-        SELECT *
-        FROM TBL_CON_TipoTransaccion
-      `);
+  try {
+     // ? listado de transacciones 
+        const [resultados] = await sequelize.query(`
+          SELECT *
+          FROM TBL_CON_TipoTransaccion
+        `);
 
-      // Devuelve un objeto con la propiedad "transacciones"
-      const objDatos = {
-    transacciones: resultados.map(t => ({
-      id: t.id,
-      tipo: t.TipoTransaccion
-    }))
-  };
+        // Devuelve un objeto con la propiedad "transacciones"
+        const objDatos = {
+      transacciones: resultados.map(t => ({
+        id: t.id,
+        tipo: t.TipoTransaccion
+      }))
+    };
 
-      res.json(objDatos);
-    } catch (error) {
-      console.error("Error obteniendo tipos de transacción:", error);
-      res.status(500).json({ error: "Error en el servidor" });
-    }
+        res.json(objDatos);
+  } catch (error) {
+    console.error("Error obteniendo tipos de transacción:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 const ProyectosGastos = async (req, res) => {
-   try {
+  try {
     const [resultados] = await sequelize.query(`
        SELECT dbo.TBL_SER_ValoracionEncabezado.OP, dbo.TBL_SER_ValoracionEncabezado.SKU, dbo.TBL_SER_PROYECTOS.Nombre,
        dbo.TBL_SER_PROYECTOS.idPadre,dbo.TBL_SER_PROYECTOS.idNodo,dbo.TBL_SER_PROYECTOS.NitCliente,
@@ -788,13 +718,13 @@ const ProyectosGastos = async (req, res) => {
     };
 
     res.json(Proyectos);
-    // TODO POR SI PIDEN QUE SE ENVIE EL IDNODO Y PADRE 
+    // TODO POR SI PIDEN QUE SE ENVIE EL IDNODO Y PADRE
     //select * from TBL_SER_PROYECTOS where SKU = 50138 AND TipoParte = N'cabecera'
   } catch (error) {
     console.error("Error obteniendo tipos de transacción:", error);
     res.status(500).json({ error: "Error en el servidor" });
   }
-}
+};
 
 const Entregables = async (req, res) => {
   const {
@@ -869,5 +799,6 @@ module.exports = {
   Entregables,
   NameProyects,
   tipoTransaccion,
-  ProyectosGastos
+  ProyectosGastos,
+  ValidarTotalProyectos
 };

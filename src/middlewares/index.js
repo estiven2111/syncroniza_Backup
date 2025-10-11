@@ -13,7 +13,8 @@ const {
   Entregables,
   NameProyects,
   tipoTransaccion,
-  ProyectosGastos
+  ProyectosGastos,
+  ValidarTotalProyectos
 } = require("./proyect");
 const Ocr = require("./Ocr")
 
@@ -31,6 +32,7 @@ module.exports = {
   NameProyects,
   tipoTransaccion,
   ProyectosGastos,
+  ValidarTotalProyectos,
   //?Middlewares
   ConsultaIndicadoresMiddleware,
   ConsultaIndicadores2Middleware
