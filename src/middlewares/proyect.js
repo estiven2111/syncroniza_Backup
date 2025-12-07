@@ -570,16 +570,50 @@ const registerActivities = async (req, res) => {
 //todo devuelve la sumatoria de las actividades
 const hourActivities = async (req, res) => {
   try {
-    const { idNodoProyecto, idNodoActividad } = req.query;
+    console.log("ENTRO A HORAS")
+    const { idNodoProyecto, idNodoActividad,DocumentoEmpleado } = req.query;
     const hours = await sequelize.query(
-      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
+      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad} AND DocumentoEmpleado = ${DocumentoEmpleado}`
     );
+
+
     const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
+    console.log(TotalH,"Total de horas")
     res.json(TotalH);
   } catch (error) {
     res.json({ error: error });
   }
 };
+
+// const hourActivities = async (req, res) => {
+//   try {
+//     const { idNodoProyecto, idNodoActividad, DocumentoEmpleado } = req.query;
+
+//     const [rows] = await sequelize.query(
+//       `SELECT SUM(DuracionHoras) AS horas
+//        FROM TBL_SER_ReporteHorasActividadEmpleado
+//        WHERE idNodoProyecto = :idNodoProyecto
+//          AND idNodoActividad = :idNodoActividad
+//          AND DocumentoEmpleado = :DocumentoEmpleado`,
+//       {
+//         replacements: {
+//           idNodoProyecto,
+//           idNodoActividad,
+//           DocumentoEmpleado
+//         }
+//       }
+//     );
+
+//     const TotalH = parseFloat(rows.horas || 0).toFixed(2);
+
+//     console.log(TotalH, "Total de horas");
+//     res.json(TotalH);
+
+//   } catch (error) {
+//     res.json({ error: error.message });
+//   }
+// };
+
 
 const updateProyecto = async (req, res) => {
   const { finished, idNodoProyecto, SKU_Proyecto } = req.body;
