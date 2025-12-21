@@ -767,15 +767,17 @@ const Entregables = async (req, res) => {
     idNodoProyecto,
     NumeroEntregable,
     idProceso,
+    DocumentoEmpleado
   } = req.query;
-
   // res.send("ok")
   // return
   let entrega = false;
   try {
     const Entregables = await sequelize.query(
       `
-    SELECT * FROM TBL_SER_ProyectoActividadesEmpleadosEntregables WHERE SKU_Proyecto = :sku AND NitCliente = :nit AND idNodoProyecto = :id AND NumeroEntregable = :numE AND idProceso = :proceso`,
+    SELECT * FROM TBL_SER_ProyectoActividadesEmpleadosEntregables 
+    WHERE SKU_Proyecto = :sku AND NitCliente = :nit AND idNodoProyecto = :id
+     AND NumeroEntregable = :numE AND idProceso = :proceso  AND  N_DocumentoEmpleado = :DocEmpleado`,
       {
         replacements: {
           sku: SKU_Proyecto,
@@ -783,11 +785,11 @@ const Entregables = async (req, res) => {
           id: idNodoProyecto,
           numE: NumeroEntregable,
           proceso: idProceso,
+          DocEmpleado : DocumentoEmpleado
         },
         type: sequelize.QueryTypes.SELECT,
       }
     );
-
     if (Entregables.length >= 1) {
       entrega = true;
     }
