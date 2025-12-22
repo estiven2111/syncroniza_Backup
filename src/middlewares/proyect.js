@@ -557,7 +557,7 @@ const registerActivities = async (req, res) => {
   `
     );
     const hours = await sequelize.query(
-      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad}`
+      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad} AND DocumentoEmpleado = ${DocumentoEmpleado}`
     );
 
     TotalH = parseFloat(hours[0][0].horas).toFixed(2);
