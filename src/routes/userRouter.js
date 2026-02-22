@@ -166,7 +166,6 @@ passport.use(
       resource: "https://graph.microsoft.com/",
     },
     (accessToken, refreshToken, params, profile, done) => {
-      console.log("entro en el web");
      
       // aca puede realizar acciones para obtener los datos de los usuarios
       //para enviar ala base datos o lo que desee y se pueda hacer
@@ -225,15 +224,16 @@ userRouter.get("/api/microsoft",(req,res)=>{
 
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
+
 userRouter.get(
   "/api/callback",
   passport.authenticate("azuread-openidconnect", {
     failureRedirect: "/user/api/files",
   }),
   (req, res) => {
-    console.log(req.query)
+    
     const auth = req.isAuthenticated()
-    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
+    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken,profile:req.user.profile}
     res.json(datos)
 
   }
@@ -246,7 +246,9 @@ userRouter.get(
     failureRedirect: "/user/api/web",
   }),
   (req, res) => {
+
     const auth = req.isAuthenticated()
+    
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
     res.send(
       ` 
@@ -256,7 +258,7 @@ userRouter.get(
       <body>
 
       </body>
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
+      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividade') 
       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
         window.close();
     </script>

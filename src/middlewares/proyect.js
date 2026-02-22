@@ -663,10 +663,11 @@ const AnticipoGastos = async (req, res) => {
   try {
     const { doc, sku } = req.body;
 
-    console.log(doc, sku, "anticipo");
+    console.log("🚀🚀🚀 AnticipoGastos called with doc:", doc, "and sku:", sku);
+   // B.DocumentoIngreso  A.NumeroDocumento
     const datos = await sequelize.query(
       `
-       select A.Id,A.NumeroDocumento,A.Valor, 0 EsTarjeta
+       select A.Id,B.DocumentoIngreso,A.Valor, 0 EsTarjeta
 from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
 where A.N_documento=:doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1
 union all
@@ -678,6 +679,7 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
         type: sequelize.QueryTypes.SELECT,
       }
     );
+    
     let objDatos = [];
     // datos.map((datos) => {
     //   objDatos.push({
@@ -690,15 +692,25 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
     //     sku: datos.SKU,
     //   });
     // });
-    datos.map((datos) => {
+    //con A.
+    // datos.map((datos) => {
+    //   objDatos.push({
+    //     IdResponsable: datos.Id,
+    //     Observaciones: datos.NumeroDocumento,
+    //     Valor: datos.Valor,
+    //     tarjeta: datos.EsTarjeta,
+    //   });
+    // });
+//con B.
+     datos.map((datos) => {
       objDatos.push({
         IdResponsable: datos.Id,
-        Observaciones: datos.NumeroDocumento,
+        Observaciones: datos.DocumentoIngreso,
         Valor: datos.Valor,
         tarjeta: datos.EsTarjeta,
       });
     });
-    console.log(objDatos, "antici55555555555555555555555555555555555555555");
+  
     res.send(objDatos);
   } catch (error) {
     res.json({ error: error });

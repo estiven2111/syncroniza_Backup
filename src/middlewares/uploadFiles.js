@@ -346,16 +346,9 @@ const moveupload = (
   });
 };
 
-
-
-
-
-
-
-
 const insertInto = async (data, tipo) => {
   if (!data) return;
-console.log(data, "ESTO ES LO QUE VOY A GUARDAR")
+
   // Declarar values fuera del switch
   const values = {
     SKU_Proyecto: data.SKU_Proyecto ?? "", // [SKU_Proyecto]
