@@ -1532,19 +1532,57 @@ Validate and understand the document carefully. Use correct values, formats, and
     const content = response.data.choices[0].message.content.trim();
     let datos = {};
     console.log(content, "contenido de la IA");
-    try {
-      const jsonClean = content
-        .replace(/^```json/i, "")
-        .replace(/^```/, "")
-        .replace(/```$/, "")
-        .trim();
+    // try {
+    //   const jsonClean = content
+    //     .replace(/^```json/i, "")
+    //     .replace(/^```/, "")
+    //     .replace(/```$/, "")
+    //     .trim();
 
-      datos = JSON.parse(jsonClean);
-    } catch (err) {
-      console.error("❌ Error al convertir respuesta en JSON:", err.message);
-      await eliminar(uploadPath);
-      return res.status(400).json({ error: "Formato inválido desde la IA" });
-    }
+    //   datos = JSON.parse(jsonClean);
+    // } catch (err) {
+    //   console.error("❌ Error al convertir respuesta en JSON:", err.message);
+    //   await eliminar(uploadPath);
+    //   return res.status(400).json({ error: "Formato inválido desde la IA" });
+    // }
+
+    try {
+  if (!content || typeof content !== "string") {
+    throw new Error("Respuesta vacía o inválida desde la IA");
+  }
+
+  // 1️⃣ Limpiar bloques markdown
+  let jsonClean = content
+    .replace(/```json/gi, "")
+    .replace(/```/g, "")
+    .trim();
+
+  // 2️⃣ Extraer únicamente el JSON real
+  const firstBrace = jsonClean.indexOf("{");
+  const lastBrace = jsonClean.lastIndexOf("}");
+
+  if (firstBrace === -1 || lastBrace === -1) {
+    throw new Error("No se encontró estructura JSON válida");
+  }
+
+  jsonClean = jsonClean.substring(firstBrace, lastBrace + 1);
+
+  // 3️⃣ Parsear
+  datos = JSON.parse(jsonClean);
+
+} catch (err) {
+  console.error("❌ Error al convertir respuesta en JSON:", err.message);
+
+  // Elimina el archivo solo si existe
+  if (uploadPath) {
+    await eliminar(uploadPath);
+  }
+
+  return res.status(400).json({
+    error: "Formato inválido desde la IA",
+    detalle: err.message
+  });
+}
 
     // 📍 Obtener municipio y código postal
     let municipio = "";
