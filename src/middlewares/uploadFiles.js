@@ -359,8 +359,8 @@ const insertInto = async (data, tipo) => {
     Nombre_Empleado: data.Nombre_Empleado ?? "", // [Nombre_Empleado]
     NumeroComprobante: data.NumFactura ?? "", // [NumeroComprobante]
     URLArchivo: data.URLArchivo ?? "", // [URLArchivo]
-    Fecha: data.Fecha ?? "null", // [Fecha]
-    FechaComprobante: data.FechaComprobante ?? null, // [FechaComprobante]
+    Fecha: formatToSQLDate(data.Fecha) ?? null, // [Fecha]
+    FechaComprobante: formatToSQLDate(data.FechaComprobante) ?? null, // [FechaComprobante]
     ValorComprobante: parseFloat(data.ValorComprobante) || 0, // [ValorComprobante]
     NitComprobante: data.NitComprobante ?? "", // [NitComprobante]
     NombreComprobante: data.NombreComprobante ?? "", // [NombreComprobante]
@@ -510,6 +510,20 @@ const insertInto = async (data, tipo) => {
       break;
   }
 };
+
+function formatToSQLDate(dateString) {
+  if (!dateString) return null;
+
+  // Si ya viene en formato ISO, no tocarla
+  if (dateString.includes('-')) return dateString;
+
+  const [day, month, yearAndTime] = dateString.split('/');
+  const [year, time] = yearAndTime.includes(' ')
+    ? yearAndTime.split(' ')
+    : [yearAndTime, '00:00:00'];
+
+  return `${year}-${month}-${day} ${time}`;
+}
 
 //! Eliminar archivo en uploads
 
