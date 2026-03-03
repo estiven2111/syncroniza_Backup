@@ -125,13 +125,13 @@ const fs = require("fs");
 const request = require("request");
 const cors = require("cors");
 require("dotenv").config();
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW,SESSIONSECRET } = process.env;
 const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
 const callbackURLW = REDIRECT_URIW; //"http://localhost:5000/validation";
 const tenantID = TENANT_ID;
-
+const rateLimit = require("express-rate-limit");
 const userRouter = Router();
 const optionCors = {
   origin: "*",
@@ -141,7 +141,7 @@ const optionCors = {
 };
 userRouter.use(cors());
 // const userRouter = express()
-const sessionSecret = crypto.randomBytes(64).toString("hex");
+const sessionSecret = SESSIONSECRET || crypto.randomBytes(64).toString("hex");
 console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW);
 // Configura y utiliza sesiones en Express
 userRouter.use(
@@ -213,7 +213,28 @@ userRouter.get("/api/auth",(req,res)=>{
   }
 })
 
-userRouter.post("/api/login", login);
+// const loginLimiter = rateLimit({
+//   windowMs: 10 * 60 * 1000,
+//   max: 5,
+//   message: {
+//     error: "Demasiados intentos de login, intenta en 10 minutos"
+//   },
+//   skipSuccessfulRequests: true // solo cuenta intentos fallidos
+// });
+
+const loginLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  keyGenerator: (req, res) => {
+    const ip = rateLimit.ipKeyGenerator(req); 
+    const email = req.body.email || "unknown";
+    return `${ip}-${email}`;
+  },
+  skipSuccessfulRequests: true
+});
+
+// userRouter.post("/api/login", login);
+userRouter.post("/api/login", loginLimiter, login);
 // userRouter.get("/api/files", authUpload);
 // userRouter.get("/api/callback", uploadFiles);
 // userRouter.get("/api/dashboard", ensureAuthenticated, dashboard);
@@ -248,7 +269,6 @@ userRouter.get(
   (req, res) => {
 
     const auth = req.isAuthenticated()
-    
     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
     res.send(
       ` 

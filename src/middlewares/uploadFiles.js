@@ -346,11 +346,19 @@ const moveupload = (
   });
 };
 
+
 function parseMoney(value) {
   if (!value) return 0;
 
-  const cleaned = value.toString().replace(/,/g, '').trim();
-  const number = parseFloat(cleaned);
+  let str = value.toString().trim();
+
+  // Quitar puntos de miles
+  str = str.replace(/\./g, '');
+
+  // Reemplazar la coma decimal por punto
+  str = str.replace(/,/g, '.');
+
+  const number = parseFloat(str);
 
   return isNaN(number) ? 0 : number;
 }

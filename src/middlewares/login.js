@@ -1,13 +1,34 @@
 // const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 const { sequelize } = require("../db");
 const { LocalStorage } = require("node-localstorage");
 const { LoadProyect } = require("./proyect");
 const localStorage = new LocalStorage("./local-storage");
+const rateLimit = require("express-rate-limit");
 
+async function getGeo(ip) {
+  const response = await axios.get(`https://ipapi.co/${ip}/json/`);
+  return response.data;
+}
 const login = async (req, res) => {
   const { user, password } = req.body;
-  console.log("entro login")
+ 
+  const ip = rateLimit.ipKeyGenerator(req);
+
+  let geo = null;
+
+   try {
+    geo = await getGeo(ip);
+    console.log({
+      ip,
+      country: geo.country_name,
+      city: geo.city
+    });
+  } catch (error) {
+    console.log("No se pudo obtener geolocalización");
+  }
+
   if (user === "" || password === "") {
     res.status(401).json({ message: "Completar los campos" });
     return;
