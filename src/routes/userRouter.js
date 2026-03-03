@@ -208,6 +208,7 @@ passport.use(
       tenant: process.env.TENANT_ID,
       resource: "https://graph.microsoft.com/",
     },
+    
     async (accessToken, refreshToken, params, profile, done) => {
       try {
         // Calculamos expiración
