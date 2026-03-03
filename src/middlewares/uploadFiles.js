@@ -348,32 +348,28 @@ const moveupload = (
 
 
 
-
-
-
 function parseMoney(value) {
   if (!value) return 0;
 
-  // Convertimos a string y limpiamos espacios
   let str = value.toString().trim();
 
-  // Detectamos separadores
-  const commaCount = (str.match(/,/g) || []).length;
-  const dotCount = (str.match(/\./g) || []).length;
+  // Eliminamos espacios
+  str = str.replace(/\s+/g, '');
 
-  // Caso 1: formato latino '3.800.265,00' → punto miles, coma decimal
-  if (dotCount > 0 && str.includes(',')) {
+  // Detectamos si el formato es latino (coma decimal al final)
+  const lastComma = str.lastIndexOf(',');
+  const lastDot = str.lastIndexOf('.');
+
+  if (lastComma > lastDot) {
+    // Coma después de punto → latino: puntos = miles, coma = decimal
     str = str.replace(/\./g, '').replace(',', '.');
-  }
-  // Caso 2: formato anglo '380,000.00' → coma miles, punto decimal
-  else if (commaCount > 0 && str.includes('.')) {
+  } else if (lastDot > lastComma) {
+    // Punto después de coma → anglo: comas = miles, punto = decimal
     str = str.replace(/,/g, '');
+  } else {
+    // Solo comas o solo puntos → asumimos que es decimal
+    str = str.replace(/,/g, '.');
   }
-  // Caso 3: solo comas '380000,00' → coma decimal
-  else if (commaCount > 0 && !str.includes('.')) {
-    str = str.replace(',', '.');
-  }
-  // Caso 4: solo puntos '380000.00' → válido, no cambia
 
   const number = parseFloat(str);
   return isNaN(number) ? 0 : number;
