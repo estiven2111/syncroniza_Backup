@@ -347,19 +347,29 @@ const moveupload = (
 };
 
 
+
+
 function parseMoney(value) {
   if (!value) return 0;
 
-  let str = value.toString().trim();
+  // Convertimos todo a string
+  const str = value.toString().trim();
 
-  // Quitar puntos de miles
-  str = str.replace(/\./g, '');
+  // Detectamos si el formato es "1.234.567,89" (latino) o "1,234,567.89" (anglo)
+  const hasComma = str.includes(',');
+  const hasDot = str.includes('.');
 
-  // Reemplazar la coma decimal por punto
-  str = str.replace(/,/g, '.');
+  let normalized = str;
 
-  const number = parseFloat(str);
+  if (hasComma && hasDot) {
+    // Caso '5,449,663.86' → eliminamos las comas de miles
+    normalized = str.replace(/,/g, '');
+  } else if (hasComma && !hasDot) {
+    // Caso '5.449.663' → reemplazamos puntos por nada, comas por decimal
+    normalized = str.replace(/\./g, '').replace(',', '.');
+  }
 
+  const number = parseFloat(normalized);
   return isNaN(number) ? 0 : number;
 }
 
