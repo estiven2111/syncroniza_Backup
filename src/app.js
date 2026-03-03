@@ -5,15 +5,17 @@ const fileupload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const router = require("./routes/index");
 const sequelize = require("sequelize");
-const helmet = require('helmet');
-const rateLimit = require("express-rate-limit");
 
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// const helmet = require('helmet');
+// const rateLimit = require("express-rate-limit");
+
+// const globalLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 200,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
+
 // require("dotenv").config()
 const app = express();
 // app.use(cors());
@@ -25,7 +27,7 @@ const app = express();
 //   };
   
 //   app.use(cors(optionCors));
-app.use(helmet());
+// app.use(helmet());
 const allowedOrigins = ["*",'http://localhost:3000', 'https://app.creame.com.co', 'http://localhost:4180','http://localhost:5000/user/api/proyect/ocr','https://app.creame.com.co/user/api/proyect/ocr'];
 
 const corsOptions = {
@@ -73,7 +75,7 @@ app.use(fileupload());
 app.use(sequelize);
 
 app.use(morgan("dev"));
-app.use(globalLimiter);
+// app.use(globalLimiter);
 
 
 // const path = require("path");
