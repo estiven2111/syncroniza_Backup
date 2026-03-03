@@ -7,14 +7,14 @@ const router = require("./routes/index");
 const sequelize = require("sequelize");
 
 const helmet = require('helmet');
-const rateLimit = require("express-rate-limit");
+// const rateLimit = require("express-rate-limit");
 
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// const globalLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 200,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
 // require("dotenv").config()
 const app = express();
@@ -75,7 +75,7 @@ app.use(fileupload());
 app.use(sequelize);
 
 app.use(morgan("dev"));
-app.use(globalLimiter);
+// app.use(globalLimiter);
 
 
 // const path = require("path");
