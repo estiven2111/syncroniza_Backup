@@ -276,14 +276,14 @@ userRouter.post("/api/login", loginLimiter, login);
 // userRouter.get("/api/dashboard", ensureAuthenticated, dashboard);
 
 userRouter.get("/api/microsoft",(req,res)=>{
-  res.redirect("/user/api/callback")
+  res.redirect("/user/api/callbacks")
 })
 
 userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
 userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
 
 userRouter.get(
-  "/api/callback",
+  "/api/callbacks",
   passport.authenticate("azuread-openidconnect", {
     failureRedirect: "/user/api/files",
   }),
@@ -379,7 +379,7 @@ userRouter.get(
       <script>
         if (window.opener) {
           const urls = [
-            'https://app.creame.com.co/actividade',
+            'https://app.creame.com.co/actividades',
             'https://app.creame.com.co/Gastos'
           ];
           urls.forEach(url => {
