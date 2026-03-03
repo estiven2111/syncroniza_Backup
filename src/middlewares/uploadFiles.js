@@ -349,27 +349,33 @@ const moveupload = (
 
 
 
+
+
 function parseMoney(value) {
   if (!value) return 0;
 
-  // Convertimos todo a string
-  const str = value.toString().trim();
+  // Convertimos a string y limpiamos espacios
+  let str = value.toString().trim();
 
-  // Detectamos si el formato es "1.234.567,89" (latino) o "1,234,567.89" (anglo)
-  const hasComma = str.includes(',');
-  const hasDot = str.includes('.');
+  // Detectamos separadores
+  const commaCount = (str.match(/,/g) || []).length;
+  const dotCount = (str.match(/\./g) || []).length;
 
-  let normalized = str;
-
-  if (hasComma && hasDot) {
-    // Caso '5,449,663.86' → eliminamos las comas de miles
-    normalized = str.replace(/,/g, '');
-  } else if (hasComma && !hasDot) {
-    // Caso '5.449.663' → reemplazamos puntos por nada, comas por decimal
-    normalized = str.replace(/\./g, '').replace(',', '.');
+  // Caso 1: formato latino '3.800.265,00' → punto miles, coma decimal
+  if (dotCount > 0 && str.includes(',')) {
+    str = str.replace(/\./g, '').replace(',', '.');
   }
+  // Caso 2: formato anglo '380,000.00' → coma miles, punto decimal
+  else if (commaCount > 0 && str.includes('.')) {
+    str = str.replace(/,/g, '');
+  }
+  // Caso 3: solo comas '380000,00' → coma decimal
+  else if (commaCount > 0 && !str.includes('.')) {
+    str = str.replace(',', '.');
+  }
+  // Caso 4: solo puntos '380000.00' → válido, no cambia
 
-  const number = parseFloat(normalized);
+  const number = parseFloat(str);
   return isNaN(number) ? 0 : number;
 }
 
