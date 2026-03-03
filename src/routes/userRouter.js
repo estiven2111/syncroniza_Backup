@@ -208,7 +208,6 @@ passport.use(
       tenant: process.env.TENANT_ID,
       resource: "https://graph.microsoft.com/",
     },
-    
     async (accessToken, refreshToken, params, profile, done) => {
       try {
         // Calculamos expiración
@@ -221,14 +220,15 @@ passport.use(
           profile,
         };
 
-        done(null, user);
+        return done(null, user);
       } catch (err) {
-        done(err, null);
+        return done(err, null);
       }
     }
   )
 );
-// Serialización
+
+// Serialización/deserialización
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
@@ -352,11 +352,9 @@ userRouter.get(
 
     // Verificar expiración
     if (!tokenSecret || (req.user.expiresAt && now > new Date(req.user.expiresAt))) {
-      // Token vencido → intentar refresh
       tokenSecret = await refreshAccessToken(req.user);
 
       if (!tokenSecret) {
-        // Si no se puede refrescar, forzar login de nuevo
         return res.send(`
           <script>
             alert('Sesion expirada, por favor logueate de nuevo');
@@ -377,16 +375,22 @@ userRouter.get(
       <html lang="en">
       <body></body>
       <script>
-        if (window.opener) {
-          const urls = [
-            'https://app.creame.com.co/actividades',
-            'https://app.creame.com.co/Gastos'
-          ];
-          urls.forEach(url => {
-            window.opener.postMessage(${JSON.stringify(datos)}, url);
-          });
+        try {
+          if (window.opener) {
+            const urls = [
+              'https://app.creame.com.co/actividades',
+              'https://app.creame.com.co/Gastos'
+            ];
+            urls.forEach(url => {
+              window.opener.postMessage(${JSON.stringify(datos)}, url);
+            });
+          }
+        } catch(e) {
+          console.error('Error enviando postMessage', e);
         }
-        window.close();
+
+        // Esperamos un microsegundo antes de cerrar
+        setTimeout(() => window.close(), 100);
       </script>
       </html>
     `);
