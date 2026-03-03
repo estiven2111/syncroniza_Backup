@@ -175,35 +175,70 @@ passport.use(
   )
 );
 
+//todo **************************************
+// passport.use(
+//   "azuread-openidconnect",
+//   new AzureAdOAuth2Strategy(
+//     {
+//       clientID: clientID,
+//       clientSecret: clientSecret,
+//       callbackURL: callbackURL,
+//       tenant: tenantID,
+//       resource: "https://graph.microsoft.com/",
+//     },
+//     (accessToken, refreshToken, params, profile, done) => {
+//       console.log("params", params);
+     
+//       // aca puede realizar acciones para obtener los datos de los usuarios
+//       //para enviar ala base datos o lo que desee y se pueda hacer
+
+//       return done(null, { accessToken, refreshToken, profile });
+//     }
+//   )
+// );
+//todo **************************************
+
 passport.use(
   "azuread-openidconnect",
   new AzureAdOAuth2Strategy(
     {
-      clientID: clientID,
-      clientSecret: clientSecret,
-      callbackURL: callbackURL,
-      tenant: tenantID,
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.REDIRECT_URI,
+      tenant: process.env.TENANT_ID,
       resource: "https://graph.microsoft.com/",
     },
-    (accessToken, refreshToken, params, profile, done) => {
-      console.log("params", params);
-     
-      // aca puede realizar acciones para obtener los datos de los usuarios
-      //para enviar ala base datos o lo que desee y se pueda hacer
+    async (accessToken, refreshToken, params, profile, done) => {
+      try {
+        // Calculamos expiración
+        const expiresAt = new Date(Date.now() + params.expires_in * 1000);
 
-      return done(null, { accessToken, refreshToken, profile });
+        const user = {
+          accessToken,
+          refreshToken,
+          expiresAt,
+          profile,
+        };
+
+        done(null, user);
+      } catch (err) {
+        done(err, null);
+      }
     }
   )
 );
+// Serialización
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
 // Configura la serialización de usuarios
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
+// passport.serializeUser((user, done) => {
+//   done(null, user);
+// });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+// passport.deserializeUser((user, done) => {
+//   done(null, user);
+// });
 
 userRouter.get("/api/auth",(req,res)=>{
   if (req.isAuthenticated()) {
@@ -260,40 +295,132 @@ userRouter.get(
   }
 );
 
+//todo **************************************
+// userRouter.get(
+//   "/api/validation",
+//   passport.authenticate("web-openidconnect", {
+//     failureRedirect: "/user/api/web",
+//   }),
+//   (req, res) => {
+
+//     const auth = req.isAuthenticated()
+//     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
+//     res.send(
+//       ` 
+//       <!DOCTYPE html>
+//       <html lang="en">
+
+//       <body>
+
+//       </body>
+//       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividade') 
+//       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
+//         window.close();
+//     </script>
+//       </html>
+//       `
+//    )
+//   //    <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/actividades') 
+//   //     <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/Gastos') 
+//   //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
+//   //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
+// //    setTimeout(function() {
+// //     window.close();
+// // }, 1000);
+//   }
+// );
+//todo **************************************
 
 userRouter.get(
   "/api/validation",
-  passport.authenticate("web-openidconnect", {
-    failureRedirect: "/user/api/web",
-  }),
-  (req, res) => {
+  passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/web" }),
+  async (req, res) => {
+    const auth = req.isAuthenticated();
 
-    const auth = req.isAuthenticated()
-    const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-    res.send(
-      ` 
+    if (!auth) {
+      return res.send(`
+        <script>
+          alert('Usuario no autenticado');
+          window.close();
+        </script>
+      `);
+    }
+
+    let tokenSecret = req.user.accessToken;
+    const now = new Date();
+
+    // Verificar expiración
+    if (!tokenSecret || (req.user.expiresAt && now > new Date(req.user.expiresAt))) {
+      // Token vencido → intentar refresh
+      tokenSecret = await refreshAccessToken(req.user);
+
+      if (!tokenSecret) {
+        // Si no se puede refrescar, forzar login de nuevo
+        return res.send(`
+          <script>
+            alert('Sesion expirada, por favor logueate de nuevo');
+            window.close();
+          </script>
+        `);
+      }
+    }
+
+    const datos = {
+      pass: "pass",
+      token: true,
+      tokenSecret,
+    };
+
+    res.send(`
       <!DOCTYPE html>
       <html lang="en">
-
-      <body>
-
-      </body>
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividade') 
-      <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
+      <body></body>
+      <script>
+        if (window.opener) {
+          const urls = [
+            'https://app.creame.com.co/actividade',
+            'https://app.creame.com.co/Gastos'
+          ];
+          urls.forEach(url => {
+            window.opener.postMessage(${JSON.stringify(datos)}, url);
+          });
+        }
         window.close();
-    </script>
+      </script>
       </html>
-      `
-   )
-  //    <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/actividades') 
-  //     <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/Gastos') 
-  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
-  //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
-//    setTimeout(function() {
-//     window.close();
-// }, 1000);
+    `);
   }
 );
+
+async function refreshAccessToken(user) {
+  if (!user.refreshToken) return null;
+
+  try {
+    const params = new URLSearchParams();
+    params.append("grant_type", "refresh_token");
+    params.append("client_id", process.env.CLIENT_ID);
+    params.append("client_secret", process.env.CLIENT_SECRET);
+    params.append("refresh_token", user.refreshToken);
+    params.append("scope", "https://graph.microsoft.com/.default");
+
+    const response = await axios.post(
+      `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/token`,
+      params
+    );
+
+    const data = response.data;
+
+    // Actualizamos user
+    user.accessToken = data.access_token;
+    user.refreshToken = data.refresh_token || user.refreshToken; // a veces no viene
+    user.expiresAt = new Date(Date.now() + data.expires_in * 1000);
+
+    return user.accessToken;
+  } catch (err) {
+    console.error("Error refrescando token:", err.message);
+    return null;
+  }
+}
 
 
 userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
