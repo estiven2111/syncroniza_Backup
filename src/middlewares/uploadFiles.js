@@ -349,26 +349,38 @@ const moveupload = (
 
 
 function parseMoney(value) {
-  if (!value) return 0;
+  if (!value) return ""; 
 
   let str = value.toString().trim();
 
-  // Eliminamos espacios
-  str = str.replace(/\s+/g, '');
+  // Quitar símbolos y espacios
+  str = str.replace(/[^0-9.,-]/g, '');
 
-  // Detectamos si el formato es latino (coma decimal al final)
-  const lastComma = str.lastIndexOf(',');
-  const lastDot = str.lastIndexOf('.');
+  const commaCount = (str.match(/,/g) || []).length;
+  const dotCount = (str.match(/\./g) || []).length;
 
-  if (lastComma > lastDot) {
-    // Coma después de punto → latino: puntos = miles, coma = decimal
-    str = str.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > lastComma) {
-    // Punto después de coma → anglo: comas = miles, punto = decimal
+  // Caso 1: Muchas comas y ningún punto → formato US miles
+  if (commaCount > 1 && dotCount === 0) {
     str = str.replace(/,/g, '');
-  } else {
-    // Solo comas o solo puntos → asumimos que es decimal
-    str = str.replace(/,/g, '.');
+  }
+
+  // Caso 2: Formato colombiano correcto
+  else if (dotCount > 0 && commaCount === 0) {
+    str = str.replace(/\./g, '');
+  }
+
+  // Caso 3: Formato mixto 1.000.000,00
+  else if (dotCount > 0 && commaCount === 1) {
+    str = str.replace(/\./g, '').replace(',', '.');
+  }
+
+  // Caso 4: Formato 1,000,000.00
+  else if (commaCount > 0 && dotCount === 1) {
+    str = str.replace(/,/g, '');
+  }
+
+  else {
+    str = str.replace(/[.,]/g, '');
   }
 
   const number = parseFloat(str);
@@ -401,8 +413,8 @@ const insertInto = async (data, tipo) => {
     impoconsumo: parseMoney(data.ipc) || 0, // [impoconsumo]
     Ica: parseMoney(data.ica) || 0, // [Ica]
     iva: parseMoney(data.iva) || 0, // [iva]
-    retefuente: parseMoney(data.retefuente || data.reteFuente) || 0, // [retefuente]
-    Sub_Total: parseMoney(data.Sub_Total || data.totalSinIva), // [Sub_Total]
+    retefuente: parseMoney(data.retefuente) || 0, // [retefuente]
+    Sub_Total: parseMoney(data.totalSinIva) || 0, // [Sub_Total]
     Descripcion: data.Descripcion ?? "", // [Descripcion]
     Notas: data.notas ?? data.textoExplicativo ?? "", // [Notas]
     Concepto: data.concepto ?? "", // [Concepto]
