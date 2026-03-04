@@ -438,8 +438,8 @@ function normalizeInput(value) {
 }
 
 function parseMoney(value) {
-   const normalized = normalizeInput(value);
-  return currency(normalized).value;
+  //  const normalized = normalizeInput(value);
+  return currency(value).value;
 }
 
 
