@@ -402,7 +402,6 @@ function parseMoney(value) {
 
   // 1️⃣ Limpiar todo excepto números, coma, punto y signo negativo
   str = str.replace(/[^0-9.,-]/g, '');
-
   if (!str) return "";
 
   const commaCount = (str.match(/,/g) || []).length;
@@ -411,7 +410,7 @@ function parseMoney(value) {
   let numericValue;
 
   // ==============================
-  // 🔎 DETECCIÓN DE FORMATO
+  // 🔎 DETECCIÓN DE FORMATO ORIGINAL
   // ==============================
 
   // 🟢 Caso US: 380,000.00
@@ -419,22 +418,22 @@ function parseMoney(value) {
     numericValue = str.replace(/,/g, '');
   }
 
-  // 🟢 Caso CO: 1.000.000,00
+  // 🟢 Caso Latino: 380.000,00
   else if (dotCount >= 1 && commaCount === 1 && str.lastIndexOf(',') > str.lastIndexOf('.')) {
     numericValue = str.replace(/\./g, '').replace(',', '.');
   }
 
-  // 🟢 Solo comas (6,050,000)
+  // 🟢 Solo comas como miles
   else if (commaCount > 1 && dotCount === 0) {
     numericValue = str.replace(/,/g, '');
   }
 
-  // 🟢 Solo puntos miles (1.000.000)
+  // 🟢 Solo puntos como miles
   else if (dotCount > 1 && commaCount === 0) {
     numericValue = str.replace(/\./g, '');
   }
 
-  // 🟢 Caso 359.900 (miles colombiano sin decimales)
+  // 🟢 Caso ambiguo: 359.900
   else if (dotCount === 1 && commaCount === 0) {
     const parts = str.split('.');
     if (parts[1].length === 3) {
@@ -444,33 +443,33 @@ function parseMoney(value) {
     }
   }
 
-  // 🟢 Caso simple sin separadores
+  // 🟢 Número simple
   else {
     numericValue = str.replace(/[.,]/g, '');
   }
 
   // ==============================
-  // 🔢 CONVERTIR A NÚMERO REAL
+  // 🔢 CONVERTIR A NÚMERO
   // ==============================
 
   const number = Number(numericValue);
-
   if (isNaN(number)) return "";
 
+  // Detectar si realmente tenía decimales distintos de 00
+  const decimalMatch = numericValue.match(/\.(\d+)/);
+  const hasRealDecimals = decimalMatch && decimalMatch[1] !== "00";
+
   // ==============================
-  // 🇨🇴 FORMATEAR A FORMATO COLOMBIANO
+  // 🇺🇸 FORMATO FINAL (COMA miles / PUNTO decimales)
   // ==============================
 
-  const hasDecimals = numericValue.includes('.') && 
-                      numericValue.split('.')[1]?.length > 0;
-
-  if (hasDecimals) {
-    return number.toLocaleString('es-CO', {
+  if (hasRealDecimals) {
+    return number.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
   } else {
-    return number.toLocaleString('es-CO', {
+    return number.toLocaleString('en-US', {
       maximumFractionDigits: 0
     });
   }

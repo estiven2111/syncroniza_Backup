@@ -1933,29 +1933,31 @@ Always use legal registered name, not brand or commercial name.
 MONETARY STANDARDIZATION (VERY IMPORTANT)
 ========================
 
-ALL monetary values MUST be returned in STRICT Colombian peso format.
+ALL monetary values MUST be returned in the following strict format:
 
-STEP 1 — Analyze the format shown in the document:
-- If the document uses Colombian format (1.234.567,89) → preserve it.
-- If the document uses international format (1,234,567.89) → convert it properly.
-- If the document uses plain numbers without separators → return exactly as shown.
-
-STEP 2 — Final output format MUST follow:
-- PERIOD (.) as thousand separator.
-- COMMA (,) as decimal separator ONLY if real centavos exist.
+FINAL OUTPUT FORMAT:
+- Use COMMA (,) as thousand separator.
+- Use PERIOD (.) as decimal separator ONLY if real centavos exist.
 - If there are NO centavos → do NOT add decimals.
 - Remove any currency symbols ($, COP, etc.).
-
-CRITICAL:
-- "380,000.00" must become "380.000"
-- "380000.00" must become "380.000"
-- "380000" must become "380000" (if no separators were shown)
-- "7.320" must remain "7.320"
-- NEVER return values like "380,000.00"
-- NEVER mix comma thousands with decimal point.
-- NEVER invent decimals.
-- NEVER recalculate values.
+- Do NOT invent decimals.
+- Do NOT recalculate values.
 - Preserve the exact numeric value represented in the invoice.
+
+STEP 1 — Analyze the format shown in the document:
+- If the document already uses comma for thousands and dot for decimals (380,000.00) → preserve correctly.
+- If the document uses Colombian format (380.000,00) → convert properly.
+- If the document uses plain numbers without separators → return exactly as shown (do not add separators if none existed).
+
+CRITICAL RULES:
+- "380.000,00" must become "380,000"
+- "380000.00" must become "380,000"
+- "380000" must remain "380000"
+- "7,320" must remain "7,320"
+- NEVER return values like "380.000,00"
+- NEVER mix thousand and decimal separators incorrectly.
+- Only use PERIOD (.) if there are real centavos.
+- If decimals are .00 → remove them.
 
 The values that MUST follow this rule are:
 - total
@@ -2280,7 +2282,6 @@ function parseMoney(value) {
 
   // 1️⃣ Limpiar todo excepto números, coma, punto y signo negativo
   str = str.replace(/[^0-9.,-]/g, '');
-
   if (!str) return "";
 
   const commaCount = (str.match(/,/g) || []).length;
@@ -2289,7 +2290,7 @@ function parseMoney(value) {
   let numericValue;
 
   // ==============================
-  // 🔎 DETECCIÓN DE FORMATO
+  // 🔎 DETECCIÓN DE FORMATO ORIGINAL
   // ==============================
 
   // 🟢 Caso US: 380,000.00
@@ -2297,22 +2298,22 @@ function parseMoney(value) {
     numericValue = str.replace(/,/g, '');
   }
 
-  // 🟢 Caso CO: 1.000.000,00
+  // 🟢 Caso Latino: 380.000,00
   else if (dotCount >= 1 && commaCount === 1 && str.lastIndexOf(',') > str.lastIndexOf('.')) {
     numericValue = str.replace(/\./g, '').replace(',', '.');
   }
 
-  // 🟢 Solo comas (6,050,000)
+  // 🟢 Solo comas como miles
   else if (commaCount > 1 && dotCount === 0) {
     numericValue = str.replace(/,/g, '');
   }
 
-  // 🟢 Solo puntos miles (1.000.000)
+  // 🟢 Solo puntos como miles
   else if (dotCount > 1 && commaCount === 0) {
     numericValue = str.replace(/\./g, '');
   }
 
-  // 🟢 Caso 359.900 (miles colombiano sin decimales)
+  // 🟢 Caso ambiguo: 359.900
   else if (dotCount === 1 && commaCount === 0) {
     const parts = str.split('.');
     if (parts[1].length === 3) {
@@ -2322,33 +2323,33 @@ function parseMoney(value) {
     }
   }
 
-  // 🟢 Caso simple sin separadores
+  // 🟢 Número simple
   else {
     numericValue = str.replace(/[.,]/g, '');
   }
 
   // ==============================
-  // 🔢 CONVERTIR A NÚMERO REAL
+  // 🔢 CONVERTIR A NÚMERO
   // ==============================
 
   const number = Number(numericValue);
-
   if (isNaN(number)) return "";
 
+  // Detectar si realmente tenía decimales distintos de 00
+  const decimalMatch = numericValue.match(/\.(\d+)/);
+  const hasRealDecimals = decimalMatch && decimalMatch[1] !== "00";
+
   // ==============================
-  // 🇨🇴 FORMATEAR A FORMATO COLOMBIANO
+  // 🇺🇸 FORMATO FINAL (COMA miles / PUNTO decimales)
   // ==============================
 
-  const hasDecimals = numericValue.includes('.') && 
-                      numericValue.split('.')[1]?.length > 0;
-
-  if (hasDecimals) {
-    return number.toLocaleString('es-CO', {
+  if (hasRealDecimals) {
+    return number.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
   } else {
-    return number.toLocaleString('es-CO', {
+    return number.toLocaleString('en-US', {
       maximumFractionDigits: 0
     });
   }
