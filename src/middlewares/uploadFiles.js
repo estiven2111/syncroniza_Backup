@@ -395,53 +395,86 @@ function parseMoney(value) {
   return number;
 }
 
-function normalizeInput(value) {
-  if (!value) return 0;
+function parseMoney(value) {
+  if (value === null || value === undefined) return "";
 
   let str = String(value).trim();
 
-  // quitar todo excepto números, punto, coma y signo
+  // 1️⃣ Limpiar todo excepto números, coma, punto y signo negativo
   str = str.replace(/[^0-9.,-]/g, '');
+
+  if (!str) return "";
 
   const commaCount = (str.match(/,/g) || []).length;
   const dotCount = (str.match(/\./g) || []).length;
 
-  // Caso: múltiples comas (6,050,000)
-  if (commaCount > 1 && dotCount === 0) {
-    return str.replace(/,/g, '');
+  let numericValue;
+
+  // ==============================
+  // 🔎 DETECCIÓN DE FORMATO
+  // ==============================
+
+  // 🟢 Caso US: 380,000.00
+  if (commaCount >= 1 && dotCount === 1 && str.lastIndexOf('.') > str.lastIndexOf(',')) {
+    numericValue = str.replace(/,/g, '');
   }
 
-  // Caso: múltiples puntos (1.000.000)
-  if (dotCount > 1 && commaCount === 0) {
-    return str.replace(/\./g, '');
+  // 🟢 Caso CO: 1.000.000,00
+  else if (dotCount >= 1 && commaCount === 1 && str.lastIndexOf(',') > str.lastIndexOf('.')) {
+    numericValue = str.replace(/\./g, '').replace(',', '.');
   }
 
-  // Caso US: 380,000.00
-  if (commaCount >= 1 && dotCount === 1) {
-    return str.replace(/,/g, '');
+  // 🟢 Solo comas (6,050,000)
+  else if (commaCount > 1 && dotCount === 0) {
+    numericValue = str.replace(/,/g, '');
   }
 
-  // Caso LATAM: 1.000.000,00
-  if (dotCount >= 1 && commaCount === 1) {
-    return str.replace(/\./g, '').replace(',', '.');
+  // 🟢 Solo puntos miles (1.000.000)
+  else if (dotCount > 1 && commaCount === 0) {
+    numericValue = str.replace(/\./g, '');
   }
 
-  // Caso 359.900 → miles colombiano
-  if (dotCount === 1 && commaCount === 0) {
+  // 🟢 Caso 359.900 (miles colombiano sin decimales)
+  else if (dotCount === 1 && commaCount === 0) {
     const parts = str.split('.');
     if (parts[1].length === 3) {
-      return parts[0] + parts[1];
+      numericValue = parts.join('');
+    } else {
+      numericValue = str;
     }
   }
 
-  return str.replace(/[.,]/g, '');
-}
+  // 🟢 Caso simple sin separadores
+  else {
+    numericValue = str.replace(/[.,]/g, '');
+  }
 
-function parseMone3y(value) {
-  //  const normalized = normalizeInput(value);
-  return currency(value).value;
-}
+  // ==============================
+  // 🔢 CONVERTIR A NÚMERO REAL
+  // ==============================
 
+  const number = Number(numericValue);
+
+  if (isNaN(number)) return "";
+
+  // ==============================
+  // 🇨🇴 FORMATEAR A FORMATO COLOMBIANO
+  // ==============================
+
+  const hasDecimals = numericValue.includes('.') && 
+                      numericValue.split('.')[1]?.length > 0;
+
+  if (hasDecimals) {
+    return number.toLocaleString('es-CO', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  } else {
+    return number.toLocaleString('es-CO', {
+      maximumFractionDigits: 0
+    });
+  }
+}
 
 const insertInto = async (data, tipo) => {
   if (!data) return;
