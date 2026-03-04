@@ -1868,7 +1868,7 @@ console.log( "datos finales antes de formatear");
 
 
 function normalizeInput(value) {
-  if (!value) return 0;
+  if (!value) return "";
 
   let str = String(value).trim();
 
