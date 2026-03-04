@@ -396,7 +396,7 @@ function parseMoney3(value) {
 }
 
 function normalizeInput(value) {
-  if (!value) return 0;
+  if (!value) return "";
 
   let str = String(value).trim();
 
