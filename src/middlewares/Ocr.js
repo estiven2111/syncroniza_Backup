@@ -1911,8 +1911,8 @@ function normalizeInput(value) {
 
 function parseMoney(value) {
    if (!value) return "";
-  const normalized = normalizeInput(value);
-  return currency(value).value;
+  // const normalized = normalizeInput(value);
+  return value;
 }
 
 
