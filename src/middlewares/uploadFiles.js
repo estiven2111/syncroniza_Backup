@@ -17,7 +17,7 @@ const clientID = CLIENT_ID;
 const clientSecret = CLIENT_SECRET;
 const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
 const tenantID = TENANT_ID;
-
+const currency = require('currency.js');
 const authUpload = (req, res) => {
   console.log("login inicial ");
   return passport.authenticate("azuread-openidconnect");
