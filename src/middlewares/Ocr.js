@@ -1130,6 +1130,7 @@ const computerVisionClient = new ComputerVisionClient(
   new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-Key": key } }),
   endpoint
 );
+const currency = require('currency.js');
 
 async function Ocr2(req, res) {
   const { latitud, longitud } = req.body;
@@ -1863,44 +1864,61 @@ console.log( "datos finales antes de formatear");
   }
 }
 
-function parseMoney(value) {
-  if (!value) return ""; 
 
-  let str = value.toString().trim();
 
-  // Quitar símbolos y espacios
+
+function normalizeInput(value) {
+  if (!value) return 0;
+
+  let str = String(value).trim();
+
+  // quitar todo excepto números, punto, coma y signo
   str = str.replace(/[^0-9.,-]/g, '');
 
   const commaCount = (str.match(/,/g) || []).length;
   const dotCount = (str.match(/\./g) || []).length;
 
-  // Caso 1: Muchas comas y ningún punto → formato US miles
+  // Caso: múltiples comas (6,050,000)
   if (commaCount > 1 && dotCount === 0) {
-    str = str.replace(/,/g, '');
+    return str.replace(/,/g, '');
   }
 
-  // Caso 2: Formato colombiano correcto
-  else if (dotCount > 0 && commaCount === 0) {
-    str = str.replace(/\./g, '');
+  // Caso: múltiples puntos (1.000.000)
+  if (dotCount > 1 && commaCount === 0) {
+    return str.replace(/\./g, '');
   }
 
-  // Caso 3: Formato mixto 1.000.000,00
-  else if (dotCount > 0 && commaCount === 1) {
-    str = str.replace(/\./g, '').replace(',', '.');
+  // Caso US: 380,000.00
+  if (commaCount >= 1 && dotCount === 1) {
+    return str.replace(/,/g, '');
   }
 
-  // Caso 4: Formato 1,000,000.00
-  else if (commaCount > 0 && dotCount === 1) {
-    str = str.replace(/,/g, '');
+  // Caso LATAM: 1.000.000,00
+  if (dotCount >= 1 && commaCount === 1) {
+    return str.replace(/\./g, '').replace(',', '.');
   }
 
-  else {
-    str = str.replace(/[.,]/g, '');
+  // Caso 359.900 → miles colombiano
+  if (dotCount === 1 && commaCount === 0) {
+    const parts = str.split('.');
+    if (parts[1].length === 3) {
+      return parts[0] + parts[1];
+    }
   }
 
-  const number = parseFloat(str);
-  return isNaN(number) ? 0 : number;
+  return str.replace(/[.,]/g, '');
 }
+
+function parseMoney(value) {
+  const normalized = normalizeInput(value);
+  return currency(normalized).value;
+}
+
+
+
+
+
+
 
 
 async function eliminar(filePath) {
