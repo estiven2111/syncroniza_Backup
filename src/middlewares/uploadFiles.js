@@ -350,7 +350,7 @@ const moveupload = (
 
 
 
-function parseMoney3(value) {
+function parseMoney(value) {
   if (value === null || value === undefined) return 0;
 
   let str = String(value).trim();
@@ -437,7 +437,7 @@ function normalizeInput(value) {
   return str.replace(/[.,]/g, '');
 }
 
-function parseMoney(value) {
+function parseMone3y(value) {
   //  const normalized = normalizeInput(value);
   return currency(value).value;
 }
