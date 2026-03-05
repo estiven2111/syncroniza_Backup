@@ -1933,33 +1933,32 @@ Always use legal registered name, not brand or commercial name.
 MONETARY STANDARDIZATION (VERY IMPORTANT)
 ========================
 
-ALL monetary values MUST be returned in the following strict format:
+ALL monetary values MUST follow this strict format:
 
 FINAL OUTPUT FORMAT:
-- Use COMMA (,) as thousand separator.
-- Use PERIOD (.) as decimal separator ONLY if real centavos exist.
-- If there are NO centavos → do NOT add decimals.
-- Remove any currency symbols ($, COP, etc.).
-- Do NOT invent decimals.
-- Do NOT recalculate values.
-- Preserve the exact numeric value represented in the invoice.
+1. Comma (,) as thousand separator.
+2. Period (.) as decimal separator ONLY if real cents exist.
+3. If there are NO cents → do NOT add decimals.
+4. Keep all real decimals exactly as they appear.
+5. Remove any currency symbols ($, COP, etc.).
+6. Do NOT invent decimals or recalculate values.
+7. Preserve the exact numeric value represented in the invoice.
 
-STEP 1 — Analyze the format shown in the document:
-- If the document already uses comma for thousands and dot for decimals (380,000.00) → preserve correctly.
-- If the document uses Colombian format (380.000,00) → convert properly.
-- If the document uses plain numbers without separators → return exactly as shown (do not add separators if none existed).
+STEP 1 — Analyze the format of the value:
+- US format (e.g., 380,000.50) → preserve correctly.
+- Colombian format (e.g., 380.000,50) → convert properly to US-style (380,000.50).
+- Plain numbers without separators → return exactly as shown (do not add separators if none existed).
 
 CRITICAL RULES:
-- "380.000,00" must become "380,000"
-- "380000.00" must become "380,000"
-- "380000" must remain "380000"
-- "7,320" must remain "7,320"
+- "380.000,00" → "380,000"
+- "380000.00" → "380,000"
+- "380000" → "380000"
+- "7,320" → "7,320"
 - NEVER return values like "380.000,00"
 - NEVER mix thousand and decimal separators incorrectly.
-- Only use PERIOD (.) if there are real centavos.
-- If decimals are .00 → remove them.
+- Keep decimals if they exist (e.g., 1500.75 → "1,500.75").
 
-The values that MUST follow this rule are:
+FIELDS THAT MUST FOLLOW THIS RULE:
 - total
 - totalSinIva
 - iva
