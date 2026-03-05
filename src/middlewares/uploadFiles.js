@@ -395,7 +395,7 @@ function parseMoney(value) {
   return number;
 }
 
-function parseMoney(value) {
+function parseMoneytexto(value) {
   if (value === null || value === undefined) return "";
 
   let str = String(value).trim();
@@ -473,6 +473,59 @@ function parseMoney(value) {
       maximumFractionDigits: 0
     });
   }
+}
+
+function parseMoney(value) {
+  if (value === null || value === undefined) return null;
+
+  let str = String(value).trim();
+
+  // Limpiar todo excepto números, coma, punto y signo negativo
+  str = str.replace(/[^0-9.,-]/g, '');
+  if (!str) return null;
+
+  const commaCount = (str.match(/,/g) || []).length;
+  const dotCount = (str.match(/\./g) || []).length;
+
+  let numericValue;
+
+  // Caso US: 380,000.00
+  if (commaCount >= 1 && dotCount === 1 && str.lastIndexOf('.') > str.lastIndexOf(',')) {
+    numericValue = str.replace(/,/g, '');
+  }
+
+  // Caso Latino: 380.000,00
+  else if (dotCount >= 1 && commaCount === 1 && str.lastIndexOf(',') > str.lastIndexOf('.')) {
+    numericValue = str.replace(/\./g, '').replace(',', '.');
+  }
+
+  // Solo comas como miles
+  else if (commaCount > 1 && dotCount === 0) {
+    numericValue = str.replace(/,/g, '');
+  }
+
+  // Solo puntos como miles
+  else if (dotCount > 1 && commaCount === 0) {
+    numericValue = str.replace(/\./g, '');
+  }
+
+  // Caso ambiguo: 359.900
+  else if (dotCount === 1 && commaCount === 0) {
+    const parts = str.split('.');
+    if (parts[1].length === 3) {
+      numericValue = parts.join('');
+    } else {
+      numericValue = str;
+    }
+  }
+
+  // Número simple
+  else {
+    numericValue = str.replace(/[.,]/g, '');
+  }
+
+  const number = Number(numericValue);
+  return isNaN(number) ? null : number;
 }
 
 const insertInto = async (data, tipo) => {
