@@ -554,7 +554,7 @@ const insertInto = async (data, tipo) => {
     impoconsumo: parseMoney(data.ipc) || 0, // [impoconsumo]
     Ica: parseMoney(data.ica) || 0, // [Ica]
     iva: parseMoney(data.iva) || 0, // [iva]
-    retefuente: parseMoney(data.retefuente) || 0, // [retefuente]
+    retefuente: parseMoney(data.reteFuente) || 0, // [retefuente]
     Sub_Total: parseMoney(data.Sub_Total || data.totalSinIva) || 0, // [Sub_Total]
     Descripcion: data.Descripcion ?? "", // [Descripcion]
     Notas: data.notas ?? data.textoExplicativo ?? "", // [Notas]
