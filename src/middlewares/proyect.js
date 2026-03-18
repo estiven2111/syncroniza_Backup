@@ -616,17 +616,18 @@ const hourActivities = async (req, res) => {
 
 
 const updateProyecto = async (req, res) => {
-  const { finished, idNodoProyecto, SKU_Proyecto } = req.body;
-  try {
+  const { finished, idNodoProyecto, SKU_Proyecto,N_Documento } = req.body;
+
+  try { //cambio
     await sequelize.query(
       `
     UPDATE TBL_SER_ProyectoActividadesEmpleados
    SET Terminada = ${finished}
-   WHERE idNodoProyecto = ${idNodoProyecto} and SKU_Proyecto = ${SKU_Proyecto};
+   WHERE idNodoProyecto = ${idNodoProyecto} and SKU_Proyecto = ${SKU_Proyecto} and N_DocumentoEmpleado = ${N_Documento};
     `
     );
 
-    // await sequelize.query(
+    // await sequelize.query(  
     //   `
     //   UPDATE TBL_SER_ProyectoActividadesEmpleados
     //   SET Terminada = :finished
