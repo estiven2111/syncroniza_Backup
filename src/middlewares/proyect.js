@@ -790,7 +790,7 @@ const Entregables = async (req, res) => {
       `
     SELECT * FROM TBL_SER_ProyectoActividadesEmpleadosEntregables 
     WHERE SKU_Proyecto = :sku AND NitCliente = :nit AND idNodoProyecto = :id
-     AND NumeroEntregable = :numE AND idProceso = :proceso  AND  N_DocumentoEmpleado = :DocEmpleado`,
+     AND NumeroEntregable = :numE AND idProceso = :proceso  AND  N_DocumentoEmpleado = :DocEmpleado and Rechazado <> 1`,
       {
         replacements: {
           sku: SKU_Proyecto,
