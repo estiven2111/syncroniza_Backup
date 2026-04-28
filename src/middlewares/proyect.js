@@ -7,7 +7,7 @@ const LoadProyect = async (Doc_id, email) => {
   try {
     // Obtener idNodo para saber qué proyectos tiene el usuario
     const idnodo = await sequelize.query(
-      `SELECT idNodoProyecto, Terminada FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId`,
+      `SELECT idNodoProyecto, Terminada,SKU_Proyecto FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId`,
       { replacements: { docId: Doc_id } }
     );
 
@@ -33,8 +33,10 @@ const LoadProyect = async (Doc_id, email) => {
     for (const i of idnodo[0]) {
       try {
         const proyect = await sequelize.query(
-          `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = :idNodo) ORDER BY SKU, idNodo`,
-          { replacements: { docId: Doc_id, idNodo: i.idNodoProyecto } }
+          `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto)
+           FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId 
+           AND idNodo = :idNodo AND SKU = :SKU) ORDER BY SKU, idNodo`,
+          { replacements: { docId: Doc_id, idNodo: i.idNodoProyecto, SKU: i.SKU_Proyecto } }
         );
 
         if (proyect[0].length > 0) {

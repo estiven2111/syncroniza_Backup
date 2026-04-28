@@ -1114,22 +1114,22 @@
 //todo ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // OCR.js
-const fs = require("fs");
-const fs_extra = require("fs-extra");
-const path = require("path");
-const axios = require("axios");
-const sharp = require("sharp");
-const {
-  ComputerVisionClient,
-} = require("@azure/cognitiveservices-computervision");
-const { ApiKeyCredentials } = require("@azure/ms-rest-js");
+// const fs = require("fs");
+// const fs_extra = require("fs-extra");
+// const path = require("path");
+// const axios = require("axios");
+// const sharp = require("sharp");
+// const {
+//   ComputerVisionClient,
+// } = require("@azure/cognitiveservices-computervision");
+// const { ApiKeyCredentials } = require("@azure/ms-rest-js");
 
-const { apiKey, apiUrl, key, endpoint } = process.env;
+// const { apiKey, apiUrl, key, endpoint } = process.env;
+// const computerVisionClient = new ComputerVisionClient(
+//   new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-Key": key } }),
+//   endpoint
+// );
 
-const computerVisionClient = new ComputerVisionClient(
-  new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-Key": key } }),
-  endpoint
-);
 const currency = require('currency.js');
 
 async function Ocr2(req, res) {
@@ -1488,7 +1488,10 @@ Validate and understand the document carefully. Use correct values, formats, and
   }
 }
 
-async function Ocr(req, res) {
+
+//este es el original que estabamos usando antes de cambiar recuros 
+// estamos usando nose revisar 
+async function Ocr_origin(req, res) {
   const { latitud, longitud } = req.body;
   const { imagen } = req.files || {};
 
@@ -1542,323 +1545,6 @@ async function Ocr(req, res) {
     // 2️⃣ MENSAJES PARA IA
     // ==============================
 
-//     const prompt = `
-// Extract all relevant information from the provided invoice image. Return only the following JSON object, with no extra explanations or text:
-
-// {
-// "nit": "",
-// "NumFactura": "",
-// "OrdenCompra": "",
-// "doc": "",
-// "total": "",
-// "totalSinIva": "",
-// "nombre": "",
-// "razon_social": "",
-// "fecha": "",
-// "iva": "",
-// "rete": "",
-// "porcentaje_rete": "",
-// "ipc": "",
-// "concepto": "",
-// "ica": "",
-// "municipio": "",
-// "codepostal": "",
-// "porcentaje_iva": "",
-// "textoExplicativo": "",
-// "tipo_factura": "",
-// "direccion_detectada": "",
-// "ciudad_detectada": "",
-// "detalles_compra": "",
-// "icui": "",
-// "porcentaje_icui": ""
-// }
-
-// ⚠️ STRICT RULES:
-
-// Extract the "nit" from the document. Use it to search legal public records in Colombia (DIAN or RUES) online.
-
-// If the NIT exists and is linked to a legal entity, assign its official name as "razon_social" and optionally also in "nombre".
-
-// If it's a natural person, use the name on the invoice for both "razon_social" and "nombre".
-
-// If not found, use the sender’s name on the invoice.
-
-// Never assign “Corporación Incubadora de Empresas” to "razon_social" (it's your client, not the issuer).
-
-// Always use only what you find online by NIT, not commercial or brand names.
-
-// All fields in the JSON must be present. If any value is missing or unreadable, leave it as "".
-
-// Use exactly the same field names provided. Do not alter key names.
-
-// Date format: DD/MM/YYYY.
-
-// "nit" must be numeric only (no dashes or check digits). It can be a NIT, RUT, or Colombian ID (Cédula).
-
-// "doc" is the same as "nit", or cédula if it's a natural person. Numbers only.
-
-// "total": use the exact value from the invoice. Do not recalculate.
-
-// "totalSinIva": only if explicitly shown as "Subtotal", "Total sin IVA", "Valor antes de IVA", "TOTAL BRUTO". If missing, leave as "".
-
-// "iva": only if explicitly mentioned as VAT. Never calculate or infer. Use the final value, not per item.
-// If a field such as “Total Imp.” appears, it must be understood as IPC (consumption tax) and not as VAT.
-
-// "porcentaje_iva": Always "19" for 2025 unless Colombian law changes. 
-
-// "rete": include only if explicitly shown (e.g., "RETE FUENTE: 37.065,88"). Format properly.
-
-// "porcentaje_rete": if explicitly shown. Otherwise, leave blank.
-
-// "ipc": only if explicitly stated (e.g., INC). Not the same as ICUI. Leave blank if missing.
-
-// "concepto": must be one of ["producto", "servicio", "honorario", ""].
-
-// "ica": include only if explicitly shown.
-
-// "OrdenCompra": include only if labeled as "Orden de compra", "OC", "PO", etc. Not the invoice number.
-
-// "NumFactura": the official invoice number. May have a prefix (e.g., FT-00023). Don’t confuse with OC or delivery notes.
-
-// "tipo_factura":
-
-// "electronica" → if CUFE, QR, DIAN validation is present
-
-// "formal" → if paper with clear legal format, resolution, logo
-
-// "comprobante" → simple receipt, informal, handwritten or account payable
-
-// "direccion_detectada": structured address from the invoice. Use format like “CRA 45 #22-33” or names like "Centro Comercial". If not present, leave as "".
-
-// "municipio": the city or town of the issuer. E.g., "Medellín", "Bogotá". Not neighborhoods.
-
-// "codepostal": corresponding postal code. Leave blank if undetermined.
-
-// "icui": only if the ICUI tax is explicitly mentioned. Not the same as IPC. Leave blank if missing.
-
-// "porcentaje_icui": if ICUI appears, and it’s 2025, set to "20". Otherwise, leave blank.
-
-// "detalles_compra": list of purchased items or services. Extract descriptions from the invoice and join with commas. Do not include prices or payment details.
-
-// "textoExplicativo": short summary (in Spanish) explaining:
-
-// which fields were found and used
-
-// which fields were left blank and why
-
-// whether “totalSinIva” was used explicitly
-
-// if NIT was searched online and whether it was found (include URL if available)
-
-// why "razon_social" was assigned the way it was (e.g., TEXTILES Y RETAZOS LOS PAISAS)
-
-// DO NOT INVENT values. Do not infer, guess, or estimate. Only extract what is clearly present in the document.
-
-// If it's a "cuenta de cobro", extract the legal ID (RUT or cédula) of the person or entity marked as “Debe a” or “Pagado a”.
-// This ID goes in "nit". The full name goes in both "nombre" and "razon_social".
-
-// Monetary values (like total, totalSinIva, rete, ipc, ica, icui) must be:
-
-// In the same format as on the invoice
-
-// No dollar signs
-
-// Use periods (.) as decimal separator only
-
-// No commas (",") for thousands. E.g., "130335.55" not "130,335.55"
-
-// No decimals if the value doesn’t include them on the invoice
-
-// Validate and understand the document carefully. Use correct values, formats, and interpretations.
-// `;
-
-// const prompt = `
-// Extract all relevant information from the provided invoice image.
-
-// Return ONLY the following JSON object.
-// Do NOT include explanations outside the JSON.
-
-// {
-// "nit": "",
-// "NumFactura": "",
-// "OrdenCompra": "",
-// "doc": "",
-// "total": "",
-// "totalSinIva": "",
-// "nombre": "",
-// "razon_social": "",
-// "fecha": "",
-// "iva": "",
-// "rete": "",
-// "porcentaje_rete": "",
-// "ipc": "",
-// "concepto": "",
-// "ica": "",
-// "municipio": "",
-// "codepostal": "",
-// "porcentaje_iva": "",
-// "textoExplicativo": "",
-// "tipo_factura": "",
-// "direccion_detectada": "",
-// "ciudad_detectada": "",
-// "detalles_compra": "",
-// "icui": "",
-// "porcentaje_icui": ""
-// }
-
-// ========================
-// GENERAL EXTRACTION RULES
-// ========================
-
-// - ALL fields must exist in the JSON.
-// - If a value is missing, unreadable, or not explicitly present → return "".
-// - NEVER invent, infer, calculate, assume or estimate values.
-// - Use EXACT field names. Do NOT rename keys.
-// - Date format MUST be: DD/MM/YYYY.
-// - Do not confuse invoice number with purchase order.
-
-// ========================
-// IDENTIFICATION RULES
-// ========================
-
-// - "nit" must contain NUMBERS ONLY (no dashes, no check digit).
-// - It may be NIT, RUT, or Colombian ID (cédula).
-// - "doc" must be the same numeric value as "nit".
-// - Extract the NIT from the document.
-// - Use the NIT to search official Colombian public records (DIAN or RUES).
-
-// If NIT is found:
-//     - Use the OFFICIAL registered legal name as "razon_social".
-//     - Optionally also use it in "nombre".
-
-// If it is a natural person:
-//     - Use the invoice name for both "razon_social" and "nombre".
-
-// If not found online:
-//     - Use the issuer name shown in the invoice.
-
-// NEVER assign “Corporación Incubadora de Empresas” as razon_social.
-
-// Always use legal registered name, not brand or commercial name.
-
-// ========================
-// MONETARY STANDARDIZATION (VERY IMPORTANT)
-// ========================
-
-// ALL monetary values MUST follow this STRICT Colombian numeric format:
-
-// - Use PERIOD (.) as decimal separator ONLY.
-// - NEVER use commas (,) as thousand separators.
-// - Remove ALL thousand separators.
-// - Do NOT include currency symbols.
-// - Keep EXACT numeric value shown in invoice.
-// - Do NOT recalculate any value.
-// - If the invoice shows no decimals → return no decimals.
-// - If decimals appear → preserve them exactly as shown.
-
-// Examples of correct output:
-// "15451541"
-// "2935792.79"
-// "18387333.79"
-// "130335.55"
-
-// Examples of incorrect output:
-// "15,451,541"
-// "15.451.541"
-// "$15451541"
-// "15451.541" (if this was not explicitly shown)
-
-// The values that MUST follow this rule are:
-// - total
-// - totalSinIva
-// - iva
-// - rete
-// - ipc
-// - ica
-// - icui
-
-// ========================
-// TAX RULES
-// ========================
-
-// - "total": exact total value shown. Do NOT calculate.
-// - "totalSinIva": ONLY if explicitly shown as:
-//   "Subtotal", "Total sin IVA", "Valor antes de IVA", "TOTAL BRUTO".
-//   If not explicitly present → "".
-
-// - "iva": ONLY if explicitly labeled as VAT or IVA.
-//   Never calculate.
-//   Use final IVA value, not per-item tax.
-
-// - "porcentaje_iva": Always "19" for 2025 unless Colombian law changes.
-
-// - "rete": ONLY if explicitly shown.
-// - "porcentaje_rete": ONLY if explicitly shown.
-
-// - "ipc": ONLY if explicitly stated (e.g., INC).
-// - "ica": ONLY if explicitly shown.
-// - "icui": ONLY if explicitly mentioned.
-// - "porcentaje_icui": if ICUI appears and document is 2025 → "20".
-//   Otherwise → "".
-
-// IMPORTANT:
-// If the invoice shows "Total Imp." it must be interpreted as IPC (consumption tax), NOT IVA.
-
-// ========================
-// DOCUMENT CLASSIFICATION
-// ========================
-
-// "tipo_factura" must be:
-
-// - "electronica" → if CUFE, QR, or DIAN validation appears
-// - "formal" → legal formatted invoice with resolution
-// - "comprobante" → simple receipt or informal document
-
-// ========================
-// OTHER FIELDS
-// ========================
-
-// - "OrdenCompra": only if explicitly labeled as OC, PO, Orden de Compra.
-// - "NumFactura": official invoice number (may include prefix).
-// - "direccion_detectada": structured address from issuer.
-// - "municipio": issuer city.
-// - "ciudad_detectada": city if separately identifiable.
-// - "codepostal": only if explicitly shown.
-// - "concepto": must be one of:
-//   ["producto", "servicio", "honorario", ""]
-
-// - "detalles_compra":
-//   Extract descriptions of purchased items/services.
-//   Join with commas.
-//   Do NOT include prices or payment terms.
-
-// ========================
-// SPECIAL CASE
-// ========================
-
-// If document is a "cuenta de cobro":
-// - Extract ID of person marked as “Debe a” or “Pagado a”.
-// - That ID goes in "nit".
-// - Full name goes in both "nombre" and "razon_social".
-
-// ========================
-// textoExplicativo (REQUIRED)
-// ========================
-
-// Write a short explanation in Spanish describing:
-
-// - Which fields were found and used
-// - Which fields were blank and why
-// - Whether "totalSinIva" was explicitly used
-// - If NIT was searched online and whether it was found (include URL if available)
-// - Why razon_social was assigned the way it was
-
-// Be concise and factual.
-// Do NOT invent information.
-
-// Validate and understand the document carefully.
-// Return ONLY the JSON.
-// `;
 
 const prompt = `
 Extract all relevant information from the provided invoice image.
@@ -2274,7 +1960,7 @@ Return ONLY the JSON.
         codepostal = address?.postcode || "";
       }
     } catch (err) {
-      console.warn("⚠️ Error geolocalización:", err.message);
+      console.warn("⚠️ Error geolocalización:", err);
     }
 
     // ==============================
@@ -2311,34 +1997,6 @@ console.log( "datos finales antes de formatear");
       concepto: datos.detalles_compra,
     };
 
-    //   const resultadoFinal = {
-    //   nit: nitLimpio || "",
-    //   NumFactura: datos.NumFactura,
-    //   OrdenCompra: datos.OrdenCompra,
-    //   doc: datos.doc,
-    //   total: datos.total,
-    //   totalSinIva: datos.totalSinIva,
-    //   nombre: datos.nombre,
-    //   razon_social: datos.razon_social,
-    //   fecha: datos.fecha,
-    //   iva: datos.iva,
-    //   rete: datos.rete,
-    //   porcentaje_rete: datos.porcentaje_rete,
-    //   ipc: datos.ipc,
-    //   Tipo_Documento: datos.concepto,
-    //   ica: datos.ica,
-    //   municipio,
-    //   codepostal,
-    //   porcentaje_iva: datos.porcentaje_iva,
-    //   textoExplicativo: datos.textoExplicativo,
-    //   tipo_factura: datos.tipo_factura,
-    //   Direccion: datos.direccion_detectada,
-    //   ciudad_detectada: datos.ciudad_detectada,
-    //   icui: datos.icui,
-    //   porcentaje_icui: datos.porcentaje_icui,
-    //   concepto: datos.detalles_compra,
-    // };
-
     await eliminar(uploadPath);
 
     return res.json(resultadoFinal);
@@ -2356,6 +2014,7 @@ console.log( "datos finales antes de formatear");
     });
   }
 }
+
 
 
 
@@ -2455,6 +2114,283 @@ const normalized = normalizeInput(value);
 async function eliminar(filePath) {
   if (fs_extra.existsSync(filePath)) {
     await fs_extra.unlink(filePath);
+  }
+}
+
+
+
+
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
+const axios = require("axios");
+
+const {
+  ComputerVisionClient,
+} = require("@azure/cognitiveservices-computervision");
+
+const { ApiKeyCredentials } = require("@azure/ms-rest-js");
+
+// ==============================
+// 🔵 AZURE VISION CLIENT
+// ==============================
+const computerVisionClient = new ComputerVisionClient(
+  new ApiKeyCredentials({
+    inHeader: {
+      "Ocp-Apim-Subscription-Key": process.env.VISION_KEY,
+    },
+  }),
+  process.env.VISION_ENDPOINT
+);
+
+// ==============================
+// 💰 MONEY PARSER (ROBUSTO)
+// ==============================
+function parseMoney(value) {
+  if (value === null || value === undefined) return "";
+
+  let str = String(value).trim();
+
+  // limpiar símbolos
+  str = str.replace(/[^0-9.,-]/g, "");
+  if (!str) return "";
+
+  const hasComma = str.includes(",");
+  const hasDot = str.includes(".");
+
+  let normalized = str;
+
+  // 🇨🇴 1.234.567,89
+  if (hasComma && hasDot) {
+    if (str.lastIndexOf(",") > str.lastIndexOf(".")) {
+      normalized = str.replace(/\./g, "").replace(",", ".");
+    } else {
+      normalized = str.replace(/,/g, "");
+    }
+  }
+
+  // 🇨🇴 SOLO PUNTOS
+  else if (hasDot && !hasComma) {
+    const parts = str.split(".");
+    if (parts[parts.length - 1].length === 3) {
+      normalized = str.replace(/\./g, "");
+    }
+  }
+
+  // 🇺🇸 SOLO COMAS
+  else if (hasComma && !hasDot) {
+    const parts = str.split(",");
+    if (parts[parts.length - 1].length === 3) {
+      normalized = str.replace(/,/g, "");
+    } else {
+      normalized = str.replace(",", ".");
+    }
+  }
+
+  const number = Number(normalized);
+  if (isNaN(number)) return "";
+
+  return number.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+}
+
+// ==============================
+// 🔥 OCR CONTROLLER
+// ==============================
+async function Ocr(req, res) {
+  const { imagen } = req.files || {};
+
+  if (!imagen) {
+    return res.status(400).json({
+      error: "Debes subir una imagen o PDF",
+    });
+  }
+
+  const uploadPath = `uploads/${Date.now()}_${imagen.name}`;
+  await imagen.mv(uploadPath);
+
+  const extension = path.extname(imagen.name).toLowerCase();
+
+  let textoPlano = "";
+  let base64Image = "";
+
+  try {
+    // ==============================
+    // 1. OCR AZURE VISION
+    // ==============================
+    if (extension === ".pdf") {
+      const buffer = await fs.promises.readFile(uploadPath);
+
+      const result = await computerVisionClient.readInStream(buffer);
+
+      const operationId = result.operationLocation?.split("/").pop();
+
+      if (!operationId) {
+        throw new Error("No operationId from Azure Vision");
+      }
+
+      let pollResult;
+
+      for (let i = 0; i < 15; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        pollResult = await computerVisionClient.getReadResult(operationId);
+
+        if (pollResult.status === "succeeded") break;
+        if (pollResult.status === "failed") {
+          throw new Error("OCR falló en Azure Vision");
+        }
+      }
+
+      const lines =
+        pollResult?.analyzeResult?.readResults?.flatMap((r) =>
+          r.lines.map((l) => l.text)
+        ) || [];
+
+      textoPlano = lines.join(" ");
+    } else {
+      const optimized = await sharp(uploadPath)
+        .resize({ width: 2500 })
+        .normalize()
+        .sharpen()
+        .jpeg({ quality: 90 })
+        .toBuffer();
+
+      base64Image = optimized.toString("base64");
+    }
+
+    // ==============================
+    // 2. PROMPT IA
+    // ==============================
+    const prompt = `
+Extract invoice data and return ONLY valid JSON.
+
+Fields:
+{
+"nit": "",
+"NumFactura": "",
+"OrdenCompra": "",
+"doc": "",
+"total": "",
+"totalSinIva": "",
+"nombre": "",
+"razon_social": "",
+"fecha": "",
+"iva": "",
+"rete": "",
+"ipc": "",
+"concepto": "",
+"ica": "",
+"municipio": "",
+"porcentaje_iva": "",
+"textoExplicativo": ""
+}
+
+Rules:
+- DO NOT invent data
+- If missing → ""
+- ONLY JSON
+`;
+
+    const messages = [
+      {
+        role: "system",
+        content: "Eres un extractor de facturas extremadamente preciso.",
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ];
+
+    if (base64Image) {
+      messages.push({
+        role: "user",
+        content: [
+          {
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${base64Image}`,
+            },
+          },
+        ],
+      });
+    } else {
+      messages.push({
+        role: "user",
+        content: textoPlano,
+      });
+    }
+
+    // ==============================
+    // 3. AZURE OPENAI
+    // ==============================
+    const response = await axios.post(
+      process.env.OPENAI_ENDPOINT,
+      {
+        messages,
+        temperature: 0,
+        max_tokens: 1500,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": process.env.OPENAI_KEY,
+        },
+      }
+    );
+
+    const content =
+      response?.data?.choices?.[0]?.message?.content?.trim();
+
+    if (!content) {
+      throw new Error("Azure OpenAI no devolvió respuesta");
+    }
+
+    // ==============================
+    // 4. PARSE JSON
+    // ==============================
+    let json;
+
+    try {
+      const clean = content.replace(/```json|```/g, "").trim();
+      const match = clean.match(/\{[\s\S]*\}/);
+
+      if (!match) throw new Error("JSON no encontrado");
+
+      json = JSON.parse(match[0]);
+    } catch (err) {
+      throw new Error("JSON inválido desde IA");
+    }
+
+    // ==============================
+    // 5. APLICAR FORMATO DINERO
+    // ==============================
+    json.total = parseMoney(json.total);
+    json.totalSinIva = parseMoney(json.totalSinIva);
+    json.iva = parseMoney(json.iva);
+    json.rete = parseMoney(json.rete);
+    json.ipc = parseMoney(json.ipc);
+    json.ica = parseMoney(json.ica);
+
+    // ==============================
+    // 6. CLEANUP
+    // ==============================
+    fs.unlinkSync(uploadPath);
+
+    return res.json(json);
+  } catch (error) {
+    console.error("❌ ERROR OCR:", error?.response?.data || error.message);
+
+    if (fs.existsSync(uploadPath)) {
+      fs.unlinkSync(uploadPath);
+    }
+
+    return res.status(500).json({
+      error: "Error procesando OCR",
+      detalle: error.message,
+    });
   }
 }
 
