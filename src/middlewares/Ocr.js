@@ -2263,10 +2263,12 @@ async function Ocr(req, res) {
     // ==============================
     // 2. PROMPT IA
     // ==============================
-    const prompt = `
-Extract invoice data and return ONLY valid JSON.
+const prompt = `
+Extract all relevant information from the provided invoice image.
 
-Fields:
+Return ONLY the following JSON object.
+Do NOT include explanations outside the JSON.
+
 {
 "nit": "",
 "NumFactura": "",
@@ -2279,19 +2281,264 @@ Fields:
 "fecha": "",
 "iva": "",
 "rete": "",
+"porcentaje_rete": "",
 "ipc": "",
 "concepto": "",
 "ica": "",
 "municipio": "",
+"codepostal": "",
 "porcentaje_iva": "",
-"textoExplicativo": ""
+"textoExplicativo": "",
+"tipo_factura": "",
+"direccion_detectada": "",
+"ciudad_detectada": "",
+"detalles_compra": "",
+"icui": "",
+"porcentaje_icui": ""
 }
 
-Rules:
-- DO NOT invent data
-- If missing → ""
-- ONLY JSON
+⚠️ STRICT RULES:
+
+Extract the "nit" from the document. Use it to search legal public records in Colombia (DIAN or RUES) online.
+
+If the NIT exists and is linked to a legal entity, assign its official name as "razon_social" and optionally also in "nombre".
+
+If it's a natural person, use the name on the invoice for both "razon_social" and "nombre".
+
+If not found, use the sender’s name on the invoice.
+
+Never assign “Corporación Incubadora de Empresas” to "razon_social" (it's your client, not the issuer).
+
+Always use only what you find online by NIT, not commercial or brand names.
+
+All fields in the JSON must be present. If any value is missing or unreadable, leave it as "".
+
+Use exactly the same field names provided. Do not alter key names.
+
+Date format: DD/MM/YYYY.
+
+"nit" must be numeric only (no dashes or check digits). It can be a NIT, RUT, or Colombian ID (Cédula).
+
+"doc" is the same as "nit", or cédula if it's a natural person. Numbers only.
+
+"total": use the exact value from the invoice. Do not recalculate.
+
+"totalSinIva": only if explicitly shown as "Subtotal", "Total sin IVA", "Valor antes de IVA", "TOTAL BRUTO". If missing, leave as "".
+
+"iva": only if explicitly mentioned as VAT. Never calculate or infer. Use the final value, not per item.
+If a field such as “Total Imp.” appears, it must be understood as IPC (consumption tax) and not as VAT.
+
+"porcentaje_iva": Always "19" for 2025 unless Colombian law changes. 
+
+"rete": include only if explicitly shown (e.g., "RETE FUENTE: 37.065,88"). Format properly.
+
+"porcentaje_rete": if explicitly shown. Otherwise, leave blank.
+
+"ipc": only if explicitly stated (e.g., INC). Not the same as ICUI. Leave blank if missing.
+
+"concepto": must be one of ["producto", "servicio", "honorario", ""].
+
+"ica": include only if explicitly shown.
+
+"OrdenCompra": include only if labeled as "Orden de compra", "OC", "PO", etc. Not the invoice number.
+
+"NumFactura": the official invoice number. May have a prefix (e.g., FT-00023). Don’t confuse with OC or delivery notes.
+
+"tipo_factura":
+
+"electronica" → if CUFE, QR, DIAN validation is present
+
+"formal" → if paper with clear legal format, resolution, logo
+
+"comprobante" → simple receipt, informal, handwritten or account payable
+
+"direccion_detectada": structured address from the invoice. Use format like “CRA 45 #22-33” or names like "Centro Comercial". If not present, leave as "".
+
+"municipio": the city or town of the issuer. E.g., "Medellín", "Bogotá". Not neighborhoods.
+
+"codepostal": corresponding postal code. Leave blank if undetermined.
+
+"icui": only if the ICUI tax is explicitly mentioned. Not the same as IPC. Leave blank if missing.
+
+"porcentaje_icui": if ICUI appears, and it’s 2025, set to "20". Otherwise, leave blank.
+
+"detalles_compra": list of purchased items or services. Extract descriptions from the invoice and join with commas. Do not include prices or payment details.
+
+"textoExplicativo": short summary (in Spanish) explaining:
+
+which fields were found and used
+
+which fields were left blank and why
+
+whether “totalSinIva” was used explicitly
+
+if NIT was searched online and whether it was found (include URL if available)
+
+why "razon_social" was assigned the way it was (e.g., TEXTILES Y RETAZOS LOS PAISAS)
+
+DO NOT INVENT values. Do not infer, guess, or estimate. Only extract what is clearly present in the document.
+
+If it's a "cuenta de cobro", extract the legal ID (RUT or cédula) of the person or entity marked as “Debe a” or “Pagado a”.
+This ID goes in "nit". The full name goes in both "nombre" and "razon_social".
+
+Monetary values (like total, totalSinIva, rete, ipc, ica, icui) must be:
+
+========================
+GENERAL EXTRACTION RULES
+========================
+
+- ALL fields must exist in the JSON.
+- If a value is missing, unreadable, or not explicitly present → return "".
+- NEVER invent, infer, calculate, assume or estimate values.
+- Use EXACT field names. Do NOT rename keys.
+- Date format MUST be: DD/MM/YYYY.
+- Do not confuse invoice number with purchase order.
+
+========================
+IDENTIFICATION RULES
+========================
+
+- "nit" must contain NUMBERS ONLY (no dashes, no check digit).
+- It may be NIT, RUT, or Colombian ID (cédula).
+- "doc" must be the same numeric value as "nit".
+- Extract the NIT from the document.
+- Use the NIT to search official Colombian public records (DIAN or RUES).
+
+If NIT is found:
+    - Use the OFFICIAL registered legal name as "razon_social".
+    - Optionally also use it in "nombre".
+
+If it is a natural person:
+    - Use the invoice name for both "razon_social" and "nombre".
+
+If not found online:
+    - Use the issuer name shown in the invoice.
+
+NEVER assign “Corporación Incubadora de Empresas” as razon_social.
+
+Always use legal registered name, not brand or commercial name.
+
+========================
+MONETARY STANDARDIZATION (VERY IMPORTANT)
+========================
+
+ALL monetary values MUST follow this strict format:
+
+FINAL OUTPUT FORMAT:
+1. Comma (,) as thousand separator.
+2. Period (.) as decimal separator ONLY if real cents exist.
+3. If there are NO cents → do NOT add decimals.
+4. Keep all real decimals exactly as they appear.
+5. Remove any currency symbols ($, COP, etc.).
+6. Do NOT invent decimals or recalculate values.
+7. Preserve the exact numeric value represented in the invoice.
+
+STEP 1 — Analyze the format of the value:
+- US format (e.g., 380,000.50) → preserve correctly.
+- Colombian format (e.g., 380.000,50) → convert properly to US-style (380,000.50).
+- Plain numbers without separators → return exactly as shown (do not add separators if none existed).
+
+CRITICAL RULES:
+- "380.000,00" → "380,000"
+- "380000.00" → "380,000"
+- "380000" → "380000"
+- "7,320" → "7,320"
+- NEVER return values like "380.000,00"
+- NEVER mix thousand and decimal separators incorrectly.
+- Keep decimals if they exist (e.g., 1500.75 → "1,500.75").
+
+FIELDS THAT MUST FOLLOW THIS RULE:
+- total
+- totalSinIva
+- iva
+- rete
+- ipc
+- ica
+- icui
+
+========================
+TAX RULES
+========================
+
+- "total": exact total value shown. Do NOT calculate.
+- "totalSinIva": ONLY if explicitly shown as:
+  "Subtotal", "Total sin IVA", "Valor antes de IVA", "TOTAL BRUTO".
+  If not explicitly present → "".
+
+- "iva": ONLY if explicitly labeled as VAT or IVA.
+  Never calculate.
+  Use final IVA value, not per-item tax.
+
+- "porcentaje_iva": Always "19" for 2025 unless Colombian law changes.
+
+- "rete": ONLY if explicitly shown.
+- "porcentaje_rete": ONLY if explicitly shown.
+
+- "ipc": ONLY if explicitly stated (e.g., INC).
+- "ica": ONLY if explicitly shown.
+- "icui": ONLY if explicitly mentioned.
+- "porcentaje_icui": if ICUI appears and document is 2025 → "20".
+  Otherwise → "".
+
+IMPORTANT:
+If the invoice shows "Total Imp." it must be interpreted as IPC (consumption tax), NOT IVA.
+
+========================
+DOCUMENT CLASSIFICATION
+========================
+
+"tipo_factura" must be:
+
+- "electronica" → if CUFE, QR, or DIAN validation appears
+- "formal" → legal formatted invoice with resolution
+- "comprobante" → simple receipt or informal document
+
+========================
+OTHER FIELDS
+========================
+
+- "OrdenCompra": only if explicitly labeled as OC, PO, Orden de Compra.
+- "NumFactura": official invoice number (may include prefix).
+- "direccion_detectada": structured address from issuer.
+- "municipio": issuer city.
+- "ciudad_detectada": city if separately identifiable.
+- "codepostal": only if explicitly shown.
+- "concepto": must be one of:
+  ["producto", "servicio", "honorario", ""]
+
+- "detalles_compra":
+  Extract descriptions of purchased items/services.
+  Join with commas.
+  Do NOT include prices or payment terms.
+
+========================
+SPECIAL CASE
+========================
+
+If document is a "cuenta de cobro":
+- Extract ID of person marked as “Debe a” or “Pagado a”.
+- That ID goes in "nit".
+- Full name goes in both "nombre" and "razon_social".
+
+========================
+textoExplicativo (REQUIRED)
+========================
+
+Write a short explanation in Spanish describing:
+
+- Which fields were found and used
+- Which fields were blank and why
+- Whether "totalSinIva" was explicitly used
+- If NIT was searched online and whether it was found (include URL if available)
+- Why razon_social was assigned the way it was
+
+Be concise and factual.
+Do NOT invent information.
+
+Validate and understand the document carefully.
+Return ONLY the JSON.
 `;
+
 
     const messages = [
       {
