@@ -196,7 +196,7 @@ const consultaIndicadoresController = async (req, res) => {
   const { docId } = req.query;
   const anio = Number(req.query.anio);
   const mes = Number(req.query.mes);
-
+console.log("docId", docId, "anio", anio, "mes", mes)
   try {
 
     const indicadores = await sequelize.query(
@@ -296,6 +296,7 @@ const consultaIndicadoresController = async (req, res) => {
         type: sequelize.QueryTypes.SELECT
       }
     );
+    console.log("indicadores", indicadores)
     return {
       ok: true,
       indicadores: indicadores[0] || {}
