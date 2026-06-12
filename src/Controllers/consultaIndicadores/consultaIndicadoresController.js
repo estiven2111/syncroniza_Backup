@@ -198,7 +198,9 @@ const consultaIndicadoresController = async (req, res) => {
   const mes = Number(req.query.mes);
 console.log("docId", docId, "anio", anio, "mes", mes)
   try {
-
+if(!docId || isNaN(anio) || isNaN(mes))  return {
+      ok: true,
+    };
     const indicadores = await sequelize.query(
       `
       SELECT
