@@ -45,153 +45,8 @@ group by B.Horas
 
 }
 
-const consultaIndicadoresController2 = async (req) => {
-    const { docId, anio, mes } = req.query;
 
-    try {
-
-        const indicadores = await sequelize.query(
-            `
-            WITH Indicadores AS
-            (
-                SELECT
-
-                    SUM(CASE
-                            WHEN (Año < :anio)
-                              OR (Año = :anio AND mes < :mes)
-                            THEN DiasLaborales
-                            ELSE 0
-                        END) AS DiasProgramados_Acumulado,
-
-                    SUM(CASE
-                            WHEN Año = :anio
-                             AND mes = :mes
-                            THEN DiasLaborales
-                            ELSE 0
-                        END) AS DiasProgramados_Mes,
-
-                    SUM(CASE
-                            WHEN (Año < :anio)
-                              OR (Año = :anio AND mes < :mes)
-                            THEN HorasDisponibles
-                            ELSE 0
-                        END) AS HorasDisponibles_Acumulado,
-
-                    SUM(CASE
-                            WHEN Año = :anio
-                             AND mes = :mes
-                            THEN HorasDisponibles
-                            ELSE 0
-                        END) AS HorasDisponibles_Mes,
-
-                    SUM(CASE
-                            WHEN (Año < :anio)
-                              OR (Año = :anio AND mes < :mes)
-                            THEN Total_Horas_Asignadas_Proy
-                            ELSE 0
-                        END) AS HorasProgramadas_Acumulado,
-
-                    SUM(CASE
-                            WHEN Año = :anio
-                             AND mes = :mes
-                            THEN Total_Horas_Asignadas_Proy
-                            ELSE 0
-                        END) AS HorasProgramadas_Mes,
-
-                    SUM(CASE
-                            WHEN (Año < :anio)
-                              OR (Año = :anio AND mes < :mes)
-                            THEN HorasRealesReportadas
-                            ELSE 0
-                        END) AS HorasCumplidas_Acumulado,
-
-                    SUM(CASE
-                            WHEN Año = :anio
-                             AND mes = :mes
-                            THEN HorasRealesReportadas
-                            ELSE 0
-                        END) AS HorasCumplidas_Mes,
-
-                    SUM(CASE
-                            WHEN (Año < :anio)
-                              OR (Año = :anio AND mes < :mes)
-                            THEN [Saldo acumulado de horas programadas no ejecutadas]
-                            ELSE 0
-                        END) AS HorasPendientes_Acumulado,
-
-                    SUM(CASE
-                            WHEN Año = :anio
-                             AND mes = :mes
-                            THEN (
-                                ISNULL(Total_Horas_Asignadas_Proy,0)
-                                - ISNULL(HorasRealesReportadas,0)
-                            )
-                            ELSE 0
-                        END) AS HorasPendientes_Mes,
-
-                    0 AS HorasFrecuencia_Acumulado,
-                    0 AS HorasFrecuencia_Mes
-
-                FROM dbo.VW_ReporteIndicadorProyectos_Actividades
-                WHERE Documento = :docId
-            )
-
-            SELECT
-                *,
-
-                -- ATRASO
-                CASE
-                    WHEN HorasProgramadas_Acumulado = 0
-                    THEN 0
-                    ELSE
-                        (HorasPendientes_Acumulado * 100.0)
-                        / HorasProgramadas_Acumulado
-                END AS Atraso,
-
-                -- PRODUCTIVIDAD
-                CASE
-                    WHEN (HorasProgramadas_Acumulado + HorasProgramadas_Mes) = 0
-                    THEN 0
-                    ELSE
-                    (
-                        (HorasCumplidas_Acumulado + HorasCumplidas_Mes)
-                        * 100.0
-                    )
-                    /
-                    (
-                        HorasProgramadas_Acumulado
-                        + HorasProgramadas_Mes
-                    )
-                END AS Productividad
-
-            FROM Indicadores
-            `,
-            {
-                replacements: {
-                    docId,
-                    anio: Number(anio),
-                    mes: Number(mes)
-                },
-                type: sequelize.QueryTypes.SELECT
-            }
-        );
-console.log(indicadores)
-        return {
-            ok: true,
-            indicadores: indicadores[0] || {}
-        };
-
-    } catch (error) {
-        console.error(error);
-
-        return {
-            ok: false,
-            message: error.message
-        };
-    }
-};
-
-const consultaIndicadoresController = async (req, res) => {
+const consultaIndicadoresController_ok = async (req, res) => {
 
   const { docId } = req.query;
   const anio = Number(req.query.anio);
@@ -314,6 +169,148 @@ if(!docId || isNaN(anio) || isNaN(mes))  return {
   }
 };
 
+const consultaIndicadoresController = async (req, res) => {
+  const { docId } = req.query;
+  const anio = Number(req.query.anio);
+  const mes = Number(req.query.mes);
+
+  try {
+
+    if (!docId || isNaN(anio) || isNaN(mes)) {
+      return {
+        ok: true,
+        indicadores: {}
+      };
+    }
+
+  const indicadores = await sequelize.query(
+`
+SELECT
+
+    CASE
+        WHEN :anio = 2026 AND :mes = 1
+        THEN 0
+        ELSE ROUND(SUM(CASE
+            WHEN Año >= 2026
+             AND (
+                    Año < :anio
+                 OR (Año = :anio AND mes < :mes)
+                 )
+            THEN ISNULL(DiasLaborales,0)
+            ELSE 0
+        END),1)
+    END AS DiasProgramados_Acumulado,
+
+    ROUND(SUM(CASE
+        WHEN Año = :anio
+         AND mes = :mes
+        THEN ISNULL(DiasLaborales,0)
+        ELSE 0
+    END),1) AS DiasProgramados_Mes,
+
+    ROUND(SUM(CASE
+        WHEN Año < :anio
+         OR (Año = :anio AND mes < :mes)
+        THEN ISNULL(HorasDisponibles,0)
+        ELSE 0
+    END),1) AS HorasDisponibles_Acumulado,
+
+    ROUND(SUM(CASE
+        WHEN Año = :anio
+         AND mes = :mes
+        THEN ISNULL(HorasDisponibles,0)
+        ELSE 0
+    END),1) AS HorasDisponibles_Mes,
+
+    ROUND(SUM(CASE
+        WHEN Año < :anio
+         OR (Año = :anio AND mes < :mes)
+        THEN ISNULL(Total_Horas_Asignadas_Proy,0)
+        ELSE 0
+    END),1) AS HorasProgramadas_Acumulado,
+
+    ROUND(SUM(CASE
+        WHEN Año = :anio
+         AND mes = :mes
+        THEN ISNULL(Total_Horas_Asignadas_Proy,0)
+        ELSE 0
+    END),1) AS HorasProgramadas_Mes,
+
+    ROUND(SUM(CASE
+        WHEN Año < :anio
+         OR (Año = :anio AND mes < :mes)
+        THEN ISNULL(HorasRealesReportadas,0)
+        ELSE 0
+    END),1) AS HorasCumplidas_Acumulado,
+
+    ROUND(SUM(CASE
+        WHEN Año = :anio
+         AND mes = :mes
+        THEN ISNULL(HorasRealesReportadas,0)
+        ELSE 0
+    END),1) AS HorasCumplidas_Mes,
+
+    ROUND(SUM(CASE
+        WHEN Año < :anio
+         OR (Año = :anio AND mes < :mes)
+        THEN (
+            ISNULL(Total_Horas_Asignadas_Proy,0)
+            - ISNULL(HorasRealesReportadas,0)
+        )
+        ELSE 0
+    END),1) AS HorasPendientes_Acumulado,
+
+    ROUND(SUM(CASE
+        WHEN Año = :anio
+         AND mes = :mes
+        THEN (
+            ISNULL(Total_Horas_Asignadas_Proy,0)
+            - ISNULL(HorasRealesReportadas,0)
+        )
+        ELSE 0
+    END),1) AS HorasPendientes_Mes,
+
+    CAST(0 AS DECIMAL(18,1)) AS HorasFrecuencia_Acumulado,
+    CAST(0 AS DECIMAL(18,1)) AS HorasFrecuencia_Mes
+
+FROM dbo.VW_ReporteIndicadorProyectos_Actividades
+WHERE Documento = :docId
+`,
+{
+    replacements: {
+        docId,
+        anio,
+        mes
+    },
+    type: sequelize.QueryTypes.SELECT
+}
+);
+
+    let resultado = indicadores[0] || {};
+
+    // ==========================
+    // REGLA ESPECIAL
+    // Enero 2026 arranca en cero
+    // ==========================
+    if (anio === 2026 && mes === 1) {
+      resultado.DiasProgramados_Acumulado = 0;
+      console.log("Aplicando regla especial para Enero 2026: DiasProgramados_Acumulado se establece en 0");
+    }
+console.log("indicadores", resultado)
+    return {
+      ok: true,
+      indicadores: resultado
+    };
+
+  } catch (error) {
+    console.error("Error consulta indicadores:", error);
+
+    return res.status(500).json({
+      ok: false,
+      message: error.message
+    });
+  }
+};
 
 
 module.exports = consultaIndicadoresController
