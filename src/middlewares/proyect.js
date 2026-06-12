@@ -8,7 +8,7 @@ const LoadProyect = async (Doc_id, email) => {
     // Obtener idNodo para saber qué proyectos tiene el usuario
     const idnodo = await sequelize.query(
       `SELECT idNodoProyecto, Terminada,SKU_Proyecto FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId`,
-      { replacements: { docId: Doc_id } }
+      { replacements: { docId: Doc_id } },
     );
 
     let obj_proyecto = { proyectos: [] };
@@ -27,7 +27,7 @@ const LoadProyect = async (Doc_id, email) => {
       LEFT JOIN TBL_PRO_OrdenesPlan OP ON A.SKU_Logistica = OP.RefDistr AND V.OP = OP.OP
       WHERE C.TipoItem = 9
       ORDER BY SKU_Logistica DESC
-      `
+      `,
     );
 
     for (const i of idnodo[0]) {
@@ -36,14 +36,20 @@ const LoadProyect = async (Doc_id, email) => {
           `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto)
            FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId 
            AND idNodo = :idNodo AND SKU = :SKU) ORDER BY SKU, idNodo`,
-          { replacements: { docId: Doc_id, idNodo: i.idNodoProyecto, SKU: i.SKU_Proyecto } }
+          {
+            replacements: {
+              docId: Doc_id,
+              idNodo: i.idNodoProyecto,
+              SKU: i.SKU_Proyecto,
+            },
+          },
         );
 
         if (proyect[0].length > 0) {
           let ID_parte = parseInt(proyect[0][0].Cod_parte);
           let Cod_parte = await sequelize.query(
             `SELECT * FROM TBL_ESP_Procesos WHERE ID = :id`,
-            { replacements: { id: ID_parte } }
+            { replacements: { id: ID_parte } },
           );
 
           if (Cod_parte[0].length > 0) {
@@ -54,12 +60,12 @@ const LoadProyect = async (Doc_id, email) => {
                   id: ID_parte,
                   descripcion: proyect[0][0].Nombre,
                 },
-              }
+              },
             );
 
             const entrega = await sequelize.query(
               `SELECT * FROM TBL_SER_EntregablesActividad WHERE id_Proceso = :idProceso`,
-              { replacements: { idProceso: Cod_parte[0][0].ID } }
+              { replacements: { idProceso: Cod_parte[0][0].ID } },
             );
 
             let nomEntregable = entrega[0]?.map((nom) => ({
@@ -93,6 +99,9 @@ const LoadProyect = async (Doc_id, email) => {
             let fecha = new Date(proyect[0][0].Fecha)
               .toISOString()
               .split("T")[0];
+            let FechaInicio = "";
+            let FechaFinal = "";
+            let FechaAccion = "";
             let componente = "";
             let proyecto = "";
             let nitCliente = "";
@@ -108,13 +117,17 @@ const LoadProyect = async (Doc_id, email) => {
             do {
               tipoParte = await sequelize.query(
                 `SELECT * FROM TBL_SER_PROYECTOS WHERE SKU IN (SELECT DISTINCT(SKU_Proyecto) FROM TBL_SER_ProyectoActividadesEmpleados WHERE N_DocumentoEmpleado = :docId AND idNodo = :idNodo) ORDER BY SKU, idNodo`,
-                { replacements: { docId: Doc_id, idNodo: Parte } }
+                { replacements: { docId: Doc_id, idNodo: Parte } },
               );
 
               if (tipoParte[0].length > 0) {
                 Parte = tipoParte[0][0].idPadre;
 
                 if (tipoParte[0][0].TipoParte === "PP") {
+                  console.log("🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 FECHA ENCONTRADA1:", new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0]);
+                  FechaInicio = new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0];
+                  FechaFinal = new Date(tipoParte[0][0].FechaFinal).toISOString().split("T")[0];
+                  FechaAccion = new Date(tipoParte[0][0].FechaAccion).toISOString().split("T")[0]; 
                   componente = tipoParte[0][0].Nombre;
                   idNodoC = tipoParte[0][0].idNodo;
                   Codi_parteC = tipoParte[0][0].Cod_parte;
@@ -124,6 +137,10 @@ const LoadProyect = async (Doc_id, email) => {
                 }
 
                 if (tipoParte[0][0].TipoParte === "Cabecera") {
+                  console.log("🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 FECHA ENCONTRADA2:", new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0]);
+                  FechaInicio = new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0];
+                  FechaFinal = new Date(tipoParte[0][0].FechaFinal).toISOString().split("T")[0];
+                  FechaAccion = new Date(tipoParte[0][0].FechaAccion).toISOString().split("T")[0]; 
                   proyecto = tipoParte[0][0].Nombre;
                   idNodoP = tipoParte[0][0].idNodo;
                   Codi_parteP = tipoParte[0][0].Cod_parte;
@@ -133,12 +150,12 @@ const LoadProyect = async (Doc_id, email) => {
 
                 // Verificar si el proyecto ya existe en obj_proyecto
                 let proyectoExistente = obj_proyecto.proyectos.find(
-                  (p) => p.proyecto === proyecto
+                  (p) => p.proyecto === proyecto,
                 );
 
                 if (proyectoExistente) {
                   let componenteExistente = proyectoExistente.componentes.find(
-                    (c) => c.componente === componente
+                    (c) => c.componente === componente,
                   );
 
                   if (componenteExistente) {
@@ -157,6 +174,9 @@ const LoadProyect = async (Doc_id, email) => {
                   } else {
                     // Agregar un nuevo componente con la actividad al proyecto existente
                     proyectoExistente.componentes.push({
+                      FechaInicio,
+                      FechaFinal,
+                      FechaAccion,
                       fecha,
                       componente,
                       idNodoC,
@@ -190,6 +210,9 @@ const LoadProyect = async (Doc_id, email) => {
                       nitCliente,
                       componentes: [
                         {
+                          FechaInicio,
+                          FechaFinal,
+                          FechaAccion,
                           fecha,
                           componente,
                           idNodoC,
@@ -262,7 +285,7 @@ const ValidacionProyectos = (email) => {
         const componentesFiltrados = proyecto.componentes
           .map((componente) => {
             const actividadesPendientes = componente.actividades.filter(
-              (a) => !a.terminada
+              (a) => !a.terminada,
             );
 
             // Solo conservamos componentes que aún tengan actividades sin terminar
@@ -300,158 +323,156 @@ const ValidacionProyectos = (email) => {
   }
 };
 
-
 // TODO ENDPOINT PARA VALIDAR SI EL PROYECTO ESTA COMPLETO O NO
 //? ESTE ENDPONIT NO ESTA EN USO
 const ValidarTotalProyectos = (req, res) => {
+  //todo valida si el proyecto esta completo o no devuelve un objeto con el total de proyectos y su estado
+  //todo si el proyecto tiene todas las actividades terminadas completado true si no false
+  //todo si el proyecto tiene todas las actividades terminadas en todos sus componentes completado true si no false
 
+  // try {
+  //   const { email } = req.query;
+  //   console.log(email);
+  //   const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
 
-   //todo valida si el proyecto esta completo o no devuelve un objeto con el total de proyectos y su estado
-    //todo si el proyecto tiene todas las actividades terminadas completado true si no false
-    //todo si el proyecto tiene todas las actividades terminadas en todos sus componentes completado true si no false
+  //   if (!proyects || !Array.isArray(proyects.proyectos)) {
+  //     return res
+  //       .status(400)
+  //       .json({ error: "Estructura de proyectos inválida o vacía." });
+  //   }
 
-    // try {
-    //   const { email } = req.query;
-    //   console.log(email);
-    //   const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+  //   const proyectosArray = proyects.proyectos;
 
-    //   if (!proyects || !Array.isArray(proyects.proyectos)) {
-    //     return res
-    //       .status(400)
-    //       .json({ error: "Estructura de proyectos inválida o vacía." });
-    //   }
+  //   const resumenProyectos = proyectosArray.map((proyecto) => {
+  //     let totalActividadesProyecto = 0;
+  //     let actividadesTerminadas = 0;
 
-    //   const proyectosArray = proyects.proyectos;
+  //     const componentesData = proyecto.componentes.map((componente) => {
+  //       const totalActividades = componente.actividades.length;
+  //       const terminadas = componente.actividades.filter(
+  //         (a) => a.terminada
+  //       ).length;
 
-    //   const resumenProyectos = proyectosArray.map((proyecto) => {
-    //     let totalActividadesProyecto = 0;
-    //     let actividadesTerminadas = 0;
+  //       totalActividadesProyecto += totalActividades;
+  //       actividadesTerminadas += terminadas;
 
-    //     const componentesData = proyecto.componentes.map((componente) => {
-    //       const totalActividades = componente.actividades.length;
-    //       const terminadas = componente.actividades.filter(
-    //         (a) => a.terminada
-    //       ).length;
+  //       return {
+  //         componente: componente.componente,
+  //         totalActividades,
+  //         terminadas,
+  //         faltantes: totalActividades - terminadas,
+  //         completado: terminadas === totalActividades,
+  //       };
+  //     });
 
-    //       totalActividadesProyecto += totalActividades;
-    //       actividadesTerminadas += terminadas;
+  //     const faltantes = totalActividadesProyecto - actividadesTerminadas;
+  //     const completado = faltantes === 0;
 
-    //       return {
-    //         componente: componente.componente,
-    //         totalActividades,
-    //         terminadas,
-    //         faltantes: totalActividades - terminadas,
-    //         completado: terminadas === totalActividades,
-    //       };
-    //     });
+  //     return {
+  //       proyecto: proyecto.proyecto,
+  //       totalComponentes: proyecto.componentes.length,
+  //       totalActividades: totalActividadesProyecto,
+  //       terminadas: actividadesTerminadas,
+  //       faltantes,
+  //       completado,
+  //       componentes: componentesData,
+  //     };
+  //   });
 
-    //     const faltantes = totalActividadesProyecto - actividadesTerminadas;
-    //     const completado = faltantes === 0;
+  //   const resultadoFinal = {
+  //     totalProyectos: proyectosArray.length,
+  //     proyectos: resumenProyectos,
+  //   };
 
-    //     return {
-    //       proyecto: proyecto.proyecto,
-    //       totalComponentes: proyecto.componentes.length,
-    //       totalActividades: totalActividadesProyecto,
-    //       terminadas: actividadesTerminadas,
-    //       faltantes,
-    //       completado,
-    //       componentes: componentesData,
-    //     };
-    //   });
+  //   res.json(resultadoFinal);
+  // } catch (error) {
+  //   console.error("❌ Error al procesar proyectos:", error);
+  //   res.status(500).json({ error: "Error interno procesando los proyectos" });
+  // }
 
-    //   const resultadoFinal = {
-    //     totalProyectos: proyectosArray.length,
-    //     proyectos: resumenProyectos,
-    //   };
+  //todo valida si el proyecto esta completo o no devuelve un objeto con el total de proyectos y su estado
+  //todo este me devuelve mas informacion ya que devuelve el idnodo del componente y el idnodo de la actividad
+  try {
+    const { email } = req.query;
+    console.log("📧 Email recibido:", email);
 
-    //   res.json(resultadoFinal);
-    // } catch (error) {
-    //   console.error("❌ Error al procesar proyectos:", error);
-    //   res.status(500).json({ error: "Error interno procesando los proyectos" });
-    // }
+    // ⚙️ Cargar proyectos desde el localStorage (según tu estructura actual)
+    const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
 
+    if (!proyects || !Array.isArray(proyects.proyectos)) {
+      return res
+        .status(400)
+        .json({ error: "Estructura de proyectos inválida o vacía." });
+    }
 
-    //todo valida si el proyecto esta completo o no devuelve un objeto con el total de proyectos y su estado
-    //todo este me devuelve mas informacion ya que devuelve el idnodo del componente y el idnodo de la actividad
-    try {
-  const { email } = req.query;
-  console.log("📧 Email recibido:", email);
+    // 🔍 Procesar todos los proyectos
+    const proyectosProcesados = proyects.proyectos.map((proyecto) => {
+      let totalActividadesProyecto = 0;
+      let actividadesTerminadasProyecto = 0;
+      let actividadesFaltantesProyecto = 0;
 
-  // ⚙️ Cargar proyectos desde el localStorage (según tu estructura actual)
-  const proyects = JSON.parse(localStorage.getItem(`${email}Proyecto`));
+      // 📦 Procesar componentes del proyecto
+      const componentesProcesados = proyecto.componentes.map((componente) => {
+        const totalActividades = componente.actividades.length;
 
-  if (!proyects || !Array.isArray(proyects.proyectos)) {
-    return res
-      .status(400)
-      .json({ error: "Estructura de proyectos inválida o vacía." });
-  }
+        // Dividir las actividades entre terminadas y pendientes
+        const actividadesTerminadas = componente.actividades.filter(
+          (a) => a.terminada,
+        );
+        const actividadesFaltantes = componente.actividades.filter(
+          (a) => !a.terminada,
+        );
 
-  // 🔍 Procesar todos los proyectos
-  const proyectosProcesados = proyects.proyectos.map((proyecto) => {
-    let totalActividadesProyecto = 0;
-    let actividadesTerminadasProyecto = 0;
-    let actividadesFaltantesProyecto = 0;
+        totalActividadesProyecto += totalActividades;
+        actividadesTerminadasProyecto += actividadesTerminadas.length;
+        actividadesFaltantesProyecto += actividadesFaltantes.length;
 
-    // 📦 Procesar componentes del proyecto
-    const componentesProcesados = proyecto.componentes.map((componente) => {
-      const totalActividades = componente.actividades.length;
+        return {
+          componente: componente.componente,
+          idNodoC: componente.idNodoC,
+          totalActividades,
+          totalTerminadas: actividadesTerminadas.length,
+          totalFaltantes: actividadesFaltantes.length,
+          completado: actividadesFaltantes.length === 0,
+          actividadesTerminadas: actividadesTerminadas.map((a) => ({
+            idNodoA: a.idNodoA,
+            actividad: a.actividad,
+            terminada: a.terminada,
+          })),
+          actividadesFaltantes: actividadesFaltantes.map((a) => ({
+            idNodoA: a.idNodoA,
+            actividad: a.actividad,
+            terminada: a.terminada,
+          })),
+        };
+      });
 
-      // Dividir las actividades entre terminadas y pendientes
-      const actividadesTerminadas = componente.actividades.filter((a) => a.terminada);
-      const actividadesFaltantes = componente.actividades.filter((a) => !a.terminada);
-
-      totalActividadesProyecto += totalActividades;
-      actividadesTerminadasProyecto += actividadesTerminadas.length;
-      actividadesFaltantesProyecto += actividadesFaltantes.length;
+      const completado = actividadesFaltantesProyecto === 0;
 
       return {
-        componente: componente.componente,
-        idNodoC: componente.idNodoC,
-        totalActividades,
-        totalTerminadas: actividadesTerminadas.length,
-        totalFaltantes: actividadesFaltantes.length,
-        completado: actividadesFaltantes.length === 0,
-        actividadesTerminadas: actividadesTerminadas.map((a) => ({
-          idNodoA: a.idNodoA,
-          actividad: a.actividad,
-          terminada: a.terminada,
-        })),
-        actividadesFaltantes: actividadesFaltantes.map((a) => ({
-          idNodoA: a.idNodoA,
-          actividad: a.actividad,
-          terminada: a.terminada,
-        })),
+        proyecto: proyecto.proyecto,
+        idNodoP: proyecto.idNodoP,
+        totalComponentes: proyecto.componentes.length,
+        totalActividades: totalActividadesProyecto,
+        totalTerminadas: actividadesTerminadasProyecto,
+        totalFaltantes: actividadesFaltantesProyecto,
+        completado,
+        componentes: componentesProcesados,
       };
     });
 
-    const completado = actividadesFaltantesProyecto === 0;
-
-    return {
-      proyecto: proyecto.proyecto,
-      idNodoP: proyecto.idNodoP,
-      totalComponentes: proyecto.componentes.length,
-      totalActividades: totalActividadesProyecto,
-      totalTerminadas: actividadesTerminadasProyecto,
-      totalFaltantes: actividadesFaltantesProyecto,
-      completado,
-      componentes: componentesProcesados,
+    // 📊 Resultado general
+    const resultadoFinal = {
+      totalProyectos: proyectosProcesados.length,
+      proyectos: proyectosProcesados,
     };
-  });
 
-  // 📊 Resultado general
-  const resultadoFinal = {
-    totalProyectos: proyectosProcesados.length,
-    proyectos: proyectosProcesados,
-  };
-
-  res.json(resultadoFinal);
-
-} catch (error) {
-  console.error("❌ Error al procesar proyectos:", error);
-  res.status(500).json({ error: "Error interno procesando los proyectos" });
-}
-
-}
+    res.json(resultadoFinal);
+  } catch (error) {
+    console.error("❌ Error al procesar proyectos:", error);
+    res.status(500).json({ error: "Error interno procesando los proyectos" });
+  }
+};
 
 const getProyectName = async (req, res) => {
   const { search, email } = req.query;
@@ -556,10 +577,10 @@ const registerActivities = async (req, res) => {
        '${FechaInicio}',
        '${FechaFinal}',
        ${DuracionHoras})
-  `
+  `,
     );
     const hours = await sequelize.query(
-      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad} AND DocumentoEmpleado = ${DocumentoEmpleado}`
+      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad} AND DocumentoEmpleado = ${DocumentoEmpleado}`,
     );
 
     TotalH = parseFloat(hours[0][0].horas).toFixed(2);
@@ -572,15 +593,14 @@ const registerActivities = async (req, res) => {
 //todo devuelve la sumatoria de las actividades
 const hourActivities = async (req, res) => {
   try {
-    console.log("ENTRO A HORAS")
-    const { idNodoProyecto, idNodoActividad,DocumentoEmpleado } = req.query;
+    console.log("ENTRO A HORAS");
+    const { idNodoProyecto, idNodoActividad, DocumentoEmpleado } = req.query;
     const hours = await sequelize.query(
-      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad} AND DocumentoEmpleado = ${DocumentoEmpleado}`
+      `SELECT SUM(DuracionHoras) as horas FROM TBL_SER_ReporteHorasActividadEmpleado where idNodoProyecto = ${idNodoProyecto} AND idNodoActividad = ${idNodoActividad} AND DocumentoEmpleado = ${DocumentoEmpleado}`,
     );
 
-
     const TotalH = parseFloat(hours[0][0].horas).toFixed(2);
-    console.log(TotalH,"Total de horas")
+    console.log(TotalH, "Total de horas");
     res.json(TotalH);
   } catch (error) {
     res.json({ error: error });
@@ -616,20 +636,20 @@ const hourActivities = async (req, res) => {
 //   }
 // };
 
-
 const updateProyecto = async (req, res) => {
-  const { finished, idNodoProyecto, SKU_Proyecto,N_Documento } = req.body;
+  const { finished, idNodoProyecto, SKU_Proyecto, N_Documento } = req.body;
 
-  try { //cambio
+  try {
+    //cambio
     await sequelize.query(
       `
     UPDATE TBL_SER_ProyectoActividadesEmpleados
    SET Terminada = ${finished}
    WHERE idNodoProyecto = ${idNodoProyecto} and SKU_Proyecto = ${SKU_Proyecto} and N_DocumentoEmpleado = ${N_Documento};
-    `
+    `,
     );
 
-    // await sequelize.query(  
+    // await sequelize.query(
     //   `
     //   UPDATE TBL_SER_ProyectoActividadesEmpleados
     //   SET Terminada = :finished
@@ -667,7 +687,7 @@ const AnticipoGastos = async (req, res) => {
     const { doc, sku } = req.body;
 
     console.log("🚀🚀🚀 AnticipoGastos called with doc:", doc, "and sku:", sku);
-   // B.DocumentoIngreso  A.NumeroDocumento
+    // B.DocumentoIngreso  A.NumeroDocumento
     const datos = await sequelize.query(
       `
        select A.Id,B.DocumentoIngreso,A.Valor, 0 EsTarjeta
@@ -680,9 +700,9 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
       {
         replacements: { doc: doc, sku: sku },
         type: sequelize.QueryTypes.SELECT,
-      }
+      },
     );
-    
+
     let objDatos = [];
     // datos.map((datos) => {
     //   objDatos.push({
@@ -704,8 +724,8 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
     //     tarjeta: datos.EsTarjeta,
     //   });
     // });
-//con B.
-     datos.map((datos) => {
+    //con B.
+    datos.map((datos) => {
       objDatos.push({
         IdResponsable: datos.Id,
         Observaciones: datos.DocumentoIngreso,
@@ -713,7 +733,7 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
         tarjeta: datos.EsTarjeta,
       });
     });
-  
+
     res.send(objDatos);
   } catch (error) {
     res.json({ error: error });
@@ -722,21 +742,21 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
 
 const tipoTransaccion = async (req, res) => {
   try {
-     // ? listado de transacciones 
-        const [resultados] = await sequelize.query(`
+    // ? listado de transacciones
+    const [resultados] = await sequelize.query(`
           SELECT *
           FROM TBL_CON_TipoTransaccion
         `);
 
-        // Devuelve un objeto con la propiedad "transacciones"
-        const objDatos = {
-      transacciones: resultados.map(t => ({
+    // Devuelve un objeto con la propiedad "transacciones"
+    const objDatos = {
+      transacciones: resultados.map((t) => ({
         id: t.id,
-        tipo: t.TipoTransaccion
-      }))
+        tipo: t.TipoTransaccion,
+      })),
     };
 
-        res.json(objDatos);
+    res.json(objDatos);
   } catch (error) {
     console.error("Error obteniendo tipos de transacción:", error);
     res.status(500).json({ error: "Error en el servidor" });
@@ -782,7 +802,7 @@ const Entregables = async (req, res) => {
     idNodoProyecto,
     NumeroEntregable,
     idProceso,
-    DocumentoEmpleado
+    DocumentoEmpleado,
   } = req.query;
   // res.send("ok")
   // return
@@ -800,10 +820,10 @@ const Entregables = async (req, res) => {
           id: idNodoProyecto,
           numE: NumeroEntregable,
           proceso: idProceso,
-          DocEmpleado : DocumentoEmpleado
+          DocEmpleado: DocumentoEmpleado,
         },
         type: sequelize.QueryTypes.SELECT,
-      }
+      },
     );
     if (Entregables.length >= 1) {
       entrega = true;
@@ -851,5 +871,5 @@ module.exports = {
   NameProyects,
   tipoTransaccion,
   ProyectosGastos,
-  ValidarTotalProyectos
+  ValidarTotalProyectos,
 };
