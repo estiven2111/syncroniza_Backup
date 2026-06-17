@@ -124,7 +124,7 @@ const LoadProyect = async (Doc_id, email) => {
                 Parte = tipoParte[0][0].idPadre;
 
                 if (tipoParte[0][0].TipoParte === "PP") {
-                  console.log("🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 FECHA ENCONTRADA1:", new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0]);
+                  // console.log("🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 FECHA ENCONTRADA1:", tipoParte[0][0]);
                   FechaInicio = new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0];
                   FechaFinal = new Date(tipoParte[0][0].FechaFinal).toISOString().split("T")[0];
                   FechaAccion = new Date(tipoParte[0][0].FechaAccion).toISOString().split("T")[0]; 
@@ -137,10 +137,10 @@ const LoadProyect = async (Doc_id, email) => {
                 }
 
                 if (tipoParte[0][0].TipoParte === "Cabecera") {
-                  console.log("🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 FECHA ENCONTRADA2:", new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0]);
-                  FechaInicio = new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0];
-                  FechaFinal = new Date(tipoParte[0][0].FechaFinal).toISOString().split("T")[0];
-                  FechaAccion = new Date(tipoParte[0][0].FechaAccion).toISOString().split("T")[0]; 
+                  
+                  // FechaInicio = new Date(tipoParte[0][0].FechaInicio).toISOString().split("T")[0];
+                  // FechaFinal = new Date(tipoParte[0][0].FechaFinal).toISOString().split("T")[0];
+                  // FechaAccion = new Date(tipoParte[0][0].FechaAccion).toISOString().split("T")[0]; 
                   proyecto = tipoParte[0][0].Nombre;
                   idNodoP = tipoParte[0][0].idNodo;
                   Codi_parteP = tipoParte[0][0].Cod_parte;
