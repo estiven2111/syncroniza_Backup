@@ -1,206 +1,3 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const fileupload = require("express-fileupload");
-const bodyParser = require("body-parser");
-const router = require("./routes/index");
-const sequelize = require("sequelize");
-
-// const helmet = require('helmet');
-// const rateLimit = require("express-rate-limit");
-
-// const globalLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 200,
-//   standardHeaders: true,
-//   legacyHeaders: false,
-// });
-
-// require("dotenv").config()
-const app = express();
-// app.use(cors());
-// const optionCors = {
-//     origin: "*",
-//     methods: 'GET, POST, OPTIONS, PUT, DELETE',
-//     allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
-//     credentials: true
-//   };
-  
-//   app.use(cors(optionCors));
-// app.use(helmet());
-const allowedOrigins = ["*",'http://localhost:3000', 'https://app.creame.com.co', 'http://localhost:4180','http://localhost:5000/user/api/proyect/ocr','https://app.creame.com.co/user/api/proyect/ocr'];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Permite la solicitud
-    } else {
-      callback(new Error('Not allowed by CORS')); // Bloquea el origen
-    }
-  },
-  methods: 'GET, POST, OPTIONS, PUT, DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
-  credentials: true
-};
-
-app.use(cors(corsOptions));
-
-// const allowedOrigins = [
-//   'http://localhost:3000',
-//   'https://app.creame.com.co',
-//   'http://localhost:4180',
-//   'http://localhost:5000'
-// ];
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (!origin) return callback(null, true); // permitir Postman/server-to-server
-
-//     if (allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Origen no permitido por CORS"));
-//     }
-//   },
-//   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-//   allowedHeaders: ['Content-Type','Authorization'],
-//   credentials: true
-// };
-
-app.use(cors(corsOptions));
-  
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(fileupload());
-app.use(sequelize);
-
-app.use(morgan("dev"));
-// app.use(globalLimiter);
-
-
-// const path = require("path");
-// const fs = require("fs");
-// const request = require("request");
-// const session = require("express-session");
-// const passport = require("passport");
-// const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-// const crypto = require("crypto");
-// app.use(express.static("uploads"));
-
-
-app.use("/", router);
-
-// // const sessionSecret = crypto.randomBytes(64).toString("hex");
-// // require("dotenv").config();
-// // const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
-// // const clientID = CLIENT_ID;
-// // const clientSecret = CLIENT_SECRET;
-// // const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
-// // const tenantID = TENANT_ID;
-
-module.exports = app;
-
-// // app.use(
-//   session({
-//     secret: sessionSecret,
-//     resave: true,
-//     saveUninitialized: false,
-//   })
-// );
-
-// // Inicializo Passport y lo utilizo en Express
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(fileupload());
-
-// passport.use(
-//   "azuread-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: clientID,
-//       clientSecret: clientSecret,
-//       callbackURL: callbackURL,
-//       tenant: tenantID,
-//       resource: "https://graph.microsoft.com/",
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       // aca puede realizar acciones para obtener los datos de los usuarios
-//       //para enviar ala base datos o lo que desee y se pueda hacer
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// // Configura la serialización de usuarios
-// passport.serializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// passport.deserializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// // Ruta de inicio de sesión
-// app.get("/user/api/files", passport.authenticate("azuread-openidconnect"));
-
-// // Ruta de retorno después de la autenticación
-// app.get(
-//   "/user/api/callback",
-//   passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/files" }),
-//   (req, res) => {
-//     // Redirige o muestra un mensaje de éxito después de la autenticación exitosa
-//     res.redirect("/user/api/dashboard");
-//   }
-// );
-
-// // Ruta protegida que requiere autenticación
-// app.get("/user/api/dashboard", ensureAuthenticated, (req, res) => {
-//   console.log("entro", __dirname);
-//   const file = path.join(__dirname, "", "routes", "MASCOTAS.jpg");
-
-//   const onedrive_folder = "SampleFolder";
-//   const onedrive_filename = path.basename(file);
-//   const accessToken = process.env.ACCESS_TOKEN; // Tu propio token de acceso
-
-//   fs.readFile(file, function (err, data) {
-//     if (err) {
-//       console.error(err);
-//       return;
-//     }
-//     console.log("entro1");
-//     request.put(
-//       {
-//         url: `https://graph.microsoft.com/v1.0/drive/root:/${onedrive_folder}/${onedrive_filename}:/content`,
-//         headers: {
-//           Authorization: "Bearer " + req.user.accessToken,
-//           "Content-Type": "application/json",
-//         },
-//         body: data,
-//       },
-//       function (err, response, body) {
-//         if (err) {
-//           console.error(err);
-//           return;
-//         }
-//         console.log(body);
-//         const accessUrl = JSON.parse(body)["webUrl"];
-//         console.log("URL de acceso:", accessUrl);
-//         res.send(accessUrl);
-//       }
-//     );
-//   });
-// });
-
-// // Middleware para proteger rutas
-// function ensureAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect("/user/api/files");
-// }
-
-
-
 // const express = require("express");
 // const cors = require("cors");
 // const morgan = require("morgan");
@@ -208,47 +5,149 @@ module.exports = app;
 // const bodyParser = require("body-parser");
 // const router = require("./routes/index");
 // const sequelize = require("sequelize");
-// const helmet = require('helmet');
-// const rateLimit = require("express-rate-limit");
 
-// const globalLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 200,
-//   standardHeaders: true,
-//   legacyHeaders: false,
-// });
+// // const helmet = require('helmet');
+// // const rateLimit = require("express-rate-limit");
+
+// // const globalLimiter = rateLimit({
+// //   windowMs: 15 * 60 * 1000,
+// //   max: 200,
+// //   standardHeaders: true,
+// //   legacyHeaders: false,
+// // });
+
+// // require("dotenv").config()
 // const app = express();
-// app.use(helmet());
-
-// const allowedOrigins = [
-//   'http://localhost:3000',
-//   'https://app.creame.com.co',
-//   'http://localhost:4180',
-//   'http://localhost:5000'
-// ];
+// // app.use(cors());
+// // const optionCors = {
+// //     origin: "*",
+// //     methods: 'GET, POST, OPTIONS, PUT, DELETE',
+// //     allowedHeaders: 'Content-Type, Authorization', // Corregido aquí
+// //     credentials: true
+// //   };
+  
+// //   app.use(cors(optionCors));
+// // app.use(helmet());
+// const allowedOrigins = ["*",'http://localhost:3000', 'https://app.creame.com.co', 'http://localhost:4180','http://localhost:5000/user/api/proyect/ocr','https://app.creame.com.co/user/api/proyect/ocr'];
 
 // const corsOptions = {
 //   origin: function (origin, callback) {
-//     if (!origin) return callback(null, true); // permitir Postman/server-to-server
-
-//     if (allowedOrigins.includes(origin)) {
-//       callback(null, true);
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true); // Permite la solicitud
 //     } else {
-//       callback(new Error("Origen no permitido por CORS"));
+//       callback(new Error('Not allowed by CORS')); // Bloquea el origen
 //     }
 //   },
-//   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-//   allowedHeaders: ['Content-Type','Authorization'],
+//   methods: 'GET, POST, OPTIONS, PUT, DELETE',
+//   allowedHeaders: 'Content-Type, Authorization',
 //   credentials: true
 // };
 
 // app.use(cors(corsOptions));
+
+// // const allowedOrigins = [
+// //   'http://localhost:3000',
+// //   'https://app.creame.com.co',
+// //   'http://localhost:4180',
+// //   'http://localhost:5000'
+// // ];
+
+// // const corsOptions = {
+// //   origin: function (origin, callback) {
+// //     if (!origin) return callback(null, true); // permitir Postman/server-to-server
+
+// //     if (allowedOrigins.includes(origin)) {
+// //       callback(null, true);
+// //     } else {
+// //       callback(new Error("Origen no permitido por CORS"));
+// //     }
+// //   },
+// //   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+// //   allowedHeaders: ['Content-Type','Authorization'],
+// //   credentials: true
+// // };
+
+// app.use(cors(corsOptions));
+  
 // app.use(express.json());
 // app.use(bodyParser.json());
 // app.use(fileupload());
 // app.use(sequelize);
+
 // app.use(morgan("dev"));
-// app.use(globalLimiter);
+// // app.use(globalLimiter);
+
+
+// // const path = require("path");
+// // const fs = require("fs");
+// // const request = require("request");
+// // const session = require("express-session");
+// // const passport = require("passport");
+// // const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
+// // const crypto = require("crypto");
+// // app.use(express.static("uploads"));
+
+
 // app.use("/", router);
 
+// // // const sessionSecret = crypto.randomBytes(64).toString("hex");
+// // // require("dotenv").config();
+// // // const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
+// // // const clientID = CLIENT_ID;
+// // // const clientSecret = CLIENT_SECRET;
+// // // const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
+// // // const tenantID = TENANT_ID;
+
 // module.exports = app;
+
+
+
+
+
+
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const fileupload = require("express-fileupload");
+const router = require("./routes/index");
+
+const app = express();
+
+// 🔥 IMPORTANTE (si usas proxy: Render, Nginx, etc)
+app.set("trust proxy", 1);
+
+// ================= CORS =================
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:4180",
+  "https://app.creame.com.co"
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Postman / server-to-server
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+// ================= MIDDLEWARES =================
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(fileupload());
+app.use(morgan("dev"));
+
+// ================= ROUTES =================
+app.use("/", router);
+
+// ================= EXPORT =================
+module.exports = app;
