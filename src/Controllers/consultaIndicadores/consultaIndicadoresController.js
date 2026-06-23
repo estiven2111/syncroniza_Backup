@@ -158,6 +158,141 @@ const consultaIndicadoresController = async (req, res) => {
       });
     }
 
+//     const indicadores = await sequelize.query(
+// `
+// SELECT
+
+//     -- ==========================
+//     -- DIAS PROGRAMADOS
+//     -- ==========================
+//     CASE
+//         WHEN :anio = 2026 AND :mes = 1
+//         THEN 0
+//         ELSE ROUND(SUM(CASE
+//             WHEN Año >= 2026
+//              AND (
+//                     Año < :anio
+//                  OR (Año = :anio AND mes < :mes)
+//                  )
+//             THEN ISNULL(DiasLaborales,0)
+//             ELSE 0
+//         END),1)
+//     END AS DiasProgramados_Acumulado,
+
+//     ROUND(SUM(CASE
+//         WHEN Año = :anio
+//          AND mes = :mes
+//         THEN ISNULL(DiasLaborales,0)
+//         ELSE 0
+//     END),1) AS DiasProgramados_Mes,
+
+//     -- ==========================
+//     -- HORAS DISPONIBLES
+//     -- ==========================
+//     ROUND(SUM(CASE
+//         WHEN Año < :anio
+//          OR (Año = :anio AND mes < :mes)
+//         THEN ISNULL(HorasDisponibles,0)
+//         ELSE 0
+//     END),1) AS HorasDisponibles_Acumulado,
+
+//     ROUND(SUM(CASE
+//         WHEN Año = :anio
+//          AND mes = :mes
+//         THEN ISNULL(HorasDisponibles,0)
+//         ELSE 0
+//     END),1) AS HorasDisponibles_Mes,
+
+//     -- ==========================
+//     -- HORAS PROGRAMADAS
+//     -- ==========================
+//     ROUND(SUM(CASE
+//         WHEN Año < :anio
+//          OR (Año = :anio AND mes < :mes)
+//         THEN ISNULL(Total_Horas_Asignadas_Proy,0)
+//         ELSE 0
+//     END),1) AS HorasProgramadas_Acumulado,
+
+//     ROUND(SUM(CASE
+//         WHEN Año = :anio
+//          AND mes = :mes
+//         THEN ISNULL(Total_Horas_Asignadas_Proy,0)
+//         ELSE 0
+//     END),1) AS HorasProgramadas_Mes,
+
+//     -- ==========================
+//     -- HORAS CUMPLIDAS
+//     -- ==========================
+//     ROUND(SUM(CASE
+//         WHEN Año < :anio
+//          OR (Año = :anio AND mes < :mes)
+//         THEN ISNULL(HorasRealesReportadas,0)
+//         ELSE 0
+//     END),1) AS HorasCumplidas_Acumulado,
+
+//     ROUND(SUM(CASE
+//         WHEN Año = :anio
+//          AND mes = :mes
+//         THEN ISNULL(HorasRealesReportadas,0)
+//         ELSE 0
+//     END),1) AS HorasCumplidas_Mes,
+
+//     -- ==========================
+//     -- 🔥 HORAS PENDIENTES (NUEVA LOGICA)
+//     -- ==========================
+
+//     -- ACUMULADO = MES ANTERIOR
+//     ROUND(SUM(CASE
+//         WHEN 
+//             (Año = :anio AND mes = :mes - 1)
+//             OR (mes = 12 AND :mes = 1 AND Año = :anio - 1)
+//         THEN ISNULL([Diferencia en Horas PptoReal],0)
+//         ELSE 0
+//     END),1) AS HorasPendientes_Acumulado,
+
+//     -- MES ACTUAL
+//     ROUND(SUM(CASE
+//         WHEN Año = :anio
+//          AND mes = :mes
+//         THEN ISNULL([Diferencia en Horas PptoReal],0)
+//         ELSE 0
+//     END),1) AS HorasPendientes_Mes,
+
+//     -- ==========================
+//     -- 🔥 ATRASO (%)
+//     -- ==========================
+//     ROUND(AVG(CASE
+//         WHEN Año = :anio
+//          AND mes = :mes
+//         THEN ISNULL([% Atraso],0)
+//         ELSE NULL
+//     END),2) AS Atraso_Mes,
+
+//     ROUND(AVG(CASE
+//         WHEN 
+//             (Año = :anio AND mes = :mes - 1)
+//             OR (mes = 12 AND :mes = 1 AND Año = :anio - 1)
+//         THEN ISNULL([% Atraso],0)
+//         ELSE NULL
+//     END),2) AS Atraso_Acumulado,
+
+//     -- ==========================
+//     CAST(0 AS DECIMAL(18,1)) AS HorasFrecuencia_Acumulado,
+//     CAST(0 AS DECIMAL(18,1)) AS HorasFrecuencia_Mes
+
+// FROM dbo.VW_ReporteIndicadorProyectos_Actividades
+// WHERE Documento = :docId
+// `,
+//       {
+//         replacements: {
+//           docId,
+//           anio,
+//           mes
+//         },
+//         type: sequelize.QueryTypes.SELECT
+//       }
+//     );
+
     const indicadores = await sequelize.query(
 `
 SELECT
@@ -238,14 +373,14 @@ SELECT
     END),1) AS HorasCumplidas_Mes,
 
     -- ==========================
-    -- 🔥 HORAS PENDIENTES (NUEVA LOGICA)
+    -- 🔥 HORAS PENDIENTES
     -- ==========================
 
     -- ACUMULADO = MES ANTERIOR
     ROUND(SUM(CASE
         WHEN 
             (Año = :anio AND mes = :mes - 1)
-            OR (mes = 12 AND :mes = 1 AND Año = :anio - 1)
+            OR (:mes = 1 AND Año = :anio - 1 AND mes = 12)
         THEN ISNULL([Diferencia en Horas PptoReal],0)
         ELSE 0
     END),1) AS HorasPendientes_Acumulado,
@@ -259,22 +394,23 @@ SELECT
     END),1) AS HorasPendientes_Mes,
 
     -- ==========================
-    -- 🔥 ATRASO (%)
+    -- 🔥 ATRASO (SIN REDONDEO)
     -- ==========================
-    ROUND(AVG(CASE
+
+    CAST(AVG(CASE
         WHEN Año = :anio
          AND mes = :mes
         THEN ISNULL([% Atraso],0)
         ELSE NULL
-    END),2) AS Atraso_Mes,
+    END) AS DECIMAL(18,6)) AS Atraso_Mes,
 
-    ROUND(AVG(CASE
+    CAST(AVG(CASE
         WHEN 
             (Año = :anio AND mes = :mes - 1)
-            OR (mes = 12 AND :mes = 1 AND Año = :anio - 1)
+            OR (:mes = 1 AND Año = :anio - 1 AND mes = 12)
         THEN ISNULL([% Atraso],0)
         ELSE NULL
-    END),2) AS Atraso_Acumulado,
+    END) AS DECIMAL(18,6)) AS Atraso_Acumulado,
 
     -- ==========================
     CAST(0 AS DECIMAL(18,1)) AS HorasFrecuencia_Acumulado,
@@ -283,17 +419,17 @@ SELECT
 FROM dbo.VW_ReporteIndicadorProyectos_Actividades
 WHERE Documento = :docId
 `,
-      {
-        replacements: {
-          docId,
-          anio,
-          mes
-        },
-        type: sequelize.QueryTypes.SELECT
-      }
-    );
+{
+  replacements: {
+    docId,
+    anio,
+    mes
+  },
+  type: sequelize.QueryTypes.SELECT
+}
+);
 
-    let resultado = indicadores[0] || {};
+let resultado = indicadores[0] || {};
 
     // ==========================
     // REGLA ESPECIAL
