@@ -684,21 +684,21 @@ const UpdatProyect = async (req, res) => {
 
 const AnticipoGastos = async (req, res) => {
   try {
-    const { doc, sku } = req.body;
+    const { doc, sku, op } = req.body;
 
-    console.log("🚀🚀🚀 AnticipoGastos called with doc:", doc, "and sku:", sku);
+    console.log("🚀🚀🚀 AnticipoGastos called with doc:", doc, "and sku:", sku , "OPPP", op);
     // B.DocumentoIngreso  A.NumeroDocumento
     const datos = await sequelize.query(
       `
        select A.Id,B.DocumentoIngreso,A.Valor, 0 EsTarjeta
 from TBL_CON_RegistrosTesorero A inner join TBL_CON_RegistrosTesoreroDETALLES B on A.Id=B.IdRegistrosTesorero
-where A.N_documento=:doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1
+where A.N_documento=:doc and A.HizoReintegro<>1 and B.anticipo=1 and A.Cumplido=1 and B.OP = :op
 union all
 select Id,Nombre NombreTarjeta,saldoActual, 1 EsTarjeta
 from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
       `,
       {
-        replacements: { doc: doc, sku: sku },
+        replacements: { doc: doc, sku: sku, op: op },
         type: sequelize.QueryTypes.SELECT,
       },
     );
@@ -733,9 +733,10 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
         tarjeta: datos.EsTarjeta,
       });
     });
-
+    console.log("🚀🚀🚀 objDatosssssssssssssssssssssssssss:", objDatos);
     res.send(objDatos);
   } catch (error) {
+    console.log("🚀🚀🚀 Error en AnticipoGastos:", error);
     res.json({ error: error });
   }
 };
