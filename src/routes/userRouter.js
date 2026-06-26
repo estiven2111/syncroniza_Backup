@@ -1,687 +1,6 @@
-// const { Router } = require("express");
-// // const express = require("express")
-// const session = require("express-session");
-// const { login } = require("../middlewares/index");
-// const {
-//   authUpload,
-//   uploadFiles,
-//   dashboard,
-//   ensureAuthenticated,
-// } = require("../middlewares/uploadFiles");
-// const crypto = require("crypto");
-// const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-// const passport = require("passport");
-// const path = require("path");
-// const fs = require("fs");
-// const request = require("request");
-// const cors = require("cors");
-// require("dotenv").config();
-// const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID } = process.env;
-// const clientID = CLIENT_ID;
-// const clientSecret = CLIENT_SECRET;
-// const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
-// const tenantID = TENANT_ID;
 
-// const userRouter = Router();
-// const optionCors = {
-//   origin: "*",
-//   methods: "GET, POST, OPTIONS, PUT, DELETE",
-//   allowedHeaders: "Content-Type,Authorization",
-//   credentials: true,
-// };
-// userRouter.use(cors());
-// // const userRouter = express()
-// const sessionSecret = crypto.randomBytes(64).toString("hex");
-// console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID);
-// // Configura y utiliza sesiones en Express
-// userRouter.use(
-//   session({
-//     secret: sessionSecret,
-//     resave: true,
-//     saveUninitialized: false,
-//   })
-// );
-// // Inicializo Passport y lo utilizo en Express
-// userRouter.use(passport.initialize());
-// userRouter.use(passport.session());
 
-// passport.use(
-//   "azuread-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: clientID,
-//       clientSecret: clientSecret,
-//       callbackURL: callbackURL,
-//       tenant: tenantID,
-//       resource: "https://graph.microsoft.com/",
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       console.log("token", accessToken);
-//       // aca puede realizar acciones para obtener los datos de los usuarios
-//       //para enviar ala base datos o lo que desee y se pueda hacer
-
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// // Configura la serialización de usuarios
-// passport.serializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// passport.deserializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// userRouter.post("/api/login", login);
-// // userRouter.get("/api/files", authUpload);
-// // userRouter.get("/api/callback", uploadFiles);
-// // userRouter.get("/api/dashboard", ensureAuthenticated, dashboard);
-
-// userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-// userRouter.get(
-//   "/api/callback",
-//   passport.authenticate("azuread-openidconnect", {
-//     failureRedirect: "/user/api/files",
-//   }),
-//   (req, res) => {
-//     console.log("callbackkkkk");
-//     // res.redirect("/user/api/dashboard");
-//     res.send("ok")
-//   }
-// );
-// userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
-// // userRouter.post("/api/dashboard", dashboard);
-// // ensureAuthenticated
-// // userRouter.post("/api/register",registerUser)
-
-// //todo usar para cojer el token por get desde la web
-// // userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-// // userRouter.get("/api/callback",passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/files" }),(req,res)=>{
-// //   res.redirect("/dashboard");
-// // });
-// // userRouter.get("/api/dashboard",ensureAuthenticated,dashboard);
-
-// module.exports = userRouter;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const { Router } = require("express");
-// // const express = require("express")
-// const session = require("express-session");
-// const { login } = require("../middlewares/index");
-// const {
-//   authUpload,
-//   uploadFiles,
-//   dashboard,
-//   ensureAuthenticated,
-// } = require("../middlewares/uploadFiles");
-// const crypto = require("crypto");
-// const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-// const passport = require("passport");
-// const path = require("path");
-// const fs = require("fs");
-// const request = require("request");
-// const cors = require("cors");
-// require("dotenv").config();
-// const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW,SESSIONSECRET } = process.env;
-// const clientID = CLIENT_ID;
-// const clientSecret = CLIENT_SECRET;
-// const callbackURL = REDIRECT_URI; //"http://localhost:5000/callback";
-// const callbackURLW = REDIRECT_URIW; //"http://localhost:5000/validation";
-// const tenantID = TENANT_ID;
-// const rateLimit = require("express-rate-limit");
-// const userRouter = Router();
-// const optionCors = {
-//   origin: "*",
-//   methods: "GET, POST, OPTIONS, PUT, DELETE",
-//   allowedHeaders: "Content-Type,Authorization",
-//   credentials: true,
-// };
-// userRouter.use(cors());
-// // const userRouter = express()
-// const sessionSecret = SESSIONSECRET || crypto.randomBytes(64).toString("hex");
-// console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TENANT_ID, REDIRECT_URIW);
-// // Configura y utiliza sesiones en Express
-// userRouter.use(
-//   session({
-//     secret: sessionSecret,
-//     resave: true,
-//     saveUninitialized: false,
-//   })
-// );
-// // Inicializo Passport y lo utilizo en Express
-// userRouter.use(passport.initialize());
-// userRouter.use(passport.session());
-
-// passport.use(
-//   "web-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: clientID,
-//       clientSecret: clientSecret,
-//       callbackURL: callbackURLW,
-//       tenant: tenantID,
-//       resource: "https://graph.microsoft.com/",
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-     
-//       // aca puede realizar acciones para obtener los datos de los usuarios
-//       //para enviar ala base datos o lo que desee y se pueda hacer
-
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// //todo **************************************
-// passport.use(
-//   "azuread-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: clientID,
-//       clientSecret: clientSecret,
-//       callbackURL: callbackURL,
-//       tenant: tenantID,
-//       resource: "https://graph.microsoft.com/",
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       console.log("params", params);
-     
-//       // aca puede realizar acciones para obtener los datos de los usuarios
-//       //para enviar ala base datos o lo que desee y se pueda hacer
-
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-// //todo **************************************
-
-
-
-// // Configura la serialización de usuarios
-// passport.serializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// passport.deserializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// userRouter.get("/api/auth",(req,res)=>{
-//   if (req.isAuthenticated()) {
-//     res.send("true")
-//   }else{
-//     res.send("false")
-//   }
-// })
-
-// // const loginLimiter = rateLimit({
-// //   windowMs: 10 * 60 * 1000,
-// //   max: 5,
-// //   message: {
-// //     error: "Demasiados intentos de login, intenta en 10 minutos"
-// //   },
-// //   skipSuccessfulRequests: true // solo cuenta intentos fallidos
-// // });
-
-// const loginLimiter = rateLimit({
-//   windowMs: 10 * 60 * 1000,
-//   max: 10,
-//   keyGenerator: (req, res) => {
-//     const ip = rateLimit.ipKeyGenerator(req); 
-//     const email = req.body.email || "unknown";
-//     return `${ip}-${email}`;
-//   },
-//   skipSuccessfulRequests: true
-// });
-
-// // userRouter.post("/api/login", login);
-// userRouter.post("/api/login", loginLimiter, login);
-// // userRouter.get("/api/files", authUpload);
-// // userRouter.get("/api/callback", uploadFiles);
-// // userRouter.get("/api/dashboard", ensureAuthenticated, dashboard);
-
-// userRouter.get("/api/microsoft",(req,res)=>{
-//   res.redirect("/user/api/callbacks")
-// })
-
-// userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-// userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
-
-// userRouter.get(
-//   "/api/callbacks",
-//   passport.authenticate("azuread-openidconnect", {
-//     failureRedirect: "/user/api/files",
-//   }),
-//   (req, res) => {
-    
-//     const auth = req.isAuthenticated()
-//     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken,profile:req.user.profile}
-//     res.json(datos)
-
-//   }
-// );
-
-// //todo **************************************
-// userRouter.get(
-//   "/api/validation",
-//   passport.authenticate("web-openidconnect", {
-//     failureRedirect: "/user/api/web",
-//   }),
-//   (req, res) => {
-
-//     const auth = req.isAuthenticated()
-//     const datos = {pass:"pass",token:auth,tokenSecret:req.user.accessToken}
-//     res.send(
-//       ` 
-//       <!DOCTYPE html>
-//       <html lang="en">
-
-//       <body>
-
-//       </body>
-//       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividade') 
-//       <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
-//         window.close();
-//     </script>
-//       </html>
-//       `
-//    )
-//   //    <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/actividades') 
-//   //     <script> window.opener.postMessage(${JSON.stringify(datos)}, 'http://localhost:4180/Gastos') 
-//   //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/actividades') 
-//   //  <script> window.opener.postMessage(${JSON.stringify(datos)}, 'https://app.creame.com.co/Gastos') 
-// //    setTimeout(function() {
-// //     window.close();
-// // }, 1000);
-//   }
-// );
-// //todo **************************************
-
-
-
-// userRouter.post("/api/dashboard",ensureAuthenticated,dashboard);
-// userRouter.post("/api/creame-dashboard",dashboard);
-// // userRouter.post("/api/dashboard", dashboard);
-// // ensureAuthenticated
-// // userRouter.post("/api/register",registerUser)
-
-// //todo usar para cojer el token por get desde la webs
-// // userRouter.get("/api/files", passport.authenticate("azuread-openidconnect"));
-// // userRouter.get("/api/callback",passport.authenticate("azuread-openidconnect", { failureRedirect: "/user/api/files" }),(req,res)=>{
-// //   res.redirect("/dashboard");
-// // });
-// // userRouter.get("/api/dashboard",ensureAuthenticated,dashboard);
-
-// module.exports = userRouter;
-
-
-//todo ********************************
-
-
-// const { Router } = require("express");
-// const session = require("express-session");
-// const { login } = require("../middlewares/index");
-// const {
-//   dashboard,
-//   ensureAuthenticated,
-// } = require("../middlewares/uploadFiles");
-// const crypto = require("crypto");
-// const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-// const passport = require("passport");
-// const cors = require("cors");
-// require("dotenv").config();
-// const rateLimit = require("express-rate-limit");
-// // const rateLimit = require("express-rate-limit");
-// const { ipKeyGenerator } = require("express-rate-limit");
-// const {
-//   CLIENT_ID,
-//   CLIENT_SECRET,
-//   REDIRECT_URI,
-//   TENANT_ID,
-//   REDIRECT_URIW,
-//   SESSIONSECRET,
-// } = process.env;
-
-// const userRouter = Router();
-
-// userRouter.use(cors());
-
-// // ================= SESSION =================
-// const sessionSecret =
-//   SESSIONSECRET || crypto.randomBytes(64).toString("hex");
-
-// userRouter.use(
-//   session({
-//     secret: sessionSecret,
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
-
-// // ================= PASSPORT =================
-// userRouter.use(passport.initialize());
-// userRouter.use(passport.session());
-
-// // 🔒 evitar reutilización del code
-// const usedCodes = new Set();
-
-// // ================= STRATEGY WEB =================
-// passport.use(
-//   "web-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: CLIENT_ID,
-//       clientSecret: CLIENT_SECRET,
-//       callbackURL: REDIRECT_URIW,
-//       tenant: TENANT_ID,
-//       resource: "https://graph.microsoft.com/",
-//       state: true, // 🔥 IMPORTANTE
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// // ================= STRATEGY NORMAL =================
-// passport.use(
-//   "azuread-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: CLIENT_ID,
-//       clientSecret: CLIENT_SECRET,
-//       callbackURL: REDIRECT_URI,
-//       tenant: TENANT_ID,
-//       resource: "https://graph.microsoft.com/",
-//       state: true, // 🔥 IMPORTANTE
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// // ================= SERIALIZE =================
-// passport.serializeUser((user, done) => done(null, user));
-// passport.deserializeUser((user, done) => done(null, user));
-
-// // ================= AUTH STATUS =================
-// userRouter.get("/api/auth", (req, res) => {
-//   res.send(req.isAuthenticated() ? "true" : "false");
-// });
-
-// // ================= LOGIN NORMAL =================
-
-// const loginLimiter = rateLimit({
-//   windowMs: 10 * 60 * 1000,
-//   max: 10,
-
-//   keyGenerator: (req) => {
-//     const ip = ipKeyGenerator(req); // ✅ correcto
-//     const email = req.body.email || "unknown";
-//     return `${ip}-${email}`;
-//   },
-
-//   skipSuccessfulRequests: true,
-// });
-
-// userRouter.post("/api/login", loginLimiter, login);
-
-// // ================= MICROSOFT LOGIN =================
-// userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
-
-// // ================= CALLBACK VALIDATION =================
-// userRouter.get(
-//   "/api/validation",
-
-//   // 🔥 PREVALIDACIONES
-//   (req, res, next) => {
-//     const code = req.query.code;
-
-//     if (!code) {
-//       return res.redirect("/");
-//     }
-
-//     if (usedCodes.has(code)) {
-//       return res.status(400).send("Código ya usado");
-//     }
-
-//     usedCodes.add(code);
-
-//     next();
-//   },
-
-//   passport.authenticate("web-openidconnect", {
-//     failureRedirect: "/user/api/web",
-//   }),
-
-//   (req, res) => {
-//     try {
-//       const auth = req.isAuthenticated();
-
-//       const datos = {
-//         pass: "pass",
-//         token: auth,
-//         tokenSecret: req.user.accessToken,
-//       };
-
-//       res.send(`
-//         <!DOCTYPE html>
-//         <html>
-//         <body></body>
-
-//         <script>
-//           const data = ${JSON.stringify(datos)};
-
-         
-//           window.opener.postMessage(data, 'https://app.creame.com.co/actividade');
-//           window.opener.postMessage(data, 'https://app.creame.com.co/Gastos');
-
-//           window.close();
-//         </script>
-
-//         </html>
-//       `);
-//     } catch (error) {
-//         // window.opener.postMessage(data, 'http://localhost:4180/actividade');
-//         //   window.opener.postMessage(data, 'http://localhost:4180/Gastos');
-//       //  window.opener.postMessage(data, 'https://app.creame.com.co/actividade');
-//           // window.opener.postMessage(data, 'https://app.creame.com.co/Gastos');
-//       console.error("ERROR VALIDATION:", error);
-//       res.status(500).send("Error en autenticación");
-//     }
-//   }
-// );
-
-// // ================= DASHBOARD =================
-// userRouter.post("/api/dashboard", ensureAuthenticated, dashboard);
-// userRouter.post("/api/creame-dashboard", dashboard);
-
-// module.exports = userRouter;
-
-
-
-//todo ********************************
-
-
-// const { Router } = require("express");
-// const session = require("express-session");
-// const { login } = require("../middlewares/index");
-// const {
-//   dashboard,
-//   ensureAuthenticated,
-// } = require("../middlewares/uploadFiles");
-// const crypto = require("crypto");
-// const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-// const passport = require("passport");
-// require("dotenv").config();
-// const rateLimit = require("express-rate-limit");
-// const { ipKeyGenerator } = require("express-rate-limit");
-
-// const {
-//   CLIENT_ID,
-//   CLIENT_SECRET,
-//   REDIRECT_URI,
-//   TENANT_ID,
-//   REDIRECT_URIW,
-//   SESSIONSECRET,
-// } = process.env;
-
-// const userRouter = Router();
-
-// // ================= SESSION =================
-// userRouter.use(
-//   session({
-//     secret: SESSIONSECRET || crypto.randomBytes(64).toString("hex"),
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       secure: false, // 🔥 en producción (https)
-//       httpOnly: true,
-//       sameSite: "none", // 🔥 necesario para frontend separado
-//     },
-//   })
-// );
-
-// // ================= PASSPORT =================
-// userRouter.use(passport.initialize());
-// userRouter.use(passport.session());
-
-// // ================= STRATEGIES =================
-// passport.use(
-//   "web-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: CLIENT_ID,
-//       clientSecret: CLIENT_SECRET,
-//       callbackURL: REDIRECT_URIW,
-//       tenant: TENANT_ID,
-//       resource: "https://graph.microsoft.com/",
-//       state: true,
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// passport.use(
-//   "azuread-openidconnect",
-//   new AzureAdOAuth2Strategy(
-//     {
-//       clientID: CLIENT_ID,
-//       clientSecret: CLIENT_SECRET,
-//       callbackURL: REDIRECT_URI,
-//       tenant: TENANT_ID,
-//       resource: "https://graph.microsoft.com/",
-//       state: true,
-//     },
-//     (accessToken, refreshToken, params, profile, done) => {
-//       return done(null, { accessToken, refreshToken, profile });
-//     }
-//   )
-// );
-
-// // ================= SERIALIZE =================
-// passport.serializeUser((user, done) => done(null, user));
-// passport.deserializeUser((user, done) => done(null, user));
-
-// // ================= AUTH STATUS =================
-// userRouter.get("/api/auth", (req, res) => {
-//   res.send(req.isAuthenticated() ? "true" : "false");
-// });
-
-// // ================= LOGIN NORMAL =================
-// const loginLimiter = rateLimit({
-//   windowMs: 10 * 60 * 1000,
-//   max: 10,
-//   keyGenerator: (req) => {
-//     const ip = ipKeyGenerator(req);
-//     const email = req.body.email || "unknown";
-//     return `${ip}-${email}`;
-//   },
-//   skipSuccessfulRequests: true,
-// });
-
-// userRouter.post("/api/login", loginLimiter, login);
-
-// // ================= MICROSOFT LOGIN =================
-// userRouter.get("/api/web", passport.authenticate("web-openidconnect"));
-
-// // ================= CALLBACK =================
-// userRouter.get(
-//   "/api/validation",
-
-//   passport.authenticate("web-openidconnect", {
-//     failureRedirect: "/login-error", // ✅ FIX
-//   }),
-
-//   (req, res) => {
-//     try {
-//       const datos = {
-//         pass: "pass",
-//         token: req.isAuthenticated(),
-//         tokenSecret: req.user.accessToken,
-//       };
-
-//       res.send(`
-//         <!DOCTYPE html>
-//         <html>
-//         <body></body>
-
-//         <script>
-//           const data = ${JSON.stringify(datos)};
-          
-//           window.opener.postMessage(data, 'http://localhost:4180'); // ✅ FIX
-//           window.close();
-//         </script>
-
-//         </html>
-//       `);
-//     } catch (error) {
-//       // window.opener.postMessage(data, 'https://app.creame.com.co'); // ✅ FIX
-//       console.error("ERROR VALIDATION:", error);
-//       res.status(500).send("Error en autenticación");
-//     }
-//   }
-// );
-
-// // ================= DASHBOARD =================
-// userRouter.post("/api/dashboard", ensureAuthenticated, dashboard);
-// userRouter.post("/api/creame-dashboard", dashboard);
-
-// module.exports = userRouter;
-
-
-
-
-
-// funciona medio nien
-
+// //todo ********************************
 // const { Router } = require("express");
 // const session = require("express-session");
 // const { login } = require("../middlewares/index");
@@ -698,7 +17,7 @@
 //   CLIENT_SECRET,
 //   REDIRECT_URIW, // URL de callback (local o prod)
 //   TENANT_ID,
-//   FRONTEND_URL, // URL del frontend (local o prod)
+//   FRONTEND_URL,  // URL del frontend (local o prod)
 //   SESSIONSECRET,
 //   NODE_ENV
 // } = process.env;
@@ -713,9 +32,9 @@
 //     resave: false,
 //     saveUninitialized: false,
 //     cookie: {
-//       secure: isProd, // 🔥 true en producción (requiere HTTPS)
+//       secure: isProd, // true en producción (requiere HTTPS)
 //       httpOnly: true,
-//       sameSite: isProd ? "none" : "lax", // 🔥 'none' requiere secure: true, en local usa 'lax'
+//       sameSite: isProd ? "none" : "lax", 
 //     },
 //   })
 // );
@@ -724,20 +43,43 @@
 // userRouter.use(passport.initialize());
 // userRouter.use(passport.session());
 
-// // ================= STRATEGY (UNA SOLA) =================
+// // ================= STRATEGY =================
 // passport.use(
 //   "azure-openidconnect",
 //   new AzureAdOAuth2Strategy(
 //     {
 //       clientID: CLIENT_ID,
 //       clientSecret: CLIENT_SECRET,
-//       callbackURL: REDIRECT_URIW, // Usa la que venga del .env
+//       callbackURL: REDIRECT_URIW,
 //       tenant: TENANT_ID,
 //       resource: "https://graph.microsoft.com/",
-//       state: true,
+//       // 🍏 SOLUCIÓN AL PROBLEMA DE "SÓLO UNA VEZ": 
+//       // Al poner state: false, Passport deja de exigir que la cookie concuerde de forma estricta.
+//       // Esto elimina el error intermitente de los intentos consecutivos y te asegura 
+//       // recibir SIEMPRE el accessToken real de Microsoft tanto para admins como para usuarios comunes.
+//       state: false, 
+//       authorizationURL: `https://login.microsoftonline.com/${TENANT_ID}/oauth2/authorize`,
+//       tokenURL: `https://login.microsoftonline.com/${TENANT_ID}/oauth2/token`
 //     },
 //     (accessToken, refreshToken, params, profile, done) => {
-//       return done(null, { accessToken, refreshToken, profile });
+//       try {
+//         console.log("=========================================");
+//         console.log("🟢 MICROSOFT ENTREGÓ EL TOKEN REAL");
+//         console.log("Token válido obtenido para subida de archivos.");
+//         console.log("=========================================");
+
+//         const usuarioValido = {
+//           accessToken,
+//           refreshToken,
+//           profile: profile || { displayName: "Usuario Corporativo" },
+//           id_token: params.id_token
+//         };
+
+//         return done(null, usuarioValido);
+//       } catch (error) {
+//         console.error("❌ ERROR CRÍTICO EN LA ESTRATEGIA PASSPORT:", error);
+//         return done(error);
+//       }
 //     }
 //   )
 // );
@@ -769,38 +111,85 @@
 // userRouter.get("/api/web", passport.authenticate("azure-openidconnect"));
 
 // // ================= CALLBACK =================
-// userRouter.get(
-//   "/api/validation",
-//   passport.authenticate("azure-openidconnect", {
-//     failureRedirect: "/login-error", 
-//   }),
-//   (req, res) => {
-//     try {
-//       const datos = {
-//         pass: "pass",
-//         token: req.isAuthenticated(),
-//         tokenSecret: req.user.accessToken,
-//       };
-
-//       // Usamos FRONTEND_URL dinámico para el postMessage de manera segura
-//       res.send(`
-//         <!DOCTYPE html>
-//         <html>
-//         <body>
-//           <script>
-//             const data = ${JSON.stringify(datos)};
-//             window.opener.postMessage(data, '${FRONTEND_URL}'); 
-//             window.close();
-//           </script>
-//         </body>
-//         </html>
-//       `);
-//     } catch (error) {
-//       console.error("ERROR VALIDATION:", error);
-//       res.status(500).send("Error en autenticación");
-//     }
+// userRouter.get("/api/validation", (req, res, next) => {
+//   // Limpieza limpia por si acaso quedó rastro de sesión en memoria
+//   if (req.isAuthenticated()) {
+//     req.logout((err) => {
+//       if (err) console.error("Error limpiando sesión previa:", err);
+//     });
 //   }
-// );
+
+//   passport.authenticate("azure-openidconnect", (err, user, info) => {
+//     if (err) {
+//       console.log("\n=========================================");
+//       console.log("❌ ERROR EN EL CALLBACK:");
+//       console.error(err);
+//       console.log("=========================================\n");
+//       return res.redirect("/user/login-error");
+//     }
+
+//     if (!user) {
+//       console.log("\n=========================================");
+//       console.log("⚠️ PASSPORT NEGÓ EL ACCESO (INFO):", info);
+//       console.log("=========================================\n");
+//       return res.redirect("/user/login-error");
+//     }
+
+//     // Login en Express
+//     req.logIn(user, (loginErr) => {
+//       if (loginErr) {
+//         console.error("❌ Error al persistir la sesión:", loginErr);
+//         return res.redirect("/user/login-error");
+//       }
+
+//       try {
+//         // 🚀 Volvemos a la estructura original limpia que te funcionaba con el Admin
+//         // Enviando el accessToken legítimo que Passport extrajo de Microsoft.
+//         const datos = {
+//           pass: "pass",
+//           token: req.isAuthenticated(),
+//           tokenSecret: req.user.accessToken, 
+//         };
+
+//         return res.send(`
+//           <!DOCTYPE html>
+//           <html>
+//           <body>
+//             <script>
+//               const data = ${JSON.stringify(datos)};
+//               window.opener.postMessage(data, '${FRONTEND_URL}'); 
+//               window.close();
+//             </script>
+//           </body>
+//           </html>
+//         `);
+//       } catch (error) {
+//         console.error("❌ ERROR EN LA RESPUESTA DE VALIDACIÓN:", error);
+//         return res.status(500).send("Error emitiendo tokens al frontend");
+//       }
+//     });
+//   })(req, res, next);
+// });
+
+// // ================= RUTA DE CONTROL DE ERROR =================
+// userRouter.get("/login-error", (req, res) => {
+//   console.log("=========================================");
+//   console.log("🔴 LOGIN FALLIDO CONTROLADO");
+//   console.log("=========================================");
+  
+//   res.status(401).send(`
+//     <!DOCTYPE html>
+//     <html>
+//     <body>
+//       <script>
+//         window.opener.postMessage({ error: 'Auth failed' }, '${FRONTEND_URL}');
+//         alert('No se pudo completar el ingreso con Microsoft. Contacte al administrador.');
+//         window.close();
+//       </script>
+//     </body>
+//     </html>
+//   `);
+// });
 
 // // ================= DASHBOARD =================
 // userRouter.post("/api/dashboard", ensureAuthenticated, dashboard);
@@ -809,37 +198,24 @@
 // module.exports = userRouter;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//todo ********************************
 const { Router } = require("express");
 const session = require("express-session");
+const crypto = require("crypto");
+const passport = require("passport");
+const rateLimit = require("express-rate-limit");
+const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
+require("dotenv").config();
+
+// Middlewares internos
 const { login } = require("../middlewares/index");
 const { dashboard, ensureAuthenticated } = require("../middlewares/uploadFiles");
-const crypto = require("crypto");
-const AzureAdOAuth2Strategy = require("passport-azure-ad-oauth2").Strategy;
-const passport = require("passport");
-require("dotenv").config();
-const rateLimit = require("express-rate-limit");
-const { ipKeyGenerator } = require("express-rate-limit");
 
 const {
   CLIENT_ID,
   CLIENT_SECRET,
-  REDIRECT_URIW, // URL de callback (local o prod)
+  REDIRECT_URIW, 
   TENANT_ID,
-  FRONTEND_URL,  // URL del frontend (local o prod)
+  FRONTEND_URL,  
   SESSIONSECRET,
   NODE_ENV
 } = process.env;
@@ -847,25 +223,24 @@ const {
 const userRouter = Router();
 const isProd = NODE_ENV === "production";
 
-// ================= SESSION =================
+// ================= 1. MIDDLEWARES DE SESIÓN =================
 userRouter.use(
   session({
     secret: SESSIONSECRET || crypto.randomBytes(64).toString("hex"),
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: isProd, // true en producción (requiere HTTPS)
+      secure: isProd, 
       httpOnly: true,
       sameSite: isProd ? "none" : "lax", 
     },
   })
 );
 
-// ================= PASSPORT =================
 userRouter.use(passport.initialize());
 userRouter.use(passport.session());
 
-// ================= STRATEGY =================
+// ================= 2. ESTRATEGIA PASSPORT =================
 passport.use(
   "azure-openidconnect",
   new AzureAdOAuth2Strategy(
@@ -875,85 +250,73 @@ passport.use(
       callbackURL: REDIRECT_URIW,
       tenant: TENANT_ID,
       resource: "https://graph.microsoft.com/",
-      // 🍏 SOLUCIÓN AL PROBLEMA DE "SÓLO UNA VEZ": 
-      // Al poner state: false, Passport deja de exigir que la cookie concuerde de forma estricta.
-      // Esto elimina el error intermitente de los intentos consecutivos y te asegura 
-      // recibir SIEMPRE el accessToken real de Microsoft tanto para admins como para usuarios comunes.
       state: false, 
       authorizationURL: `https://login.microsoftonline.com/${TENANT_ID}/oauth2/authorize`,
       tokenURL: `https://login.microsoftonline.com/${TENANT_ID}/oauth2/token`
     },
     (accessToken, refreshToken, params, profile, done) => {
       try {
-        console.log("=========================================");
-        console.log("🟢 MICROSOFT ENTREGÓ EL TOKEN REAL");
-        console.log("Token válido obtenido para subida de archivos.");
-        console.log("=========================================");
-
+        console.log("🟢 Token válido obtenido de Microsoft.");
         const usuarioValido = {
           accessToken,
           refreshToken,
           profile: profile || { displayName: "Usuario Corporativo" },
           id_token: params.id_token
         };
-
         return done(null, usuarioValido);
       } catch (error) {
-        console.error("❌ ERROR CRÍTICO EN LA ESTRATEGIA PASSPORT:", error);
+        console.error("❌ Error en la estrategia de Passport:", error);
         return done(error);
       }
     }
   )
 );
 
-// ================= SERIALIZE =================
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-// ================= AUTH STATUS =================
-userRouter.get("/api/auth", (req, res) => {
-  res.send(req.isAuthenticated() ? "true" : "false");
-});
-
-// ================= LOGIN NORMAL =================
+// ================= 3. LIMITADOR DE PETICIONES =================
 const loginLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   max: 10,
   keyGenerator: (req) => {
-    const ip = ipKeyGenerator(req);
-    const email = req.body.email || "unknown";
+    const ip = req.ip || "unknown-ip";
+    const email = req.body.email || "unknown-email";
     return `${ip}-${email}`;
   },
   skipSuccessfulRequests: true,
 });
 
+// ================= 4. RUTAS DE AUTENTICACIÓN =================
+
+// Estado de autenticación local
+userRouter.get("/api/auth", (req, res) => {
+  res.send(req.isAuthenticated() ? "true" : "false");
+});
+
+// Login tradicional
 userRouter.post("/api/login", loginLimiter, login);
 
-// ================= MICROSOFT LOGIN =================
+// Endpoint que dispara el login de Microsoft
 userRouter.get("/api/web", passport.authenticate("azure-openidconnect"));
 
-// ================= CALLBACK =================
+// Callback de redirección de Azure
 userRouter.get("/api/validation", (req, res, next) => {
-  // Limpieza limpia por si acaso quedó rastro de sesión en memoria
   if (req.isAuthenticated()) {
     req.logout((err) => {
-      if (err) console.error("Error limpiando sesión previa:", err);
+      if (err) console.error("Error al limpiar sesión previa:", err);
     });
   }
 
   passport.authenticate("azure-openidconnect", (err, user, info) => {
+    // 💡 IMPORTANTE: Si tu router se monta sobre '/user', redirigir a '/user/login-error'
     if (err) {
-      console.log("\n=========================================");
-      console.log("❌ ERROR EN EL CALLBACK:");
-      console.error(err);
-      console.log("=========================================\n");
+      console.error("❌ ERROR EN EL CALLBACK:", err);
       return res.redirect("/user/login-error");
     }
 
     if (!user) {
-      console.log("\n=========================================");
-      console.log("⚠️ PASSPORT NEGÓ EL ACCESO (INFO):", info);
-      console.log("=========================================\n");
+      console.warn("⚠️ PASSPORT NEGÓ EL ACCESO:", info);
       return res.redirect("/user/login-error");
     }
 
@@ -965,13 +328,14 @@ userRouter.get("/api/validation", (req, res, next) => {
       }
 
       try {
-        // 🚀 Volvemos a la estructura original limpia que te funcionaba con el Admin
-        // Enviando el accessToken legítimo que Passport extrajo de Microsoft.
+        // 🔥 CORRECCIÓN: Forzamos 'token: true' como un booleano real
         const datos = {
           pass: "pass",
-          token: req.isAuthenticated(),
+          token: true, 
           tokenSecret: req.user.accessToken, 
         };
+
+        console.log("🟢 Enviando mensaje postMessage al frontend con el token...");
 
         return res.send(`
           <!DOCTYPE html>
@@ -979,6 +343,7 @@ userRouter.get("/api/validation", (req, res, next) => {
           <body>
             <script>
               const data = ${JSON.stringify(datos)};
+              // Enviamos los datos de manera segura al Frontend
               window.opener.postMessage(data, '${FRONTEND_URL}'); 
               window.close();
             </script>
@@ -993,27 +358,24 @@ userRouter.get("/api/validation", (req, res, next) => {
   })(req, res, next);
 });
 
-// ================= RUTA DE CONTROL DE ERROR =================
+// Ruta controlada de fallos
 userRouter.get("/login-error", (req, res) => {
-  console.log("=========================================");
-  console.log("🔴 LOGIN FALLIDO CONTROLADO");
-  console.log("=========================================");
-  
+  console.log("🔴 LOGIN FALLIDO EN AZURE AD");
   res.status(401).send(`
     <!DOCTYPE html>
     <html>
-    <body>
-      <script>
-        window.opener.postMessage({ error: 'Auth failed' }, '${FRONTEND_URL}');
-        alert('No se pudo completar el ingreso con Microsoft. Contacte al administrador.');
-        window.close();
-      </script>
-    </body>
+      <body>
+        <script>
+          window.opener.postMessage({ error: 'Auth failed' }, '${FRONTEND_URL}');
+          alert('No se pudo completar el ingreso con Microsoft. Contacte al administrador.');
+          window.close();
+        </script>
+      </body>
     </html>
   `);
 });
 
-// ================= DASHBOARD =================
+// ================= 5. CONEXIÓN DE PROYECTOS / DASHBOARD =================
 userRouter.post("/api/dashboard", ensureAuthenticated, dashboard);
 userRouter.post("/api/creame-dashboard", dashboard);
 
