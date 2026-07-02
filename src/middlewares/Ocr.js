@@ -2417,6 +2417,11 @@ If not found online:
 NEVER assign “Corporación Incubadora de Empresas” as razon_social.
 
 Always use legal registered name, not brand or commercial name.
+Do NOT use "Corporación Incubadora de Empresas" under any circumstances.
+Do NOT use its name, NIT, identification number, or any related data.
+Do NOT generate, infer, assume, or substitute any information associated with this entity.
+This entity must be treated as completely excluded and forbidden.
+If encountered, it must be ignored and never used as a fallback or default value.
 
 ========================
 MONETARY STANDARDIZATION (VERY IMPORTANT)
