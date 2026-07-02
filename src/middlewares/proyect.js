@@ -725,14 +725,29 @@ from TBL_CON_TARJETASCREDITO where N_Doc_Responsable=:doc
     //   });
     // });
     //con B.
+ 
+    // datos.map((datos) => {
+    //   objDatos.push({
+    //     IdResponsable: datos.Id,
+    //     Observaciones: datos.DocumentoIngreso,
+    //     Valor: datos.Valor,
+    //     tarjeta: datos.EsTarjeta,
+    //   });
+    // });
+
     datos.map((datos) => {
-      objDatos.push({
-        IdResponsable: datos.Id,
-        Observaciones: datos.DocumentoIngreso,
-        Valor: datos.Valor,
-        tarjeta: datos.EsTarjeta,
-      });
-    });
+  const valorFormateado = new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+  }).format(datos.Valor);
+
+  objDatos.push({
+    IdResponsable: datos.Id,
+    Observaciones: datos.DocumentoIngreso,
+    Valor: valorFormateado, 
+    tarjeta: datos.EsTarjeta,
+  });
+});
     console.log("🚀🚀🚀 objDatosssssssssssssssssssssssssss:", objDatos);
     res.send(objDatos);
   } catch (error) {
