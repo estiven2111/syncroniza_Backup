@@ -440,7 +440,7 @@ SELECT
             (Año = :anio AND mes = :mes - 1)
             OR (:mes = 1 AND Año = :anio - 1 AND mes = 12)
          )
-        THEN ISNULL([Diferencia en Horas PptoReal],0)
+        THEN ISNULL([Saldo acumulado de horas programadas no ejecutadas],0)
         ELSE 0
     END),1) AS HorasPendientes_Acumulado,
 
